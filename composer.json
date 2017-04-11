@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^5.3.3 || ^7.0",
-        "dimabdc/php-fast-simple-html-dom-parser": "^1.1",
+        "dimabdc/php-fast-simple-html-dom-parser": "^1.1"
     },
     "autoload": {
         "psr-0": {

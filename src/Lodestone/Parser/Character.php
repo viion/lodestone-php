@@ -2,7 +2,8 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\{Logger,XIVDB};
+use Lodestone\Modules\Logger,
+    Lodestone\Modules\XIVDB;
 
 /**
  * Class Character

@@ -2,8 +2,6 @@
 
 Small lodestone parser built in PHP. The goals are to be **extremely fast** and very lightweight memory, a single character parse should be under 3mb memory. This is built for parsing thousands of characters a minute.
 
-This Project needs some cleaning up and decoupling from my XIVSync service, so it might not work out the box... Not tested
-
 On the very first parse, if XIVDB data is required it will download it. It will then be cached in an `xivdb.json` file. You can run:
 
 ```php

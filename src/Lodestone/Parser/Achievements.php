@@ -1,20 +1,25 @@
 <?php
-//
-// Parse a lodestone achievements
-//
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
 
+use Lodestone\Modules\{Logger,XIVDB};
+
+/**
+ * Class Achievements
+ * @package Lodestone\Parser
+ */
 class Achievements extends ParserHelper
 {
     /**
-     * Parse lodestone!
-     *
-     * @param $html
+     * @param bool|string $html
      * @return array|bool
      */
-	public function parse($html)
-	{
+    public function parse($html = false)
+    {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
         // check if private
@@ -27,12 +32,11 @@ class Achievements extends ParserHelper
 		    return false;
         }
 
-        printtime(__FUNCTION__.'#'.__LINE__);
         $this->setInitialDocument($html);
 
         $started = microtime(true);
 		$this->parseList();
-        output('PARSE DURATION: %s ms', [ round(microtime(true) - $started, 3) ]);
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
         //show($this->data);die;
 
@@ -44,12 +48,12 @@ class Achievements extends ParserHelper
 	//
 	private function parseList()
 	{
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__Achievements();
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         $rows = $box->find('li');
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$list = [];
 		$listPossible = [];
@@ -78,7 +82,7 @@ class Achievements extends ParserHelper
 				'points' => $points,
 				'timestamp' => $timestamp,
 			];
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		}
 
 		$this->add('list', $list);

@@ -1,24 +1,26 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
+
+use Lodestone\Modules\{Logger,XIVDB};
 
 /**
- * Class CharacterFollowing
- * @package Sync\Parser
+ * Class Linkshell
+ * @package src\Parser
  */
-class CharacterFollowing extends ParserHelper
+class Linkshell extends ParserHelper
 {
     /**
-     * Parse FC members
-     * @param $html
+     * @param bool|string $html
      * @return array|bool
      */
-	public function parse($html)
-	{
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+    public function parse($html = false)
+    {
         if (!$html) {
-            return false;
+            $html = $this->html;
         }
+
+        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
 		// check exists
         if ($this->is404($html)) {
@@ -27,7 +29,7 @@ class CharacterFollowing extends ParserHelper
 
         $this->setInitialDocument($html);
 
-        // no friends
+        // no members
         if ($this->getDocument()->find('.parts__zero', 0)) {
             return false;
         }
@@ -35,10 +37,7 @@ class CharacterFollowing extends ParserHelper
 		$started = microtime(true);
 		$this->pageCount();
 		$this->parseList();
-
-		output('PARSE DURATION: %s ms', [ round(microtime(true) - $started, 3) ]);
-
-        #show($this->data);die;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
 		return $this->data;
 	}
@@ -65,7 +64,7 @@ class CharacterFollowing extends ParserHelper
 	}
 
     /**
-     * Parse members
+     * Parse members, lazy suppressing of rank since not all members have one...
      */
 	private function parseList()
 	{
@@ -77,6 +76,7 @@ class CharacterFollowing extends ParserHelper
 			    'id' => explode('/', $node->find('a', 0)->getAttribute('href'))[3],
 			    'name' => trim($node->find('.entry__name')->plaintext),
                 'server' => trim($node->find('.entry__world')->plaintext),
+                'rank' => @trim($node->find('.entry__chara_info__linkshell span', 0)->plaintext),
                 'avatar' => explode('?', $node->find('.entry__chara__face img', 0)->src)[0],
             ];
 		}

@@ -1,21 +1,29 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
+
+use Lodestone\Modules\{Logger,XIVDB};
 
 /**
- * Class FreeCompanyMembers
- * @package Sync\Parser
+ * Class CharacterFriends
+ * @package src\Parser
  */
-class FreeCompanyMembers extends ParserHelper
+class CharacterFriends extends ParserHelper
 {
     /**
-     * Parse FC members
-     * @param $html
+     * @param bool|string $html
      * @return array|bool
      */
-	public function parse($html)
-	{
+    public function parse($html = false)
+    {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+        if (!$html) {
+            return false;
+        }
 
 		// check exists
         if ($this->is404($html)) {
@@ -24,7 +32,7 @@ class FreeCompanyMembers extends ParserHelper
 
         $this->setInitialDocument($html);
 
-        // no members
+        // no friends
         if ($this->getDocument()->find('.parts__zero', 0)) {
             return false;
         }
@@ -32,10 +40,7 @@ class FreeCompanyMembers extends ParserHelper
 		$started = microtime(true);
 		$this->pageCount();
 		$this->parseList();
-
-		output('PARSE DURATION: %s ms', [ round(microtime(true) - $started, 3) ]);
-
-        #show($this->data);die;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
 		return $this->data;
 	}
@@ -69,12 +74,11 @@ class FreeCompanyMembers extends ParserHelper
 		$rows = $this->getDocumentFromClassname('.ldst__window');
 
 		$characters = [];
-		foreach($rows->find('li.entry') as $node) {
+		foreach($rows->find('div.entry') as $node) {
 			$characters[] = [
 			    'id' => explode('/', $node->find('a', 0)->getAttribute('href'))[3],
 			    'name' => trim($node->find('.entry__name')->plaintext),
                 'server' => trim($node->find('.entry__world')->plaintext),
-                'rank' => trim($node->find('.entry__freecompany__info span', 0)->plaintext),
                 'avatar' => explode('?', $node->find('.entry__chara__face img', 0)->src)[0],
             ];
 		}

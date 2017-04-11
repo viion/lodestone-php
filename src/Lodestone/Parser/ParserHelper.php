@@ -1,18 +1,36 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
 
-use FastSimpleHTMLDom\Document;
+use Lodestone\Dom\Document;
 
 /**
  * Class ParserHelper
- * @package Sync\Parser
+ * @package src\Parser
  */
 class ParserHelper
 {
     use ParserHelperSpecial;
+
+    /** @var Document */
 	public $dom;
+
+	/** @var array */
 	public $data = [];
+
+	/** @var string */
+	public $html;
+
+    /**
+     * @param $url
+     * @return $this
+     */
+    public function url($url)
+    {
+        $http = new \Lodestone\Modules\HttpRequest();
+        $this->html = $http->get($url);
+        return $this;
+    }
 
     /**
      * Get a new document
@@ -106,7 +124,7 @@ class ParserHelper
         $html = explode("\n", $this->dom->innerHtml());
         if ($debug) {
             $html = explode("\n", htmlentities($this->dom->innerHtml()));
-            show($html);
+            print_r($html);
             die;
         }
 

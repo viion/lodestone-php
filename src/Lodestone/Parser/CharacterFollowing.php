@@ -1,20 +1,25 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
+
+use Lodestone\Modules\{Logger,XIVDB};
 
 /**
- * Class CharacterFriends
- * @package Sync\Parser
+ * Class CharacterFollowing
+ * @package src\Parser
  */
-class CharacterFriends extends ParserHelper
+class CharacterFollowing extends ParserHelper
 {
     /**
-     * Parse FC members
-     * @param $html
+     * @param bool|string $html
      * @return array|bool
      */
-	public function parse($html)
-	{
+    public function parse($html = false)
+    {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         if (!$html) {
             return false;
@@ -35,10 +40,7 @@ class CharacterFriends extends ParserHelper
 		$started = microtime(true);
 		$this->pageCount();
 		$this->parseList();
-
-		output('PARSE DURATION: %s ms', [ round(microtime(true) - $started, 3) ]);
-
-        #show($this->data);die;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
 		return $this->data;
 	}

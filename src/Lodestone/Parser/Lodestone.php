@@ -1,11 +1,13 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
+
+use Lodestone\Modules\{Logger,XIVDB};
 
 /**
  * Parse character data
  * Class Search
- * @package Sync\Parser
+ * @package src\Parser
  */
 class Lodestone extends ParserHelper
 {
@@ -13,16 +15,20 @@ class Lodestone extends ParserHelper
 
     function __construct()
     {
-        $this->xivdb = new \Sync\Modules\XIVDBApi();
+        $this->xivdb = new XIVDB();
     }
 
     /**
      * @param $html
      * @return array|bool
      */
-	public function parseTopics($html)
+	public function parseTopics($html = false)
 	{
-		$html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+        if (!$html) {
+            $html = $this->html;
+        }
+
+        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 		$this->setInitialDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list--topics');
@@ -46,8 +52,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseNotices($html)
+    public function parseNotices($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -70,8 +80,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseMaintenance($html)
+    public function parseMaintenance($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -99,8 +113,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseUpdates($html)
+    public function parseUpdates($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -123,8 +141,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseStatus($html)
+    public function parseStatus($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -152,8 +174,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseWorldStatus($html)
+    public function parseWorldStatus($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -175,8 +201,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseFeast($html)
+    public function parseFeast($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $this->setInitialDocument($html);
 
         $entries = $this->getDocument()->find('.wolvesden__ranking__table tr');
@@ -210,8 +240,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseDeepDungeon($html)
+    public function parseDeepDungeon($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $this->setInitialDocument($html);
 
         $entries = $this->getDocument()->find('.deepdungeon__ranking__wrapper__inner li');
@@ -253,8 +287,12 @@ class Lodestone extends ParserHelper
      * @param $lang
      * @return mixed
      */
-    public function parseDevTrackingUrl($html, $lang)
+    public function parseDevTrackingUrl($html = false, $lang = 'en')
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $trackerNumber = [
             'ja' => 0,
             'en' => 1,
@@ -272,8 +310,12 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseDevPostLinks($html)
+    public function parseDevPostLinks($html = false)
     {
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $this->setInitialDocument($html);
         $posts = $this->getDocument()->find('.blockbody li');
 
@@ -288,10 +330,19 @@ class Lodestone extends ParserHelper
     /**
      * @param $html
      * @param $postId
-     * @return array
+     * @return array|bool
      */
-    public function parseDevPost($html, $postId)
+    public function parseDevPost($html = false, $postId = false)
     {
+        if (!$postId) {
+            Logger::write(__CLASS__, __LINE__, 'Error: No post ID');
+            return false;
+        }
+
+        if (!$html) {
+            $html = $this->html;
+        }
+
         $this->setInitialDocument($html);
 
         $post = $this->getDocument();
@@ -312,7 +363,8 @@ class Lodestone extends ParserHelper
         // get post
         $post = $post->find('#post_'. $postId);
 
-        // todo : translate ...
+        // translate timestamp, this is rough at the moment...
+        // todo: find a better way to handle forum times.
         $timestamp = $post->find('.posthead .date', 0)->plaintext;
         $timestamp = trim(str_ireplace('&nbsp;', ' ', htmlentities($timestamp)));
         if (stripos($timestamp, 'Yesterday') !== false || stripos($timestamp, 'Today') !== false) {

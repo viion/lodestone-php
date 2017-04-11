@@ -2,7 +2,7 @@
     "name": "viion/lodestone-php",
     "type": "library",
     "keywords": ["ffxiv","php","parser","lodestone"],
-    "description": "Small lodestone parser built in PHP.",
+    "description": "Small lodestone parser built in PHP. Relys on the XIVDB API for some data conversion.",
     "homepage": "https://github.com/viion/lodestone-php",
     "license": "MIT",
     "authors": [
@@ -15,11 +15,11 @@
     ],
     "require": {
         "php": "^7.0",
-        "dimabdc/php-fast-simple-html-dom-parser": "^1.1"
+        "symfony/css-selector": "^3.2"
     },
     "autoload": {
         "psr-0": {
-            "Sync": "src/"
+            "Lodestone\\": "src/"
         }
     }
 }

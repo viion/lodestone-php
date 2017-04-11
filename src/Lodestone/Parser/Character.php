@@ -1,20 +1,25 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
+
+use Lodestone\Modules\{Logger,XIVDB};
 
 /**
- * Parse character data
  * Class Character
- * @package Sync\Parser
+ * @package src\Parser
  */
 class Character extends ParserHelper
 {
     /**
-     * @param $html
+     * @param bool|string $html
      * @return array|bool
      */
-	public function parse($html)
+	public function parse($html = false)
 	{
+	    if (!$html) {
+	        $html = $this->html;
+        }
+
 		$html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
 		// check exists
@@ -31,9 +36,7 @@ class Character extends ParserHelper
 		$this->parseCollectables();
 		$this->parseEquipGear();
         $this->parseActiveClass();
-		output('PARSE DURATION: %s ms', [ round(microtime(true) - $started, 3) ]);
-
-		//show($this->data);die;
+		Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
 		return $this->data;
 	}
@@ -44,52 +47,52 @@ class Character extends ParserHelper
 	private function parseProfile()
 	{
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		$box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// id
 		$data = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
 		$this->add('id', trim($data));
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// name
 		$data = $box->find('.frame__chara__name', 0)->plaintext;
 		$this->add('name', trim($data));
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// server
 		$data = $box->find('.frame__chara__world', 0)->plaintext;
 		$this->add('server', trim($data));
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// title
 		$this->add('title', null);
 		if ($title = $box->find('.frame__chara__title', 0)) {
 			$this->add('title', trim($title->plaintext));
 		}
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// avatar
 		$data = $box->find('.frame__chara__face', 0)->find('img', 0)->src;
 		$data = trim(explode('?', $data)[0]);
 		$this->add('avatar', $data);
 		$this->add('portrait', str_ireplace('c0_96x96', 'l0_640x873', $data));
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// biography
         $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
 		$data = trim($box->plaintext);
 		$this->add('biography', $data);
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// ----------------------
         // move to character profile detail
         $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
 		// ----------------------
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// race, clan, gender
         $data = $box->find('.character-block', 0)->find('.character-block__name')->innerHtml();
@@ -99,21 +102,21 @@ class Character extends ParserHelper
 		$this->add('clan', strip_tags(trim($clan)));
 		$this->add('gender', strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// nameday
 		$node = $box->find('.character-block', 1);
 		$data = $node->find('.character-block__birth', 0)->plaintext;
 		$this->add('nameday', $data);
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$this->add('guardian', [
 			'icon' => explode('?', $node->find('img', 0)->src)[0],
 			'name' => $node->find('.character-block__name', 0)->plaintext,
 		]);
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// city
         $box = $this->getDocumentFromRangeCustom(42,47);
@@ -122,7 +125,7 @@ class Character extends ParserHelper
             'name' => $box->find('.character-block__name', 0)->plaintext,
 		]);
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		// grand company (and sometimes FC if they're in an FC but not in a GC)
 		$this->add('grand_company', null);
@@ -154,7 +157,7 @@ class Character extends ParserHelper
             }
         }
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         // is in a grand company or free company?
         if ($node = $box->find('.character__freecompany__name', 0))
@@ -165,7 +168,7 @@ class Character extends ParserHelper
         }
 
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         unset($box);
 		unset($node);
@@ -176,14 +179,14 @@ class Character extends ParserHelper
      */
 	private function parseClassJobs()
 	{
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
 		// class jobs
 		$cj = [];
 		foreach($box->find('.character__job') as $node)
 		{
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
 			$node = $this->getDocumentFromHtml($node->outertext);
 
 			foreach($node->find('li') as $li)
@@ -211,10 +214,10 @@ class Character extends ParserHelper
 					],
 				];
 			}
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		}
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$this->add('classjobs', $cj);
 		unset($box);
@@ -227,21 +230,21 @@ class Character extends ParserHelper
      */
 	private function parseActiveClass()
 	{
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$xivdb = new \Sync\Modules\XIVDBApi();
+		$xivdb = new XIVDB();
 		$box = $this->getDocumentFromClassname('.character__profile__detail', 0);
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$level = trim($box->find('.character__class__data p', 0)->plaintext);
 		$level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$name = $box->find('.db-tooltip__item__category', 0)->plaintext;
 		$name = explode("'", $name)[0];
 		$name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
 		$name = trim($name);
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$id = $xivdb->getRoleId($name);
 
@@ -274,7 +277,7 @@ class Character extends ParserHelper
                 $id = $jobId;
             }
 		}
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
 		$this->add('active_class', [
 			'id' => $id,
@@ -290,14 +293,14 @@ class Character extends ParserHelper
      */
 	private function parseAttributes()
 	{
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__AttributesPart1();
 		//$box = $this->getDocumentFromClassname('.character__content', 1);
 
 		$stats = [];
 
 		// attributes
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
 			$name = $node->find('th')->plaintext;
 			$value = intval($node->find('td')->plaintext);
@@ -305,7 +308,7 @@ class Character extends ParserHelper
 		}
 
         // offensive properties
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 1)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $value = intval($node->find('td')->plaintext);
@@ -313,7 +316,7 @@ class Character extends ParserHelper
         }
 
         // defensive properties
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 2)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $value = intval($node->find('td')->plaintext);
@@ -321,7 +324,7 @@ class Character extends ParserHelper
         }
 
         // mental properties
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 4)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $value = intval($node->find('td')->plaintext);
@@ -331,7 +334,7 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart2();
 
         // status resistances
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $value = intval($node->find('td')->plaintext);
@@ -341,7 +344,7 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart3();
 
         // hp, mp, tp, cp, gp etc
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('li') as $node) {
             $name = $node->find('.character__param__text')->plaintext;
             $value = intval($node->find('span')->plaintext);
@@ -351,7 +354,7 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart4();
 
         // elementals
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('li') as $node) {
             $name = explode('__', $node->innerHtml())[1];
             $name = explode(' ', $name)[0];
@@ -359,7 +362,7 @@ class Character extends ParserHelper
             $stats['elemental'][$name] = $value;
         }
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		$this->add('stats', $stats);
 		unset($box);
 	}
@@ -369,20 +372,20 @@ class Character extends ParserHelper
      */
 	private function parseCollectables()
 	{
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__Collectables();
 		if (!$box) {
 		    return;
         }
 
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		if (!$box->find('.character__mounts', 0) || !$box->find('.character__minion', 0)) {
 		    return;
         }
 
 		// get mounts
 		$mounts = [];
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		foreach($box->find('.character__mounts ul li') as $node) {
 			$mounts[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
 		}
@@ -391,7 +394,7 @@ class Character extends ParserHelper
 
 		// get minions
 		$minions = [];
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 		foreach($box->find('.character__minion ul li') as $node) {
 			$minions[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
 		}
@@ -407,19 +410,19 @@ class Character extends ParserHelper
      */
 	private function parseEquipGear()
 	{
-        printtime(__FUNCTION__.'#'.__LINE__);
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__EquipGear();
 		//$box = $this->getDocumentFromClassname('.character__content', 0);
 
 		$gear = [];
 		foreach($box->find('.item_detail_box') as $i => $node) {
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $name = $node->find('.db-tooltip__item__name')->plaintext;
 			$id = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
 
 			// add mirage
             $mirageId = false;
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $mirageNode = $node->find('.db-tooltip__item__mirage');
             if ($mirageNode) {
                 $mirageNode = $mirageNode->find('a', 0);
@@ -430,7 +433,7 @@ class Character extends ParserHelper
 
             // add creator
             $creatorId = false;
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $creatorNode = $node->find('.db-tooltip__signature-character');
             if ($creatorNode) {
                 $creatorNode = $creatorNode->find('a',0);
@@ -441,7 +444,7 @@ class Character extends ParserHelper
 
             // add dye
             $dyeId = false;
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $dyeNode = $node->find('.stain');
             if ($dyeNode) {
                 $dyeNode = $dyeNode->find('a',0);
@@ -472,7 +475,7 @@ class Character extends ParserHelper
             }
 
 			// slot conditions, based on category
-            printtime(__FUNCTION__.'#'.__LINE__);
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
 			$slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
 
 			// if this is first item, its main-hand

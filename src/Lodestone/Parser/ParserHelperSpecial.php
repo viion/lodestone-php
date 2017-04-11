@@ -1,15 +1,23 @@
 <?php
 
-namespace Sync\Parser;
+namespace Lodestone\Parser;
 
 /**
  * Bunch of custom helpers
+ *
+ * These will require small maintenance whenever
+ * lodestone is updated as they trim html
+ * based on fixed positions. This is done for
+ * very explicit performance gains.
+ *
  * Class ParserHelperSpecial
- * @package Sync\Parser
+ * @package src\Parser
  */
 trait ParserHelperSpecial
 {
-
+    /**
+     * @return mixed
+     */
     protected function getSpecial__AttributesPart1()
     {
         $html = $this->dom->innerHtml();
@@ -28,6 +36,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getSpecial__AttributesPart2()
     {
         $html = $this->dom->innerHtml();
@@ -45,6 +56,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getSpecial__AttributesPart3()
     {
         $html = $this->dom->innerHtml();
@@ -63,6 +77,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getSpecial__AttributesPart4()
     {
         $html = $this->dom->innerHtml();
@@ -82,6 +99,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getSpecial__ClassJobs()
     {
         $html = $this->dom->innerHtml();
@@ -101,6 +121,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return bool
+     */
     protected function getSpecial__Collectables()
     {
         $html = $this->dom->innerHtml();
@@ -124,6 +147,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getSpecial__EquipGear()
     {
         $html = $this->dom->innerHtml();
@@ -143,6 +169,9 @@ trait ParserHelperSpecial
         return $dom;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getSpecial__Achievements()
     {
         $html = $this->dom->innerHtml();

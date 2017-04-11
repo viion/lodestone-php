@@ -1,44 +1,28 @@
 <?php
 
-namespace Sync\Modules;
-
-$XIVDB_FILE = __DIR__.'/xivdb_data.php';
-
-// Accessor
-$XIVDBDATA = false;
-if (file_exists($XIVDB_FILE)) {
-    $XIVDBDATA = require $XIVDB_FILE;
-}
+namespace Lodestone\Modules;
 
 /**
- * Class XIVDBApi
- * @package Sync\Modules
+ * Class XIVDB
+ * @package src\Modules
  */
-class XIVDBApi
+class XIVDB
 {
 	private $Http;
 	private $host = 'https://api.xivdb.com';
+	private $cache = __DIR__.'/xivdb.json';
 	private $data;
 
 	function __construct()
 	{
-		$this->Http = new \Sync\Modules\HttpRequest();
+		$this->Http = new HttpRequest;
 		$this->init();
 	}
 
 	public function init()
 	{
-		global $XIVDBDATA;
-
-		// check global var
-		if ($XIVDBDATA) {
-			$this->data = $XIVDBDATA;
-			return;
-		}
-
-		// if still no XIVDB, get it again
-		if (!$XIVDBDATA)
-		{
+	    // if no cache file, get the data
+	    if (!file_exists($this->cache)) {
 			$this->query('exp_table', '/data/exp_table');
 			$this->query('classjobs', '/data/classjobs');
 			$this->query('grand_company', '/data/grand_company');
@@ -50,12 +34,13 @@ class XIVDBApi
 
 			// simplify contents
 			$data = json_encode($this->data);
-			$data = base64_encode($data);
-
-			// save file
-			$data = sprintf('<?php return "%s"; ?>', $data);
-			file_put_contents(__DIR__.'/xivdb_data.php', $data);
+			file_put_contents($this->cache, $data);
 		}
+
+		// decode data
+        $this->data = file_get_contents($this->cache);
+		$this->data = json_decode($this->data, true);
+		Logger::write(__CLASS__, __LINE__, 'XIVDB Ready');
 	}
 
     /**
@@ -138,4 +123,13 @@ class XIVDBApi
 			$this->data['classjobs'][$obj['id']] = $obj;
 		}
 	}
+
+    /**
+     * Clear cache file
+     */
+	public function clearCache()
+    {
+        unlink($this->cache);
+        Logger::write(__CLASS__, __LINE__, 'XIVDB Cache Cleared');
+    }
 }

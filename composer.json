@@ -1,7 +1,18 @@
 {
     "name": "viion/lodestone-php",
+    "type": "library",
+    "keywords": ["ffxiv","php","parser","lodestone"],
     "description": "Small lodestone parser built in PHP.",
-
+    "homepage": "https://github.com/viion/lodestone-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Freeman",
+            "email": "josh@viion.co.uk",
+            "homepage": "http://xivdb.com",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^5.3.3 || ^7.0",
         "dimabdc/php-fast-simple-html-dom-parser": "^1.1",
@@ -9,7 +20,6 @@
         "doctrine/dbal": "~2.2",
         "twig/twig": "^1.25"
     },
-
     "autoload": {
         "psr-0": {
             "Sync": "src/"

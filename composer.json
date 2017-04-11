@@ -1,5 +1,5 @@
 {
-    "name": "viion/lodestone-nodejs",
+    "name": "viion/lodestone-php",
     "description": "Small lodestone parser built in PHP.",
 
     "require": {

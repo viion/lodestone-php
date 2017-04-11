@@ -1,5 +1,10 @@
 # lodestone-php
 
+[![Latest Stable Version](https://poser.pugx.org/viion/lodestone-php/v/stable)](https://packagist.org/packages/viion/lodestone-php)
+[![Total Downloads](https://poser.pugx.org/viion/lodestone-php/downloads)](https://packagist.org/packages/viion/lodestone-php)
+[![Latest Unstable Version](https://poser.pugx.org/viion/lodestone-php/v/unstable)](https://packagist.org/packages/viion/lodestone-php)
+[![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)
+
 Small lodestone parser built in PHP. The goals are to be **extremely fast** and very lightweight memory, a single character parse should be under 3mb memory. This is built for parsing thousands of characters a minute.
 
 On the very first parse, if XIVDB data is required it will download it. It will then be cached in an `xivdb.json` file. You can run:

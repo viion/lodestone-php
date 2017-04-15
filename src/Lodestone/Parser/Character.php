@@ -132,42 +132,28 @@ class Character extends ParserHelper
 		$this->add('grand_company', null);
         $this->add('free_company', null);
 
-        $box = $this->getDocumentFromRangeCustom(48,58);
+        $box = $this->getDocumentFromRangeCustom(48,64);
         if ($box)
         {
-            // is in a grand company or free company?
+            // Grand Company
+            if ($gcNode = $box->find('.character-block__name', 0)) {
+                list($name, $rank) = explode('/', $gcNode->plaintext);
+                $this->add('grand_company', [
+                    'icon' => explode('?', $box->find('img', 0)->src)[0],
+                    'name' => trim($name),
+                    'rank' => trim($rank),
+                ]);
+            }
+
+            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
+            // Free Company
             if ($node = $box->find('.character__freecompany__name', 0))
             {
-                // Free Company
                 $id = explode('/', $node->find('a', 0)->href)[3];
                 $this->add('free_company', $id);
             }
-            else
-            {
-                // Grand Company
-                $gcNode = $box->find('.character-block__name', 0);
-
-                if ($gcNode) {
-                    list($name, $rank) = explode('/', $gcNode->plaintext);
-                    $this->add('grand_company', [
-                        'icon' => explode('?', $box->find('img', 0)->src)[0],
-                        'name' => trim($name),
-                        'rank' => trim($rank),
-                    ]);
-                }
-            }
         }
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // is in a grand company or free company?
-        if ($node = $box->find('.character__freecompany__name', 0))
-        {
-            // Free Company
-            $id = explode('/', $node->find('a', 0)->href)[3];
-            $this->add('free_company', $id);
-        }
-
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 

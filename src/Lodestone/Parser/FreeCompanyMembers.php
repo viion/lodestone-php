@@ -78,6 +78,7 @@ class FreeCompanyMembers extends ParserHelper
 			    'name' => trim($node->find('.entry__name')->plaintext),
                 'server' => trim($node->find('.entry__world')->plaintext),
                 'rank' => trim($node->find('.entry__freecompany__info span', 0)->plaintext),
+                'rankicon' => trim($node->find('.entry__freecompany__info img', 0)->src),
                 'avatar' => explode('?', $node->find('.entry__chara__face img', 0)->src)[0],
             ];
 		}

@@ -6,7 +6,7 @@ require __DIR__.'/../vendor/autoload.php';
 // parse characters
 // view Lodestone/Modules/Routes for more urls.
 // todo: write a simple route wrapper.
-$url = sprintf(\Lodestone\Modules\Routes::LODESTONE_CHARACTERS_URL, 730968);
+$url = sprintf(\Lodestone\Modules\Routes::LODESTONE_CHARACTERS_URL, 16412004);
 $parser = new Lodestone\Parser\Character();
 $data = $parser->url($url)->parse();
 

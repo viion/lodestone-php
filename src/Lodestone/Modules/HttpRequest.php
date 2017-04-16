@@ -48,10 +48,7 @@ class HttpRequest
         curl_close($handle);
         unset($handle);
 
-        // not found or no response
-        if ($httpCode == 404 || $httpCode == 204) {
-            return false;
-        }
+        Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
 
         return $data;
 	}

@@ -23,6 +23,28 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array|bool
      */
+    public function parseBanners($html)
+    {
+        $this->setInitialDocument($html);
+
+        $entries = $this->getDocument()->find('#slider_bnr_area li');
+        $results = [];
+
+        foreach($entries as $entry) {
+            $results[] = [
+                'url' => $entry->find('a',0)->href,
+                'banner' => explode('?', $entry->find('img', 0)->getAttribute('src'))[0],
+            ];
+        }
+
+        $this->add('entries', $results);
+        return $this->data;
+    }
+
+    /**
+     * @param $html
+     * @return array|bool
+     */
 	public function parseTopics($html = false)
 	{
         if (!$html) {

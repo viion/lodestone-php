@@ -32,6 +32,7 @@ class Routes
     const LODESTONE_LINKSHELL_MEMBERS_URL = self::LODESTONE_URL .'lodestone/linkshell/%s/';
 
     // homepage
+    const LODESTONE_BANNERS = self::LODESTONE_URL .'lodestone/';
     const LODESTONE_NEWS = self::LODESTONE_URL .'lodestone/news/';
     const LODESTONE_TOPICS = self::LODESTONE_URL .'lodestone/topics/';
     const LODESTONE_NOTICES = self::LODESTONE_URL .'lodestone/news/category/1';

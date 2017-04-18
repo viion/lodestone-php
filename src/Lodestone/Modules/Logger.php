@@ -9,9 +9,6 @@ namespace Lodestone\Modules;
  */
 class Logger
 {
-    const ENABLE_WRITE = false;
-    const ENABLE_PRINT_TIME = false;
-
     public static $startTime = false;
     public static $lastTime = 0;
 
@@ -22,7 +19,7 @@ class Logger
      */
     public static function write($class, $line, $message)
     {
-        if (!self::ENABLE_WRITE) {
+        if (!defined('LOGGER_ENABLED')) {
             return;
         }
 
@@ -35,7 +32,7 @@ class Logger
      */
     public static function printtime($msg)
     {
-        if (!self::ENABLE_PRINT_TIME) {
+        if (!defined('LOGGER_ENABLE_PRINT_TIME')) {
             return;
         }
 

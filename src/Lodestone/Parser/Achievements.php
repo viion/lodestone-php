@@ -21,17 +21,17 @@ class Achievements extends ParserHelper
             $html = $this->html;
         }
 
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-
         // check if private
         if ($this->isPrivate($html)) {
             return 'private';
         }
 
         // check if doesnt exist
-		if ($this->is404($html)) {
-		    return false;
+        if ($this->is404($html)) {
+            return false;
         }
+
+        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
         $this->setInitialDocument($html);
 

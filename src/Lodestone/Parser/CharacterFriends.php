@@ -21,15 +21,15 @@ class CharacterFriends extends ParserHelper
             $html = $this->html;
         }
 
+        // check exists
+        if ($this->is404($html)) {
+            return false;
+        }
+
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         if (!$html) {
             return false;
         }
-
-		// check exists
-        if ($this->is404($html)) {
-			return false;
-		}
 
         $this->setInitialDocument($html);
 

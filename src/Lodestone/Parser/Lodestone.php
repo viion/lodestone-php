@@ -355,39 +355,27 @@ class Lodestone extends ParserHelper
      * @param $postId
      * @return array|bool
      */
-    public function parseDevPost($html = false, $postId = false)
+    public function parseDevPost($html, $postId)
     {
-        if (!$postId) {
-            Logger::write(__CLASS__, __LINE__, 'Error: No post ID');
-            return false;
-        }
-
-        if (!$html) {
-            $html = $this->html;
-        }
-
         $this->setInitialDocument($html);
 
         $post = $this->getDocument();
 
         // get postcount
-        $postcount = $post->find('.postpagestats', 0)->plaintext;
-        $postcount = explode(' to ', $postcount)[0];
+        $postcount = $post->find('#postpagestats_above', 0)->plaintext;
+        $postcount = explode(' of ', $postcount)[1];
         $postcount = filter_var($postcount, FILTER_SANITIZE_NUMBER_INT);
 
         $data = [
-            'post' => [
-                'title' => $post->find('.threadtitle a', 0)->plaintext,
-                'url' => LODESTONE_FORUMS . $post->find('.threadtitle a', 0)->getAttribute('href'),
-                'count' => $postcount,
-            ]
+            'title' => $post->find('.threadtitle a', 0)->plaintext,
+            'url' => LODESTONE_FORUMS . $post->find('.threadtitle a', 0)->getAttribute('href') . sprintf('?p=%s#post%s', $postId, $postId),
+            'post_count' => $postcount,
         ];
 
         // get post
         $post = $post->find('#post_'. $postId);
 
-        // translate timestamp, this is rough at the moment...
-        // todo: find a better way to handle forum times.
+        // todo : translate ...
         $timestamp = $post->find('.posthead .date', 0)->plaintext;
         $timestamp = trim(str_ireplace('&nbsp;', ' ', htmlentities($timestamp)));
         if (stripos($timestamp, 'Yesterday') !== false || stripos($timestamp, 'Today') !== false) {
@@ -425,7 +413,6 @@ class Lodestone extends ParserHelper
 
         // fix some post stuff
         $message = trim($post->find('.postcontent', 0)->innerHtml());
-        $message = str_ireplace('images/', LODESTONE_FORUMS .'images/', $message);
 
         // get signature
         $signature = false;
@@ -434,15 +421,42 @@ class Lodestone extends ParserHelper
         }
 
         // create data
-        $data['contents'] = [
-            'time' => $now->format('Y-m-d H:i:s'),
+        $data['user'] = [
             'username' => trim($post->find('.username span', 0)->plaintext),
             'color' => $color,
             'title' => trim($post->find('.usertitle', 0)->plaintext),
             'avatar' => LODESTONE_FORUMS . $post->find('.postuseravatar img', 0)->src,
-            'post' => trim($message),
             'signature' => $signature,
         ];
+
+        // clean up the message
+        $replace = [
+            "\t" => null,
+            "\n" => null,
+            '&#13;' => null,
+            'images/' => LODESTONE_FORUMS .'images/',
+            'members/' => LODESTONE_FORUMS .'members/',
+            'showthread.php' => LODESTONE_FORUMS .'showthread.php',
+        ];
+
+        $message = str_ireplace(array_keys($replace), $replace, $message);
+        $message = trim($message);
+
+        $dom = new \DOMDocument;
+        $dom->loadHTML($message);
+        $message = $dom->saveXML();
+
+        $remove = [
+            '<?xml version="1.0" standalone="yes"?>',
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">',
+            '<html>', '</html>', '<head>', '</head>',
+        ];
+
+        $message = str_ireplace($remove, null, $message);
+        $message = str_ireplace(['<body>', '</body>'], ['<article>', '</article>'], $message);
+
+        $data['time'] = $now->format('Y-m-d H:i:s');
+        $data['message'] = trim($message);
 
         return $data;
     }

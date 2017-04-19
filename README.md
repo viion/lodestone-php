@@ -40,3 +40,14 @@ Provides parsing:
 WIP:
 - Grand company ranking
 - Database pages
+
+
+# Getting setup
+
+The easiest way to get started is by using composer:
+
+```shell
+composer require viion/lodestone-php
+```
+
+If you are not familiar with composer, you can download this repository and you will need `symfony/css` repository as well. You would need to build your own auto-loader for this!

@@ -43,6 +43,42 @@ class Character extends ParserHelper
 	}
 
     /**
+     * @return bool
+     */
+	public function hash()
+    {
+        if (!$this->data) {
+            Logger::write(__CLASS__, __LINE__, 'No data to hash against, have you done a parse() call?');
+            return false;
+        }
+
+        // remove data that could change outside
+        // of the players controller (inconsistent fake hash)
+        $data = $this->data;
+
+        // urls could change
+        unset($data['avatar']);
+        unset($data['portrait']);
+        unset($data['grand_company']['icon']);
+        unset($data['grand_company']['icon']);
+
+        // you can't change these
+        unset($data['guardian']);
+        unset($data['city']);
+
+        // could be kicked from an FC
+        unset($data['free_company']);
+
+        // remove creator ids (creator could be deleted)
+        foreach($data['gear'] as $slot => $gear) {
+            unset($data['gear'][$slot]['creator_id']);
+        }
+
+        array_multisort($data);
+        return sha1(json_encode($data));
+    }
+
+    /**
      * Parse main profile bits
      */
 	private function parseProfile()

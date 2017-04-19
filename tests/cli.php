@@ -10,6 +10,7 @@ define('LOGGER_ENABLED', true);
 
 $option = isset($argv[1]) ? trim($argv[1]) : false;
 $id = isset($argv[2]) ? trim($argv[2]) : false;
+$hash = isset($argv[3]) ? trim($argv[3]) : false;
 if (!$option) {
     die('Please provide an option: character, fc, ls');
 }
@@ -35,5 +36,10 @@ switch($option) {
 // Get data from parser
 $data = $parser->url($url)->parse();
 
+if ($hash) {
+    $data = $parser->hash();
+}
+
 // Array of character data
 print_r($data);
+print_r("\n");

@@ -51,3 +51,18 @@ composer require viion/lodestone-php
 ```
 
 If you are not familiar with composer, you can download this repository and you will need `symfony/css` repository as well. You would need to build your own auto-loader for this!
+
+## Examples
+View the `tests/cli.php` for examples.
+
+The repo comes with a basic vagrant file for testing.
+
+## Generating a hash
+```php
+// Get data from parser
+$data = $parser->url($url)->parse();
+
+if ($hash) {
+    $data = $parser->hash();
+}
+```

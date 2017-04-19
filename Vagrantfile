@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # network
-  config.vm.network "private_network", ip: "145.145.145.145"
+  config.vm.network "private_network", ip: "#{1 + rand(255)}.#{1 + rand(255)}.#{1 + rand(255)}.#{1 + rand(255)}"
   config.vm.hostname = "lodestone.div"
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true

@@ -15,11 +15,12 @@ if (!$option) {
     die('Please provide an option: character, fc, ls');
 }
 
+$api = new \Lodestone\Api;
+
 // load parser from command arg
 switch($option) {
     case 'character':
-        $url = sprintf(\Lodestone\Modules\Routes::LODESTONE_CHARACTERS_URL, $id ? $id : 730968);
-        $parser = new Lodestone\Parser\Character();
+        $data = $api->getCharacter($id ? $id : 730968, $hash);
         break;
 
     case 'fc':
@@ -31,13 +32,6 @@ switch($option) {
         $url = sprintf(\Lodestone\Modules\Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id ? $id : '19984723346535274');
         $parser = new Lodestone\Parser\Linkshell();
         break;
-}
-
-// Get data from parser
-$data = $parser->url($url)->parse();
-
-if ($hash) {
-    $data = $parser->hash();
 }
 
 // Array of character data

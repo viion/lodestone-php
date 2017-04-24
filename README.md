@@ -1,20 +1,71 @@
-# lodestone-php
+# Final Fantasy XIV: Lodestone PHP Parser/SDK
 
 [![Latest Stable Version](https://poser.pugx.org/viion/lodestone-php/v/stable)](https://packagist.org/packages/viion/lodestone-php)
 [![Total Downloads](https://poser.pugx.org/viion/lodestone-php/downloads)](https://packagist.org/packages/viion/lodestone-php)
 [![Latest Unstable Version](https://poser.pugx.org/viion/lodestone-php/v/unstable)](https://packagist.org/packages/viion/lodestone-php)
 [![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)
 
-Small lodestone parser built in PHP. The goals are to be **extremely fast** and very lightweight memory, a single character parse should be under 3mb memory. This is built for parsing thousands of characters a minute.
+This project is a maintained PHP library for parsing data directly from the FFXIV Lodestone website.
 
-On the very first parse, if XIVDB data is required it will download it. It will then be cached in an `xivdb.json` file. You can run:
+The goal is to provide an extremely fast and lightweight library, it is built with the purpose of parsing as many characters as possible, key being: Low memory, and micro-timed parsing methods.
+
+> If you would like more data, consider the [XIVDB Rest API](https://github.com/xivdb/api).
+
+## Information
+
+|Language|PHP|7.0+|
+|---|---|---|
+|Parse|Lodestone|(Tokyo)|
+
+
+
+
+## Commands
+
+The easiest way to start is by using the quick API class:
 
 ```php
-$xivdb = new Lodestone\Modules\XIVDB();
-$xivdb->clearCache();
+$api = new \Lodestone\Api;
 ```
 
-Provides parsing:
+With this you can call:
+- `getLog()`
+- `searchCharacter(name, server, [page])`
+- `searchFreeCompany(name, server, [page])`
+- `searchLinkshell(name, server, [page])`
+
+- `getCharacter(id)`
+- `getCharacterFriends(id)`
+- `getCharacterFollowing(id)`
+- `getCharacterAchievements(id)`
+
+- `getFreeCompany(id)`
+- `getFreeCompanyMembers(id)`
+
+- `getLinkshellMembers(id)`
+
+- `getLodestoneBanners()`
+- `getLodestoneNews()`
+- `getLodestoneTopics()`
+- `getLodestoneNotices()`
+- `getLodestoneMaintenance()`
+- `getLodestoneUpdates()`
+- `getLodestoneStatus()`
+
+- `getWorldStatus()`
+- `getDevBlog()`
+- `getDevPosts()`
+- `getFeast()`
+- `getDeepDungeon()`
+
+```php
+$api = new \Lodestone\Api;
+$api->xivdb->clearCache();
+$api->xivdb->init();
+```
+
+### Provides parsing
+
 - Charcters
 - Characters friends
 - Characters followers
@@ -42,7 +93,7 @@ WIP:
 - Database pages
 
 
-# Getting setup
+## Getting setup
 
 The easiest way to get started is by using composer:
 
@@ -50,19 +101,50 @@ The easiest way to get started is by using composer:
 composer require viion/lodestone-php
 ```
 
+```php
+$api = new \Lodestone\Api;
+// api...
+```
+
 If you are not familiar with composer, you can download this repository and you will need `symfony/css` repository as well. You would need to build your own auto-loader for this!
 
-## Examples
+
+### Examples
 View the `tests/cli.php` for examples.
 
 The repo comes with a basic vagrant file for testing.
 
-## Generating a hash
-```php
-// Get data from parser
-$data = $parser->url($url)->parse();
+You can also view `tests/run.php` (wip)
 
-if ($hash) {
-    $data = $parser->hash();
+
+### basic usage
+
+The project comes with a very quick API class
+
+```php
+$api = new \Lodestone\Api;
+$character = $api->getCharacter(1234);
+```
+
+The API doesn't do any guess work with requests, that means if you do not have the ID for a character you must search for it first. This is intentional.
+
+```php
+$api = new \Lodestone\Api;
+
+// search for characters
+$characters = $api->searchCharacter('name', 'server');
+
+// loop through characters
+foreach($characters['results'] as $char) {
+    $char = (Object)$char;
+    $char = (Object)$api->getCharacter($char->id);
+    print_r($char->name);
 }
+```
+
+
+### Generating a hash
+
+```php
+$character = $api->getCharacter(1234, true);
 ```

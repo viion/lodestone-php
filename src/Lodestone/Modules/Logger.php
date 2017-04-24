@@ -11,6 +11,7 @@ class Logger
 {
     public static $startTime = false;
     public static $lastTime = 0;
+    public static $log = [];
 
     /**
      * @param $class
@@ -19,12 +20,14 @@ class Logger
      */
     public static function write($class, $line, $message)
     {
-        if (!defined('LOGGER_ENABLED')) {
-            return;
-        }
-
         $ms = substr(microtime(true), -4);
-        echo sprintf("[%s-%s][%s][%s] %s\n", date("Y-m-d H:i:s"), $ms, $class, $line, $message);
+        $line = sprintf("[%s-%s][%s][%s] %s\n", date("Y-m-d H:i:s"), $ms, $class, $line, $message);
+        self::$log[] = $line;
+
+        // only output if enabled
+        if (defined('LOGGER_ENABLED')) {
+            echo $line;
+        }
     }
 
     /**
@@ -47,6 +50,5 @@ class Logger
         $duration = $finish - self::$startTime;
         $duration = str_pad(round($duration < 0.0001 ? 0 : $duration, 6), 10, '0');
         echo sprintf("%s \t---\t Time Overall: %s \t---\t Diff from last: %s \n", $msg, $duration, $difference);
-
     }
 }

@@ -8,21 +8,28 @@ namespace Lodestone\Modules;
  */
 class XIVDB
 {
+    const HOST = 'https://api.xivdb.com';
+    const CACHE = __DIR__.'/xivdb.json';
+
 	private $Http;
-	private $host = 'https://api.xivdb.com';
-	private $cache = __DIR__.'/xivdb.json';
 	private $data;
 
+    /**
+     * XIVDB constructor.
+     */
 	function __construct()
 	{
 		$this->Http = new HttpRequest;
 		$this->init();
 	}
 
+    /**
+     * initialize
+     */
 	public function init()
 	{
 	    // if no cache file, get the data
-	    if (!file_exists($this->cache)) {
+	    if (!file_exists(self::CACHE)) {
 			$this->query('exp_table', '/data/exp_table');
 			$this->query('classjobs', '/data/classjobs');
 			$this->query('grand_company', '/data/grand_company');
@@ -34,11 +41,11 @@ class XIVDB
 
 			// simplify contents
 			$data = json_encode($this->data);
-			file_put_contents($this->cache, $data);
+			file_put_contents(self::CACHE, $data);
 		}
 
 		// decode data
-        $this->data = file_get_contents($this->cache);
+        $this->data = file_get_contents(self::CACHE);
 		$this->data = json_decode($this->data, true);
 		Logger::write(__CLASS__, __LINE__, 'XIVDB Ready');
 	}
@@ -67,9 +74,26 @@ class XIVDB
      */
 	private function query($name, $route)
 	{
-		$data = $this->Http->get($this->host . $route);
+		$data = $this->Http->get(self::HOST . $route);
 		$this->data[$name] = json_decode($data, true);
 	}
+
+    /**
+     * Clear cache file
+     */
+    public function clearCache()
+    {
+        unlink(self::CACHE);
+        Logger::write(__CLASS__, __LINE__, 'XIVDB Cache Cleared');
+    }
+
+    /**
+     * Clear cache file
+     */
+    public function checkCache()
+    {
+        // get latest patch
+    }
 
     /**
      * @param $name
@@ -124,12 +148,4 @@ class XIVDB
 		}
 	}
 
-    /**
-     * Clear cache file
-     */
-	public function clearCache()
-    {
-        unlink($this->cache);
-        Logger::write(__CLASS__, __LINE__, 'XIVDB Cache Cleared');
-    }
 }

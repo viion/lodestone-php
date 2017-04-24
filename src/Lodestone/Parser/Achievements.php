@@ -17,9 +17,7 @@ class Achievements extends ParserHelper
      */
     public function parse($html = false)
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
         // check if private
         if ($this->isPrivate($html)) {
@@ -31,6 +29,7 @@ class Achievements extends ParserHelper
             return false;
         }
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
         $this->setInitialDocument($html);

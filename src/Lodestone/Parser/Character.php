@@ -12,20 +12,19 @@ use Lodestone\Modules\Logger,
 class Character extends ParserHelper
 {
     /**
-     * @param bool|string $html
+     * @param bool $html
      * @return array|bool
      */
-	public function parse($html = false)
+	public function parse($hash = false)
 	{
-	    if (!$html) {
-	        $html = $this->html;
-        }
+	    $this->ensureHtml();
 
         // check exists
         if ($this->is404($html)) {
             return false;
         }
 
+        $html = $this->html;
 		$html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
         $this->setInitialDocument($html);
@@ -38,6 +37,10 @@ class Character extends ParserHelper
 		$this->parseEquipGear();
         $this->parseActiveClass();
 		Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
+
+		if ($hash) {
+		    return $this->hash();
+        }
 
 		return $this->data;
 	}

@@ -2,8 +2,8 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
+use Lodestone\Modules\Routes;
+use Lodestone\Modules\XIVDB;
 
 /**
  * Parse character data
@@ -14,6 +14,9 @@ class Lodestone extends ParserHelper
 {
     private $xivdb;
 
+    /**
+     * Lodestone constructor.
+     */
     function __construct()
     {
         $this->xivdb = new XIVDB();
@@ -23,8 +26,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array|bool
      */
-    public function parseBanners($html)
+    public function parseBanners()
     {
+        $this->ensureHtml();
+
+        $html = $this->html;
         $this->setInitialDocument($html);
 
         $entries = $this->getDocument()->find('#slider_bnr_area li');
@@ -33,7 +39,7 @@ class Lodestone extends ParserHelper
         foreach($entries as $entry) {
             $results[] = [
                 'url' => $entry->find('a',0)->href,
-                'banner' => explode('?', $entry->find('img', 0)->getAttribute('src'))[0],
+                'banner' => explode('?', $entry->find('img', 0)->src)[0],
             ];
         }
 
@@ -45,12 +51,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array|bool
      */
-	public function parseTopics($html = false)
+	public function parseTopics()
 	{
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 		$this->setInitialDocument($html);
 
@@ -61,7 +66,7 @@ class Lodestone extends ParserHelper
             $results[] = [
                 'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
                 'title' => $entry->find('.news__list--title')->plaintext,
-                'url' => $entry->find('.news__list--title a', 0)->getAttribute('href'),
+                'url' => $entry->find('.news__list--title a', 0)->href,
                 'banner' => $entry->find('.news__list--img img', 0)->getAttribute('src'),
                 'html' => $entry->find('.news__list--banner p')->innerHtml(),
             ];
@@ -75,12 +80,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseNotices($html = false)
+    public function parseNotices()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -91,7 +95,7 @@ class Lodestone extends ParserHelper
             $results[] = [
                 'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
                 'title' => $entry->find('.news__list--title')->plaintext,
-                'url' => LODESTONE_URL . $entry->find('.news__list--link', 0)->getAttribute('href'),
+                'url' => Routes::LODESTONE_URL . $entry->find('.news__list--link', 0)->href,
             ];
         }
 
@@ -103,12 +107,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseMaintenance($html = false)
+    public function parseMaintenance()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -123,7 +126,7 @@ class Lodestone extends ParserHelper
             $results[] = [
                 'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
                 'title' => $title,
-                'url' => LODESTONE_URL . $entry->find('.news__list--link', 0)->getAttribute('href'),
+                'url' => Routes::LODESTONE_URL . $entry->find('.news__list--link', 0)->href,
                 'tag' => $tag,
             ];
         }
@@ -136,12 +139,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseUpdates($html = false)
+    public function parseUpdates()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -152,7 +154,7 @@ class Lodestone extends ParserHelper
             $results[] = [
                 'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
                 'title' => $entry->find('.news__list--title')->plaintext,
-                'url' => LODESTONE_URL . $entry->find('.news__list--link', 0)->getAttribute('href'),
+                'url' => Routes::LODESTONE_URL . $entry->find('.news__list--link', 0)->href,
             ];
         }
 
@@ -164,12 +166,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseStatus($html = false)
+    public function parseStatus()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -184,7 +185,7 @@ class Lodestone extends ParserHelper
             $results[] = [
                 'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
                 'title' => $title,
-                'url' => LODESTONE_URL . $entry->find('.news__list--link', 0)->getAttribute('href'),
+                'url' => Routes::LODESTONE_URL . $entry->find('.news__list--link', 0)->href,
                 'tag' => $tag,
             ];
         }
@@ -197,12 +198,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseWorldStatus($html = false)
+    public function parseWorldStatus()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -224,12 +224,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseFeast($html = false)
+    public function parseFeast()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $this->setInitialDocument($html);
 
         $entries = $this->getDocument()->find('.wolvesden__ranking__table tr');
@@ -263,12 +262,11 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseDeepDungeon($html = false)
+    public function parseDeepDungeon()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $this->setInitialDocument($html);
 
         $entries = $this->getDocument()->find('.deepdungeon__ranking__wrapper__inner li');
@@ -306,15 +304,26 @@ class Lodestone extends ParserHelper
     }
 
     /**
+     * @return mixed
+     */
+    public function parseDevBlog()
+    {
+        $html = $this->html;
+        $xml = simplexml_load_string($html, null, LIBXML_NOCDATA);
+        $json = json_decode(json_encode($xml), true);
+        return $json;
+    }
+
+    /**
      * @param $html
      * @param $lang
      * @return mixed
      */
-    public function parseDevTrackingUrl($html = false, $lang = 'en')
+    public function parseDevTrackingUrl($lang = 'en')
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
+
+        $html = $this->html;
 
         $trackerNumber = [
             'ja' => 0,
@@ -325,7 +334,7 @@ class Lodestone extends ParserHelper
 
         $this->setInitialDocument($html);
 
-        $link = $this->getDocument()->find('.devtrack_btn', $trackerNumber)->getAttribute('href');
+        $link = $this->getDocument()->find('.devtrack_btn', $trackerNumber)->href;
         return $link;
     }
 
@@ -333,18 +342,18 @@ class Lodestone extends ParserHelper
      * @param $html
      * @return array
      */
-    public function parseDevPostLinks($html = false)
+    public function parseDevPostLinks()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
+
+        $html = $this->html;
 
         $this->setInitialDocument($html);
         $posts = $this->getDocument()->find('.blockbody li');
 
         $links = [];
         foreach($posts as $node) {
-            $links[] = $node->find('.posttitle a', 0)->getAttribute('href');
+            $links[] = Routes::LODESTONE_FORUMS . $node->find('.posttitle a', 0)->href;
         }
 
         return $links;
@@ -355,8 +364,11 @@ class Lodestone extends ParserHelper
      * @param $postId
      * @return array|bool
      */
-    public function parseDevPost($html, $postId)
+    public function parseDevPost($postId)
     {
+        $this->ensureHtml();
+
+        $html = $this->html;
         $this->setInitialDocument($html);
 
         $post = $this->getDocument();
@@ -368,7 +380,7 @@ class Lodestone extends ParserHelper
 
         $data = [
             'title' => $post->find('.threadtitle a', 0)->plaintext,
-            'url' => LODESTONE_FORUMS . $post->find('.threadtitle a', 0)->getAttribute('href') . sprintf('?p=%s#post%s', $postId, $postId),
+            'url' => Routes::LODESTONE_FORUMS . $post->find('.threadtitle a', 0)->href . sprintf('?p=%s#post%s', $postId, $postId),
             'post_count' => $postcount,
         ];
 
@@ -425,7 +437,7 @@ class Lodestone extends ParserHelper
             'username' => trim($post->find('.username span', 0)->plaintext),
             'color' => $color,
             'title' => trim($post->find('.usertitle', 0)->plaintext),
-            'avatar' => LODESTONE_FORUMS . $post->find('.postuseravatar img', 0)->src,
+            'avatar' => Routes::LODESTONE_FORUMS . $post->find('.postuseravatar img', 0)->src,
             'signature' => $signature,
         ];
 
@@ -434,9 +446,9 @@ class Lodestone extends ParserHelper
             "\t" => null,
             "\n" => null,
             '&#13;' => null,
-            'images/' => LODESTONE_FORUMS .'images/',
-            'members/' => LODESTONE_FORUMS .'members/',
-            'showthread.php' => LODESTONE_FORUMS .'showthread.php',
+            'images/' => Routes::LODESTONE_FORUMS .'images/',
+            'members/' => Routes::LODESTONE_FORUMS .'members/',
+            'showthread.php' => Routes::LODESTONE_FORUMS .'showthread.php',
         ];
 
         $message = str_ireplace(array_keys($replace), $replace, $message);

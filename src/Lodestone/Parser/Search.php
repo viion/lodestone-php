@@ -1,10 +1,6 @@
 <?php
 
 namespace Lodestone\Parser;
-
-use Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
-
 /**
  * Parse character data
  * Class Search
@@ -16,12 +12,11 @@ class Search extends ParserHelper
      * @param $html
      * @return array|bool
      */
-	public function parseCharacterSearch($html = false)
+	public function parseCharacterSearch()
 	{
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
 		$html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 		$this->setInitialDocument($html);
 
@@ -53,12 +48,11 @@ class Search extends ParserHelper
      * @param $html
      * @return array|bool
      */
-    public function parseFreeCompanySearch($html = false)
+    public function parseFreeCompanySearch()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 
@@ -95,12 +89,11 @@ class Search extends ParserHelper
      * @param $html
      * @return array|bool
      */
-    public function parseLinkshellSearch($html = false)
+    public function parseLinkshellSearch()
     {
-        if (!$html) {
-            $html = $this->html;
-        }
+        $this->ensureHtml();
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($html);
 

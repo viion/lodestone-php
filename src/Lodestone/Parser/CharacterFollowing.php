@@ -15,21 +15,20 @@ class CharacterFollowing extends ParserHelper
      * @param bool|string $html
      * @return array|bool
      */
-    public function parse($html = false)
+    public function parse()
     {
-        if (!$html) {
-            $html = $this->html;
+        $this->ensureHtml();
+
+        // check exists
+        if ($this->is404($html)) {
+            return false;
         }
 
+        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         if (!$html) {
             return false;
         }
-
-		// check exists
-        if ($this->is404($html)) {
-			return false;
-		}
 
         $this->setInitialDocument($html);
 

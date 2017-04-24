@@ -45,6 +45,7 @@ class Routes
     const LODESTONE_FEAST_SEASON_2 = self::LODESTONE_URL .'lodestone/ranking/thefeast/result/2/';
     const LODESTONE_FEAST_SEASON_3 = self::LODESTONE_URL .'lodestone/ranking/thefeast/result/3/';
     const LODESTONE_FEAST_SEASON_4 = self::LODESTONE_URL .'lodestone/ranking/thefeast/'; // CURRENT
+    const LODESTONE_FEAST_CURRENT = self::LODESTONE_FEAST_SEASON_4;
 
     // deep dungeon
     const LODESTONE_DEEP_DUNGEON = self::LODESTONE_URL .'lodestone/ranking/deepdungeon/';

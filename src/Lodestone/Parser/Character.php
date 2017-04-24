@@ -59,26 +59,71 @@ class Character extends ParserHelper
         // of the players controller (inconsistent fake hash)
         $data = $this->data;
 
-        // urls could change
-        unset($data['avatar']);
-        unset($data['portrait']);
-        unset($data['grand_company']['icon']);
-        unset($data['grand_company']['icon']);
+        // ---
+        // Much of the data is pulled out and stripped down, this
+        // is to try keep it consistent and not use array keys
+        // that are implemented through the parser and are not
+        // part of lodestone, it also bypasses json config issues.
+        // ---
 
-        // you can't change these
-        unset($data['guardian']);
-        unset($data['city']);
+        // build a tight small array
+        $arr = [];
+        $arr[] = $data['id'];
+        $arr[] = $data['name'];
+        $arr[] = $data['server'];
+        $arr[] = $data['title'];
+        $arr[] = $data['race'];
+        $arr[] = $data['clan'];
+        $arr[] = $data['gender'];
+        $arr[] = $data['nameday'];
+        $arr[] = $data['guardian']['name'];
+        $arr[] = $data['city']['name'];
+        $arr[] = $data['grand_company']['name'];
+        $arr[] = $data['grand_company']['rank'];
 
-        // could be kicked from an FC
-        unset($data['free_company']);
-
-        // remove creator ids (creator could be deleted)
-        foreach($data['gear'] as $slot => $gear) {
-            unset($data['gear'][$slot]['creator_id']);
+        foreach($data['classjobs'] as $classjob) {
+            // classjob _ level _ current exp _ max exp
+            $arr[] = sprintf('classjob_%s_%s_%s', $classjob['level'], $classjob['exp']['current'], $classjob['exp']['max']);
         }
 
-        array_multisort($data);
-        return sha1(json_encode($data));
+        foreach($data['stats'] as $statlist) {
+            foreach($statlist as $name => $value) {
+                // stat _ value
+                $arr[] = 'stat_'. $value;
+            }
+        }
+
+        foreach($data['mounts'] as $mount) {
+            // mount _ value
+            $arr[] = 'mount_'. strtolower($mount);
+        }
+
+        foreach($data['minions'] as $minion) {
+            // minion _ value
+            $arr[] = 'minion_'. strtolower($minion);
+        }
+
+        foreach($data['gear'] as $gear) {
+            // gear _ id _ materia count _ dye id _ mirage id
+            $arr[] = sprintf('gear_%s_%s_%s_%s', $gear['id'], count($gear['materia']), $gear['dye_id'], $gear['mirage_id']);
+        }
+
+        // active role _ id _ level
+        $arr[] = 'active_role_'. $data['active_class']['id'] .'_'. $data['active_class']['level'];
+
+        // lower all values
+        array_walk($arr, function(&$value) {
+            $value = strtolower($value);
+        });
+
+        // ensure same sorting
+        asort($arr);
+
+        // reduce to string
+        $arr = implode('|', $arr);
+
+        // provide sha1
+        return sha1($arr);
     }
 
     /**

@@ -58,6 +58,8 @@ With this you can call:
 - `getFeast()`
 - `getDeepDungeon()`
 
+To clear XIVDB cache:
+
 ```php
 $api = new \Lodestone\Api;
 $api->xivdb->clearCache();

@@ -18,13 +18,13 @@ class CharacterFollowing extends ParserHelper
     public function parse()
     {
         $this->ensureHtml();
+        $html = $this->html;
 
         // check exists
         if ($this->is404($html)) {
             return false;
         }
 
-        $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
         if (!$html) {
             return false;

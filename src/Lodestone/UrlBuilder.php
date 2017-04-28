@@ -23,9 +23,10 @@ class UrlBuilder
         $this->params[$param] = $value;
     }
 
-    /**
-     * @param $params
-     */
+  /**
+   * @param $params
+   * @throws \Exception
+   */
     public function addMulti($params)
     {
         if (!is_array($params)) {
@@ -55,10 +56,11 @@ class UrlBuilder
         return '?'. implode('&', $query);
     }
 
-    /**
-     * Special case because SE use hashed ID's for classes
-     * @param $classname
-     */
+  /**
+   * Special case because SE use hashed ID's for classes
+   * @param $classname
+   * @return string
+   */
     public function getDeepDungeonClassId($classname)
     {
         switch($classname) {

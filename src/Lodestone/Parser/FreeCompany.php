@@ -1,8 +1,7 @@
 <?php
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
+use Lodestone\Modules\Logger;
 
 /**
  * Class FreeCompany

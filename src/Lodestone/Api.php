@@ -75,7 +75,9 @@ class Api
     }
 
     /**
-     * @param $id
+     * @param $name
+     * @param $server
+     * @param $page
      * @return array|bool
      */
     public function searchLinkshell($name, $server, $page = false)
@@ -104,9 +106,10 @@ class Api
 
     /**
      * @param $id
+     * @param $page
      * @return array|bool
      */
-    public function getCharacterFriends($id)
+    public function getCharacterFriends($id, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
@@ -117,9 +120,10 @@ class Api
 
     /**
      * @param $id
+     * @param $page
      * @return array|bool
      */
-    public function getCharacterFollowing($id)
+    public function getCharacterFollowing($id, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
@@ -151,9 +155,10 @@ class Api
 
     /**
      * @param $id
+     * @param $page
      * @return array|bool
      */
-    public function getFreeCompanyMembers($id)
+    public function getFreeCompanyMembers($id, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
@@ -164,9 +169,10 @@ class Api
 
     /**
      * @param $id
+     * @param $page
      * @return array|bool
      */
-    public function getLinkshellMembers($id)
+    public function getLinkshellMembers($id, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);

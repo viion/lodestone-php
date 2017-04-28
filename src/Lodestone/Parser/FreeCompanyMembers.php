@@ -2,8 +2,7 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
+use Lodestone\Modules\Logger;
 
 /**
  * Class FreeCompanyMembers
@@ -12,10 +11,9 @@ use Lodestone\Modules\Logger,
 class FreeCompanyMembers extends ParserHelper
 {
     /**
-     * @param bool|string $html
      * @return array|bool
      */
-    public function parse($html = false)
+    public function parse()
     {
         $this->ensureHtml();
         $html = $this->html;

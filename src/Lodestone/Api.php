@@ -48,7 +48,7 @@ class Api
      * @param $id
      * @return array|bool
      */
-    public function searchCharacter($name, $server, $page = false)
+    public function searchCharacter($name, $server = false, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('q', str_ireplace(' ', '+', $name));
@@ -63,7 +63,7 @@ class Api
      * @param $id
      * @return array|bool
      */
-    public function searchFreeCompany($name, $server, $page = false)
+    public function searchFreeCompany($name, $server = false, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('q', str_ireplace(' ', '+', $name));
@@ -80,7 +80,7 @@ class Api
      * @param $page
      * @return array|bool
      */
-    public function searchLinkshell($name, $server, $page = false)
+    public function searchLinkshell($name, $server = false, $page = false)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('q', str_ireplace(' ', '+', $name));

@@ -47,7 +47,7 @@ class FreeCompany extends ParserHelper
 		$crest = [];
 		$imgs = $box->find('.entry__freecompany__crest__image img');
 		foreach($imgs as $img) {
-			$crest[] = $img->getAttribute('src');
+			$crest[] = str_ireplace('64x64', '128x128', $img->getAttribute('src'));
 		}
 		$this->add('crest', $crest);
 

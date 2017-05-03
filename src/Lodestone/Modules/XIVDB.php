@@ -118,7 +118,6 @@ class XIVDB
      */
 	public function searchForItem($name)
     {
-        //show($this->data['items']);
         foreach($this->data['items'] as $item) {
             if (strtolower($item['name_en']) == strtolower($name)) {
                 return $item;

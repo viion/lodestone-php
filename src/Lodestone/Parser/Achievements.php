@@ -2,8 +2,7 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
+use Lodestone\Modules\Logger;
 
 /**
  * Class Achievements
@@ -12,10 +11,9 @@ use Lodestone\Modules\Logger,
 class Achievements extends ParserHelper
 {
     /**
-     * @param bool|string $html
      * @return array|bool
      */
-    public function parse($html = false)
+    public function parse()
     {
         $this->ensureHtml();
         $html = $this->html;
@@ -25,7 +23,7 @@ class Achievements extends ParserHelper
             return 'private';
         }
 
-        // check if doesnt exist
+        // check if doesn't exist
         if ($this->is404($html)) {
             return false;
         }
@@ -37,8 +35,6 @@ class Achievements extends ParserHelper
         $started = microtime(true);
 		$this->parseList();
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
-
-        //show($this->data);die;
 
 		return $this->data;
 	}

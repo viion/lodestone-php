@@ -2,8 +2,7 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
+use Lodestone\Modules\Logger;
 
 /**
  * Class CharacterFriends
@@ -12,7 +11,6 @@ use Lodestone\Modules\Logger,
 class CharacterFriends extends ParserHelper
 {
     /**
-     * @param bool|string $html
      * @return array|bool
      */
     public function parse()

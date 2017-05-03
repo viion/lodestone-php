@@ -23,7 +23,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array|bool
      */
     public function parseBanners()
@@ -48,7 +47,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array|bool
      */
 	public function parseTopics()
@@ -77,7 +75,6 @@ class Lodestone extends ParserHelper
 	}
 
     /**
-     * @param $html
      * @return array
      */
     public function parseNotices()
@@ -104,7 +101,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseMaintenance()
@@ -136,7 +132,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseUpdates()
@@ -163,7 +158,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseStatus()
@@ -195,7 +189,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseWorldStatus()
@@ -221,7 +214,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseFeast()
@@ -259,7 +251,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseDeepDungeon()
@@ -315,7 +306,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @param $lang
      * @return mixed
      */
@@ -339,7 +329,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array
      */
     public function parseDevPostLinks()
@@ -360,7 +349,6 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @param $html
      * @param $postId
      * @return array|bool
      */

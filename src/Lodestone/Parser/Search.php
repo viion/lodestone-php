@@ -9,7 +9,6 @@ namespace Lodestone\Parser;
 class Search extends ParserHelper
 {
     /**
-     * @param $html
      * @return array|bool
      */
 	public function parseCharacterSearch()
@@ -45,7 +44,6 @@ class Search extends ParserHelper
 	}
 
     /**
-     * @param $html
      * @return array|bool
      */
     public function parseFreeCompanySearch()
@@ -86,7 +84,6 @@ class Search extends ParserHelper
     }
 
     /**
-     * @param $html
      * @return array|bool
      */
     public function parseLinkshellSearch()

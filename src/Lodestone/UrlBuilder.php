@@ -29,6 +29,10 @@ class UrlBuilder
    */
     public function addMulti($params)
     {
+        if (!$params) {
+            return;
+        }
+
         if (!is_array($params)) {
             throw new \Exception('Query params provided to the API function must be an array');
         }

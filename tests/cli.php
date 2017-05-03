@@ -15,24 +15,25 @@ if (!$option) {
     die('Please provide an option: character, fc, ls');
 }
 
+// create api instance
 $api = new \Lodestone\Api;
 
-// load parser from command arg
+// switch on options
 switch($option) {
     case 'character':
         $data = $api->getCharacter($id ? $id : 730968, $hash);
         break;
 
     case 'fc':
-        $url = sprintf(\Lodestone\Modules\Routes::LODESTONE_FREECOMPANY_URL, $id ? $id : '9231253336202687179');
-        $parser = new Lodestone\Parser\FreeCompany();
+        $data = $api->getFreeCompany($id ? $id : '9231253336202687179');
         break;
 
     case 'ls':
-        $url = sprintf(\Lodestone\Modules\Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id ? $id : '19984723346535274');
-        $parser = new Lodestone\Parser\Linkshell();
+        $data = $api->getLinkshellMembers($id ? $id : '19984723346535274');
         break;
 }
+
+
 
 // Array of character data
 print_r($data);

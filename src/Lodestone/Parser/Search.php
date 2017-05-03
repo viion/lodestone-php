@@ -11,18 +11,18 @@ class Search extends ParserHelper
     /**
      * @return array|bool
      */
-	public function parseCharacterSearch()
-	{
+    public function parseCharacterSearch()
+    {
         $this->ensureHtml();
 
         $html = $this->html;
-		$html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-		$this->setInitialDocument($html);
+        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+        $this->setInitialDocument($html);
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 
         // get total
-		$total = filter_var($box->find('.parts__total')->plaintext, FILTER_SANITIZE_NUMBER_INT);
+        $total = filter_var($box->find('.parts__total')->plaintext, FILTER_SANITIZE_NUMBER_INT);
         $this->add('total', $total);
 
         $results = [];
@@ -40,8 +40,8 @@ class Search extends ParserHelper
         $this->add('count', count($results));
         $this->add('results', $results);
 
-		return $this->data;
-	}
+        return $this->data;
+    }
 
     /**
      * @return array|bool

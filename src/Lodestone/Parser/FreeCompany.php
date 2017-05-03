@@ -27,93 +27,93 @@ class FreeCompany extends ParserHelper
 
         $this->setInitialDocument($html);
 
-		$started = microtime(true);
-		$this->parseHeader();
-		$this->parseProfile();
-		$this->parseFocus();
+        $started = microtime(true);
+        $this->parseHeader();
+        $this->parseProfile();
+        $this->parseFocus();
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
-		return $this->data;
-	}
+        return $this->data;
+    }
 
     /**
      * Parse header bits
      */
-	private function parseHeader()
-	{
-		$box = $this->getDocumentFromClassname('.ldst__window .entry', 0);
+    private function parseHeader()
+    {
+        $box = $this->getDocumentFromClassname('.ldst__window .entry', 0);
 
-		// crest
-		$crest = [];
-		$imgs = $box->find('.entry__freecompany__crest__image img');
-		foreach($imgs as $img) {
-			$crest[] = str_ireplace('64x64', '128x128', $img->getAttribute('src'));
-		}
-		$this->add('crest', $crest);
+        // crest
+        $crest = [];
+        $imgs = $box->find('.entry__freecompany__crest__image img');
+        foreach($imgs as $img) {
+            $crest[] = str_ireplace('64x64', '128x128', $img->getAttribute('src'));
+        }
+        $this->add('crest', $crest);
 
-		// grand company
-		$data = $box->find('.entry__freecompany__gc')->plaintext;
-		$data = explode('<', trim($data));
-		$data = trim($data[0]);
-		$this->add('grand_company', $data);
+        // grand company
+        $data = $box->find('.entry__freecompany__gc')->plaintext;
+        $data = explode('<', trim($data));
+        $data = trim($data[0]);
+        $this->add('grand_company', $data);
 
-		// name
-		$data = trim($box->find('.entry__freecompany__name')->plaintext);
-		$this->add('name', $data);
+        // name
+        $data = trim($box->find('.entry__freecompany__name')->plaintext);
+        $this->add('name', $data);
 
-		// server
-		$data = trim($box->find('.entry__freecompany__gc', 1)->plaintext);
-		$this->add('server', $data);
+        // server
+        $data = trim($box->find('.entry__freecompany__gc', 1)->plaintext);
+        $this->add('server', $data);
 
-		// id
-		$data = $box->find('a', 0)->getAttribute('href');
-		$data = trim(explode('/', $data)[3]);
-		$this->add('id', $data);
-	}
+        // id
+        $data = $box->find('a', 0)->getAttribute('href');
+        $data = trim(explode('/', $data)[3]);
+        $this->add('id', $data);
+    }
 
     /**
      * Parse profile bits
      */
-	private function parseProfile()
-	{
+    private function parseProfile()
+    {
         $box = $this->getDocumentFromClassname('.ldst__window', 0);
 
-		// tag
-		$data = $box->find('.freecompany__text__tag', 1)->plaintext;
-		$data = trim(str_ireplace(['«', '»'], null, $data));
-		$this->add('tag', $data);
+        // tag
+        $data = $box->find('.freecompany__text__tag', 1)->plaintext;
+        $data = trim(str_ireplace(['«', '»'], null, $data));
+        $this->add('tag', $data);
 
-		// formed
+        // formed
         $timestamp = $this->getTimestamp($box->find('.freecompany__text', 2));
-		$this->add('formed', $timestamp);
+        $this->add('formed', $timestamp);
 
-		// active members
-		$data = $box->find('.freecompany__text', 3)->plaintext;
-		$data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
-		$this->add('members', $data);
+        // active members
+        $data = $box->find('.freecompany__text', 3)->plaintext;
+        $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+        $this->add('members', $data);
 
-		// rank
+        // rank
         $data = $box->find('.freecompany__text', 4)->plaintext;
-		$data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
-		$this->add('rank', $data);
+        $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+        $this->add('rank', $data);
 
-		// ranking
-		$weekly = $box->find('.character__ranking__data th', 0)->plaintext;
-		$weekly = filter_var($weekly, FILTER_SANITIZE_NUMBER_INT);
+        // ranking
+        $weekly = $box->find('.character__ranking__data th', 0)->plaintext;
+        $weekly = filter_var($weekly, FILTER_SANITIZE_NUMBER_INT);
         $monthly = $box->find('.character__ranking__data th', 1)->plaintext;
         $monthly = filter_var($monthly, FILTER_SANITIZE_NUMBER_INT);
 
-		$this->add('ranking', [
-			'weekly' => $weekly,
-			'monthly' => $monthly,
-		]);
+        $this->add('ranking', [
+            'weekly' => $weekly,
+            'monthly' => $monthly,
+        ]);
 
-		// slogan
-		$data = $box->find('.freecompany__text__message', 0)->innertext;
-		$data = str_ireplace("<br/>", "\n", $data);
-		$this->add('slogan', $data);
+        // slogan
+        $data = $box->find('.freecompany__text__message', 0)->innertext;
+        $data = str_ireplace("<br/>", "\n", $data);
+        $this->add('slogan', $data);
 
-		// estate
+        // estate
         $this->add('estate', [
             'name' => $box->find('.freecompany__estate__name')->plaintext,
             'plot' => $box->find('.freecompany__estate__text')->plaintext,
@@ -130,12 +130,12 @@ class FreeCompany extends ParserHelper
             ];
         }
         $this->add('reputation', $reputation);
-	}
+    }
 
     /**
      * Parse FC
      */
-	private function parseFocus()
+    private function parseFocus()
     {
         $box = $this->getDocumentFromClassname('.ldst__window', 1);
 

@@ -49,13 +49,13 @@ class Lodestone extends ParserHelper
     /**
      * @return array|bool
      */
-	public function parseTopics()
-	{
+    public function parseTopics()
+    {
         $this->ensureHtml();
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-		$this->setInitialDocument($html);
+        $this->setInitialDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list--topics');
         $results = [];
@@ -71,8 +71,8 @@ class Lodestone extends ParserHelper
         }
 
         $this->add('entries', $results);
-		return $this->data;
-	}
+        return $this->data;
+    }
 
     /**
      * @return array
@@ -316,11 +316,11 @@ class Lodestone extends ParserHelper
         $html = $this->html;
 
         $trackerNumber = [
-            'ja' => 0,
-            'en' => 1,
-            'fr' => 2,
-            'de' => 3,
-        ][$lang];
+                             'ja' => 0,
+                             'en' => 1,
+                             'fr' => 2,
+                             'de' => 3,
+                         ][$lang];
 
         $this->setInitialDocument($html);
 

@@ -33,17 +33,17 @@ class Achievements extends ParserHelper
         $this->setInitialDocument($html);
 
         $started = microtime(true);
-		$this->parseList();
+        $this->parseList();
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
-		return $this->data;
-	}
+        return $this->data;
+    }
 
-	//
-	// Parse main profile bits
-	//
-	private function parseList()
-	{
+    //
+    // Parse main profile bits
+    //
+    private function parseList()
+    {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__Achievements();
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
@@ -51,14 +51,14 @@ class Achievements extends ParserHelper
         $rows = $box->find('li');
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$list = [];
-		$listPossible = [];
-		$pointsPossible = 0;
-		$pointsObtained = 0;
+        $list = [];
+        $listPossible = [];
+        $pointsPossible = 0;
+        $pointsObtained = 0;
 
-		foreach($rows as $node) {
-			$id = explode('/', $node->find('.entry__achievement', 0)->getAttribute('href'))[6];
-			$points = intval($node->find('.entry__achievement__number', 0)->plaintext);
+        foreach($rows as $node) {
+            $id = explode('/', $node->find('.entry__achievement', 0)->getAttribute('href'))[6];
+            $points = intval($node->find('.entry__achievement__number', 0)->plaintext);
 
             // timestamp
             $timestamp = $node->find('.entry__activity__time', 0)->plaintext;
@@ -70,30 +70,30 @@ class Achievements extends ParserHelper
                 $pointsObtained += $points;
             }
 
-			$pointsPossible += $points;
-			$listPossible[] = $id;
+            $pointsPossible += $points;
+            $listPossible[] = $id;
 
-			$list[$id] = [
-				'id' => $id,
-				'points' => $points,
-				'timestamp' => $timestamp,
-			];
+            $list[$id] = [
+                'id' => $id,
+                'points' => $points,
+                'timestamp' => $timestamp,
+            ];
             Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		}
+        }
 
-		$this->add('list', $list);
-		$this->add('list_possible', $listPossible);
-		$this->add('points', [
-			'possible' => $pointsPossible,
-			'obtained' => $pointsObtained,
-		]);
-	}
+        $this->add('list', $list);
+        $this->add('list_possible', $listPossible);
+        $this->add('points', [
+            'possible' => $pointsPossible,
+            'obtained' => $pointsObtained,
+        ]);
+    }
 
-	//
-	// Checks if achievements are private
-	//
-	private function isPrivate($html)
-	{
-	    return (stripos($html, 'You do not have permission to view this page.') > -1);
-	}
+    //
+    // Checks if achievements are private
+    //
+    private function isPrivate($html)
+    {
+        return (stripos($html, 'You do not have permission to view this page.') > -1);
+    }
 }

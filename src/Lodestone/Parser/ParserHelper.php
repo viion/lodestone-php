@@ -13,13 +13,13 @@ class ParserHelper
     use ParserHelperSpecial;
 
     /** @var Document */
-	public $dom;
+    public $dom;
 
-	/** @var array */
-	public $data = [];
+    /** @var array */
+    public $data = [];
 
-	/** @var string */
-	public $html;
+    /** @var string */
+    public $html;
 
     /**
      * @param $url
@@ -47,28 +47,28 @@ class ParserHelper
      * @param $html
      * @return Document
      */
-	protected function getDocumentFromHtml($html)
-	{
-		$dom = new Document($html);
-		unset($html);
+    protected function getDocumentFromHtml($html)
+    {
+        $dom = new Document($html);
+        unset($html);
 
-		return $dom;
-	}
+        return $dom;
+    }
 
     /**
      * Set initial document
      * @param $html
      */
-	protected function setInitialDocument($html)
-	{
-		$this->dom = $this->getDocumentFromHtml($html);
-	}
+    protected function setInitialDocument($html)
+    {
+        $this->dom = $this->getDocumentFromHtml($html);
+    }
 
     /**
      * Get the current document
      * @return mixed
      */
-	protected function getDocument()
+    protected function getDocument()
     {
         return $this->dom;
     }
@@ -79,18 +79,18 @@ class ParserHelper
      * @param int $i
      * @return bool|Document
      */
-	protected function getDocumentFromClassname($classname, $i = 0)
-	{
-	    $html = $this->dom->find($classname, $i);
-	    if (!$html) {
-	        return false;
+    protected function getDocumentFromClassname($classname, $i = 0)
+    {
+        $html = $this->dom->find($classname, $i);
+        if (!$html) {
+            return false;
         }
 
-		$html = $html->outertext;
-		$dom = $this->getDocumentFromHtml($html);
-		unset($html);
-		return $dom;
-	}
+        $html = $html->outertext;
+        $dom = $this->getDocumentFromHtml($html);
+        unset($html);
+        return $dom;
+    }
 
     /**
      * Gets a section of html from a start/finish point, this is considerably faster
@@ -99,7 +99,7 @@ class ParserHelper
      * @param $finish
      * @return Document
      */
-	protected function getDocumentFromRange($start, $finish)
+    protected function getDocumentFromRange($start, $finish)
     {
         $started = false;
         $html = [];
@@ -151,7 +151,7 @@ class ParserHelper
      * @param $classname
      * @return array
      */
-	protected function getDomArray($classname)
+    protected function getDomArray($classname)
     {
         $box = $this->getDocumentFromClassname($classname, 0);
         if (!$box) {
@@ -192,20 +192,20 @@ class ParserHelper
      * @param $name
      * @param $value
      */
-	protected function add($name, $value)
-	{
-		$this->data[$name] = $value;
-	}
+    protected function add($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
 
     /**
      * Get data from the array
      * @param $name
      * @return mixed
      */
-	protected function get($name)
-	{
-		return $this->data[$name];
-	}
+    protected function get($name)
+    {
+        return $this->data[$name];
+    }
 
     /**
      * Trim a bunch of html
@@ -214,46 +214,46 @@ class ParserHelper
      * @param $finishHtml
      * @return array|string
      */
-	protected function trim($html, $startHtml, $finishHtml)
-	{
-		// trim the dom
-		$html = explode("\n", $html);
-		$startIndex = 0;
-		$finishIndex = 0;
+    protected function trim($html, $startHtml, $finishHtml)
+    {
+        // trim the dom
+        $html = explode("\n", $html);
+        $startIndex = 0;
+        $finishIndex = 0;
 
-		// truncate down to just the character
-		foreach($html as $i => $line) {
-			// start of code
-			if (stripos($line, $startHtml) !== false) {
-				$startIndex = $i;
-				continue;
-			}
+        // truncate down to just the character
+        foreach($html as $i => $line) {
+            // start of code
+            if (stripos($line, $startHtml) !== false) {
+                $startIndex = $i;
+                continue;
+            }
 
-			if (stripos($line, $finishHtml) !== false) {
-				$finishIndex = ($i - $startIndex);
-				break;
-			}
-		}
+            if (stripos($line, $finishHtml) !== false) {
+                $finishIndex = ($i - $startIndex);
+                break;
+            }
+        }
 
-		$html = array_slice($html, $startIndex, $finishIndex);
+        $html = array_slice($html, $startIndex, $finishIndex);
 
-		// remove blank lines
-		foreach($html as $i => $line) {
-			if (!trim($line)) {
-				unset($html[$i]);
-			}
-		}
+        // remove blank lines
+        foreach($html as $i => $line) {
+            if (!trim($line)) {
+                unset($html[$i]);
+            }
+        }
 
-		$html = implode("\n", $html);
+        $html = implode("\n", $html);
 
-		return $html;
-	}
+        return $html;
+    }
 
     /**
      * States if a lodestone page is 404 not found.
      * @return bool
      */
-	protected function is404($html)
+    protected function is404($html)
     {
         return (stripos($html, 'The page you are searching for has either been removed, or the designated URL address is incorrect.') > -1);
     }

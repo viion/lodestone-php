@@ -29,15 +29,15 @@ class HttpRequest
      * @param $url
      * @return bool|string
      */
-	public function get($url)
-	{
-	    $url = str_ireplace(' ', '+', $url);
+    public function get($url)
+    {
+        $url = str_ireplace(' ', '+', $url);
         Logger::write(__CLASS__, __LINE__, 'GET: '. $url);
 
         // build handle
-		$handle = curl_init();
+        $handle = curl_init();
         curl_setopt_array($handle, self::CURL_OPTIONS);
-		curl_setopt($handle, CURLOPT_URL, $url);
+        curl_setopt($handle, CURLOPT_URL, $url);
 
         // handle response
         $response = curl_exec($handle);
@@ -51,5 +51,5 @@ class HttpRequest
         Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
 
         return $data;
-	}
+    }
 }

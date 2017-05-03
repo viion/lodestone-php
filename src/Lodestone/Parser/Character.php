@@ -15,9 +15,9 @@ class Character extends ParserHelper
      * @param bool $html
      * @return array|bool
      */
-	public function parse($hash = false)
-	{
-	    $this->ensureHtml();
+    public function parse($hash = false)
+    {
+        $this->ensureHtml();
         $html = $this->html;
 
         // check exists
@@ -25,30 +25,30 @@ class Character extends ParserHelper
             return false;
         }
 
-		$html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
         $this->setInitialDocument($html);
 
-		$started = microtime(true);
-		$this->parseProfile();
-		$this->parseClassJobs();
-		$this->parseAttributes();
-		$this->parseCollectables();
-		$this->parseEquipGear();
+        $started = microtime(true);
+        $this->parseProfile();
+        $this->parseClassJobs();
+        $this->parseAttributes();
+        $this->parseCollectables();
+        $this->parseEquipGear();
         $this->parseActiveClass();
-		Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
-		if ($hash) {
-		    return $this->hash();
+        if ($hash) {
+            return $this->hash();
         }
 
-		return $this->data;
-	}
+        return $this->data;
+    }
 
     /**
      * @return bool
      */
-	public function hash()
+    public function hash()
     {
         if (!$this->data) {
             Logger::write(__CLASS__, __LINE__, 'No data to hash against, have you done a parse() call?');
@@ -129,91 +129,91 @@ class Character extends ParserHelper
     /**
      * Parse main profile bits
      */
-	private function parseProfile()
-	{
+    private function parseProfile()
+    {
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		$box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
+        $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// id
-		$data = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
-		$this->add('id', trim($data));
+        // id
+        $data = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
+        $this->add('id', trim($data));
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// name
-		$data = $box->find('.frame__chara__name', 0)->plaintext;
-		$this->add('name', trim($data));
+        // name
+        $data = $box->find('.frame__chara__name', 0)->plaintext;
+        $this->add('name', trim($data));
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// server
-		$data = $box->find('.frame__chara__world', 0)->plaintext;
-		$this->add('server', trim($data));
+        // server
+        $data = $box->find('.frame__chara__world', 0)->plaintext;
+        $this->add('server', trim($data));
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// title
-		$this->add('title', null);
-		if ($title = $box->find('.frame__chara__title', 0)) {
-			$this->add('title', trim($title->plaintext));
-		}
+        // title
+        $this->add('title', null);
+        if ($title = $box->find('.frame__chara__title', 0)) {
+            $this->add('title', trim($title->plaintext));
+        }
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// avatar
-		$data = $box->find('.frame__chara__face', 0)->find('img', 0)->src;
-		$data = trim(explode('?', $data)[0]);
-		$this->add('avatar', $data);
-		$this->add('portrait', str_ireplace('c0_96x96', 'l0_640x873', $data));
+        // avatar
+        $data = $box->find('.frame__chara__face', 0)->find('img', 0)->src;
+        $data = trim(explode('?', $data)[0]);
+        $this->add('avatar', $data);
+        $this->add('portrait', str_ireplace('c0_96x96', 'l0_640x873', $data));
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// biography
+        // biography
         $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
-		$data = trim($box->plaintext);
-		$this->add('biography', $data);
+        $data = trim($box->plaintext);
+        $this->add('biography', $data);
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// ----------------------
+        // ----------------------
         // move to character profile detail
         $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
-		// ----------------------
+        // ----------------------
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// race, clan, gender
+        // race, clan, gender
         $data = $box->find('.character-block', 0)->find('.character-block__name')->innerHtml();
-		list($race, $data) = explode('<br>', html_entity_decode(trim($data)));
+        list($race, $data) = explode('<br>', html_entity_decode(trim($data)));
         list($clan, $gender) = explode('/', $data);
-		$this->add('race', strip_tags(trim($race)));
-		$this->add('clan', strip_tags(trim($clan)));
-		$this->add('gender', strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
+        $this->add('race', strip_tags(trim($race)));
+        $this->add('clan', strip_tags(trim($clan)));
+        $this->add('gender', strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// nameday
-		$node = $box->find('.character-block', 1);
-		$data = $node->find('.character-block__birth', 0)->plaintext;
-		$this->add('nameday', $data);
+        // nameday
+        $node = $box->find('.character-block', 1);
+        $data = $node->find('.character-block__birth', 0)->plaintext;
+        $this->add('nameday', $data);
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$this->add('guardian', [
-			'icon' => explode('?', $node->find('img', 0)->src)[0],
-			'name' => $node->find('.character-block__name', 0)->plaintext,
-		]);
+        $this->add('guardian', [
+            'icon' => explode('?', $node->find('img', 0)->src)[0],
+            'name' => $node->find('.character-block__name', 0)->plaintext,
+        ]);
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// city
+        // city
         $box = $this->getDocumentFromRangeCustom(42,47);
-		$this->add('city', [
+        $this->add('city', [
             'icon' => explode('?', $box->find('img', 0)->src)[0],
             'name' => $box->find('.character-block__name', 0)->plaintext,
-		]);
+        ]);
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		// grand company (and sometimes FC if they're in an FC but not in a GC)
-		$this->add('grand_company', null);
+        // grand company (and sometimes FC if they're in an FC but not in a GC)
+        $this->add('grand_company', null);
         $this->add('free_company', null);
 
         $box = $this->getDocumentFromRangeCustom(48,64);
@@ -242,87 +242,87 @@ class Character extends ParserHelper
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         unset($box);
-		unset($node);
-	}
+        unset($node);
+    }
 
     /**
      * Parse the characters class/jobs levels and exp.
      */
-	private function parseClassJobs()
-	{
+    private function parseClassJobs()
+    {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
-		// class jobs
-		$cj = [];
-		foreach($box->find('.character__job') as $node)
-		{
+        // class jobs
+        $cj = [];
+        foreach($box->find('.character__job') as $node)
+        {
             Logger::printtime(__FUNCTION__.'#'.__LINE__);
-			$node = $this->getDocumentFromHtml($node->outertext);
+            $node = $this->getDocumentFromHtml($node->outertext);
 
-			foreach($node->find('li') as $li)
-			{
-			    // class name
-				$name = trim($li->find('.character__job__name', 0)->plaintext);
-				$nameIndex = strtolower($name);
+            foreach($node->find('li') as $li)
+            {
+                // class name
+                $name = trim($li->find('.character__job__name', 0)->plaintext);
+                $nameIndex = strtolower($name);
 
-				// level
-				$level = trim($li->find('.character__job__level', 0)->plaintext);
-				$level = ($level == '-') ? 0 : intval($level);
+                // level
+                $level = trim($li->find('.character__job__level', 0)->plaintext);
+                $level = ($level == '-') ? 0 : intval($level);
 
-				// current exp
-				list($current, $max) = explode('/', $li->find('.character__job__exp', 0)->plaintext);
-				$current = ($current == '-') ? 0 : intval($current);
-				$max = ($max == '-') ? 0 : intval($max);
+                // current exp
+                list($current, $max) = explode('/', $li->find('.character__job__exp', 0)->plaintext);
+                $current = ($current == '-') ? 0 : intval($current);
+                $max = ($max == '-') ? 0 : intval($max);
 
-				// store
-				$cj[$nameIndex] = [
-					'name' => $name,
-					'level' => $level,
-					'exp' => [
-						'current' => $current,
-						'max' => $max,
-					],
-				];
-			}
+                // store
+                $cj[$nameIndex] = [
+                    'name' => $name,
+                    'level' => $level,
+                    'exp' => [
+                        'current' => $current,
+                        'max' => $max,
+                    ],
+                ];
+            }
             Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		}
+        }
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$this->add('classjobs', $cj);
-		unset($box);
-	}
+        $this->add('classjobs', $cj);
+        unset($box);
+    }
 
     /**
      * Parse the characters active class/job
      * THIS HAS TO RUN AFTER GEAR AS IT NEEDS
      * TO LOOK FOR SOUL CRYSTAL EQUIPPED
      */
-	private function parseActiveClass()
-	{
+    private function parseActiveClass()
+    {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$xivdb = new XIVDB();
-		$box = $this->getDocumentFromClassname('.character__profile__detail', 0);
+        $xivdb = new XIVDB();
+        $box = $this->getDocumentFromClassname('.character__profile__detail', 0);
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$level = trim($box->find('.character__class__data p', 0)->plaintext);
-		$level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
+        $level = trim($box->find('.character__class__data p', 0)->plaintext);
+        $level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$name = $box->find('.db-tooltip__item__category', 0)->plaintext;
-		$name = explode("'", $name)[0];
-		$name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
-		$name = trim($name);
+        $name = $box->find('.db-tooltip__item__category', 0)->plaintext;
+        $name = explode("'", $name)[0];
+        $name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
+        $name = trim($name);
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$id = $xivdb->getRoleId($name);
+        $id = $xivdb->getRoleId($name);
 
-		// Handle jobs
-		$gear = $this->get('gear');
-		$soulcrystal = isset($gear['soulcrystal']) ? $gear['soulcrystal']['id'] : false;
-		if ($soulcrystal) {
+        // Handle jobs
+        $gear = $this->get('gear');
+        $soulcrystal = isset($gear['soulcrystal']) ? $gear['soulcrystal']['id'] : false;
+        if ($soulcrystal) {
 
             $soulArray = [
                 '67fd81c209e' => 19, // pld
@@ -347,36 +347,36 @@ class Character extends ParserHelper
                 $name = $xivdb->get('classjobs')[$jobId]['name_en'];
                 $id = $jobId;
             }
-		}
+        }
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-		$this->add('active_class', [
-			'id' => $id,
-			'level' => $level,
-			'name' => $name,
-		]);
+        $this->add('active_class', [
+            'id' => $id,
+            'level' => $level,
+            'name' => $name,
+        ]);
 
-		unset($box);
-	}
+        unset($box);
+    }
 
     /**
      * Parse stats
      */
-	private function parseAttributes()
-	{
+    private function parseAttributes()
+    {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__AttributesPart1();
-		//$box = $this->getDocumentFromClassname('.character__content', 1);
+        //$box = $this->getDocumentFromClassname('.character__content', 1);
 
-		$stats = [];
+        $stats = [];
 
-		// attributes
+        // attributes
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
-			$name = $node->find('th')->plaintext;
-			$value = intval($node->find('td')->plaintext);
-			$stats['attributes'][$name] = $value;
-		}
+        foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
+            $name = $node->find('th')->plaintext;
+            $value = intval($node->find('td')->plaintext);
+            $stats['attributes'][$name] = $value;
+        }
 
         // offensive properties
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
@@ -434,64 +434,64 @@ class Character extends ParserHelper
         }
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		$this->add('stats', $stats);
-		unset($box);
-	}
+        $this->add('stats', $stats);
+        unset($box);
+    }
 
     /**
      * Minions and Mounts
      */
-	private function parseCollectables()
-	{
+    private function parseCollectables()
+    {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__Collectables();
-		if (!$box) {
-		    return;
+        if (!$box) {
+            return;
         }
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		if (!$box->find('.character__mounts', 0) || !$box->find('.character__minion', 0)) {
-		    return;
+        if (!$box->find('.character__mounts', 0) || !$box->find('.character__minion', 0)) {
+            return;
         }
 
-		// get mounts
-		$mounts = [];
+        // get mounts
+        $mounts = [];
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		foreach($box->find('.character__mounts ul li') as $node) {
-			$mounts[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-		}
+        foreach($box->find('.character__mounts ul li') as $node) {
+            $mounts[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+        }
 
-		$this->add('mounts', $mounts);
+        $this->add('mounts', $mounts);
 
-		// get minions
-		$minions = [];
+        // get minions
+        $minions = [];
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
-		foreach($box->find('.character__minion ul li') as $node) {
-			$minions[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-		}
+        foreach($box->find('.character__minion ul li') as $node) {
+            $minions[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+        }
 
-		$this->add('minions', $minions);
+        $this->add('minions', $minions);
 
-		// fin
-		unset($box);
-	}
+        // fin
+        unset($box);
+    }
 
     /**
      * Gear
      */
-	private function parseEquipGear()
-	{
+    private function parseEquipGear()
+    {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__EquipGear();
-		//$box = $this->getDocumentFromClassname('.character__content', 0);
+        //$box = $this->getDocumentFromClassname('.character__content', 0);
 
-		$gear = [];
-		foreach($box->find('.item_detail_box') as $i => $node) {
+        $gear = [];
+        foreach($box->find('.item_detail_box') as $i => $node) {
             Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $name = $node->find('.db-tooltip__item__name')->plaintext;
-			$id = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
+            $id = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
 
-			// add mirage
+            // add mirage
             $mirageId = false;
             Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $mirageNode = $node->find('.db-tooltip__item__mirage');
@@ -545,34 +545,34 @@ class Character extends ParserHelper
                 }
             }
 
-			// slot conditions, based on category
+            // slot conditions, based on category
             Logger::printtime(__FUNCTION__.'#'.__LINE__);
-			$slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
+            $slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
 
-			// if this is first item, its main-hand
-			$slot = ($i == 0) ? 'mainhand' : strtolower($slot);
+            // if this is first item, its main-hand
+            $slot = ($i == 0) ? 'mainhand' : strtolower($slot);
 
-			// if item is secondary tool or shield, its off-hand
-			$slot = (stripos($slot, 'secondary tool') !== false) ? 'offhand' : $slot;
-			$slot = ($slot == 'shield') ? 'offhand' : $slot;
+            // if item is secondary tool or shield, its off-hand
+            $slot = (stripos($slot, 'secondary tool') !== false) ? 'offhand' : $slot;
+            $slot = ($slot == 'shield') ? 'offhand' : $slot;
 
-			// if item is a ring, check if its ring 1 or 2
-			if ($slot == 'ring') {
-				$slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
-			}
+            // if item is a ring, check if its ring 1 or 2
+            if ($slot == 'ring') {
+                $slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
+            }
 
-			$slot = str_ireplace(' ', '', $slot);
-			$gear[$slot] = [
-			    'id' => $id,
+            $slot = str_ireplace(' ', '', $slot);
+            $gear[$slot] = [
+                'id' => $id,
                 'name' => $name,
                 'mirage_id' => $mirageId,
                 'creator_id' => $creatorId,
                 'dye_id' => $dyeId,
                 'materia' => $materia,
             ];
-		}
+        }
 
-		$this->add('gear', $gear);
-		unset($box);
-	}
+        $this->add('gear', $gear);
+        unset($box);
+    }
 }

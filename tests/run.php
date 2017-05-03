@@ -1,4 +1,17 @@
 <?php
+/**
+ *
+ * This is an automated tester, it obtains all methods in
+ * the API class and calls any that have "@test" on them.
+ *
+ * You can provide test parameters like so: "@test x,y,z"
+ * a max of 3 currently. If you do "@test ." it means no
+ * parameters (the dot is required for regex)
+ *
+ * If a response can typically be empty (eg no friends or
+ * followers) then place "@softfail true" in the docblock
+ *
+ */
 
 // composer auto loader
 require __DIR__.'/../vendor/autoload.php';
@@ -10,86 +23,88 @@ $logger->write('TESTS',__LINE__,'Running tests ...');
 
 // api
 $api = new \Lodestone\Api;
-
-// =======================================================================
-// Start tests
-// =======================================================================
-
-$tests = [
-    'searchCharacter' => false,
-    'searchFreeCompany' => false,
-    'searchLinkshell' => false,
-    'getCharacter' => false,
-    'getCharacterFriends' => false,
-    'getCharacterFollowing' => false,
-    'getCharacterAchievements' => false,
-    'getFreeCompany' => false,
-    'getFreeCompanyMembers' => false,
-    'getLinkshellMembers' => false,
-    'getLodestoneBanners' => false,
-    'getLodestoneNews' => false,
-    'getLodestoneTopics' => false,
-    'getLodestoneNotices' => false,
-    'getLodestoneMaintenance' => false,
-    'getLodestoneUpdates' => false,
-    'getLodestoneStatus' => false,
-    'getWorldStatus' => false,
-    'getDevBlog' => false,
-    'getDevPosts' => false,
-    'getFeast' => false,
-    'getDeepDungeon' => false,
+$apiMethods = get_class_methods($api);
+$apiTestsCount = count($apiMethods);
+$testResultArray = [];
+$testResult = [
+    'passed' => 0,
+    'failed' => 0,
+    'accept' => 0,
 ];
 
-$tests = (Object)$tests;
+// print number of api methods
+$logger->write('TESTS',__LINE__,$apiTestsCount .' Tests');
 
-// clear xivdb
-$api->xivdb->clearCache();
-$api->xivdb->init();
 
-// Test 1: searchCharacter
-$data = $api->searchCharacter('Premium Virtue', 'Phoenix');
-if ($data['results']) {
-    $tests->searchCharacter = true;
+// get reflector
+$reflector = new ReflectionClass(get_class($api));
+
+// loop through methods
+$start = microtime(true);
+foreach(get_class_methods($api) as $method) {
+    // get method docs
+    $methodDocs = $reflector->getMethod($method)->getDocComment();
+
+    // parse fields
+    if (preg_match_all('/@(\w+)\s+(.*)\r?\n/m', $methodDocs, $matches)){
+        $result = array_combine($matches[1], $matches[2]);
+    }
+
+    // is softfail?
+    $isSoftFail = isset($result['softfail']) ? true : false;
+
+    // if test instructions
+    if (isset($result['test']) && $result['test']) {
+        // remove dots
+        $test = str_ireplace('.', null, trim($result['test']));
+
+        // inform
+        $logger->write('TESTS',__LINE__,sprintf('Testing method: %s with data: %s', $method, $test));
+        $test = explode(',', $test);
+
+        // bit hacky, need to figure out a cleaner way
+        switch(count($test)) {
+            case 3:
+                $data = $api->$method($test[0], $test[1], $test[2]);
+                break;
+
+            case 2:
+                $data = $api->$method($test[0], $test[1]);
+                break;
+
+            case 1:
+                $data = $api->$method($test[0]);
+                break;
+
+            case 0:
+                $data = $api->$method();
+                break;
+        }
+
+        // get pass status
+        $status = ($data ? 'PASSED' : ($isSoftFail ? 'ACCEPT' : 'FAILED'));
+
+        // increment test count
+        $testResult[strtolower($status)]++;
+
+        // add to result array
+        $testResultArray[$method] = $status;
+
+        // write
+        $logger->write('TESTS',__LINE__,$status .' - '. $method);
+    }
+}
+$finish = microtime(true);
+
+// write report
+$logger->write('TESTS',__LINE__,'Passed: '. $testResult['passed'] .'/'. $apiTestsCount);
+$logger->write('TESTS',__LINE__,'Failed: '. $testResult['failed'] .'/'. $apiTestsCount);
+$logger->write('TESTS',__LINE__,'Accept: '. $testResult['accept'] .'/'. $apiTestsCount);
+$logger->write('TESTS',__LINE__,'Results:');
+foreach($testResultArray as $method => $status) {
+    $logger->write('TESTS',__LINE__,'   '. $method .' = '. $status);
 }
 
-// Test 2: searchFreeCompany
-$data = $api->searchFreeCompany('Equilibrium', 'Phoenix');
-if ($data['results']) {
-    $tests->searchFreeCompany = true;
-}
-
-// Test 3: searchLinkshell
-$data = $api->searchLinkshell('Monster Hunt', 'Moogle');
-if ($data['results']) {
-    $tests->searchLinkshell = true;
-}
-
-// Test 4: getCharacter
-// Test 5: getCharacterFriends
-// Test 6: getCharacterFollowing
-// Test 7: getCharacterAchievements
-// Test 8: getFreeCompany
-// Test 9: getFreeCompanyMembers
-// Test 10: getLinkshellMembers
-// Test 11: getLodestoneBanners
-// Test 12: getLodestoneNews
-// Test 13: getLodestoneTopics
-// Test 14: getLodestoneNotices
-// Test 15: getLodestoneMaintenance
-// Test 16: getLodestoneUpdates
-// Test 17: getLodestoneStatus
-// Test 18: getWorldStatus
-// Test 19: getDevBlog
-$data = $api->getDevPosts();
-if ($data) {
-    $tests->getDevPosts = true;
-}
-
-// Test 20: getDevPosts
-// Test 21: getFeast
-// Test 22: getDeepDungeon
-
-// show results
-foreach((array)$tests as $test => $status) {
-    $logger->write('TESTS',__LINE__,'Test: '. $test .' '. ($status ? 'PASS' : 'FAIL'));
-}
+// write timestamps
+$duration = round($finish - $start, 8);
+$logger->write('TESTS',__LINE__,'Duration: '. $duration);

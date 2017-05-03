@@ -45,6 +45,7 @@ class Api
     }
 
     /**
+     * @test Premium Virtue,Phoenix
      * @param $id
      * @return array|bool
      */
@@ -60,6 +61,7 @@ class Api
     }
 
     /**
+     * @test Equilibrium,Pheonix
      * @param $id
      * @return array|bool
      */
@@ -75,6 +77,7 @@ class Api
     }
 
     /**
+     * @test Monster Hunt
      * @param $name
      * @param $server
      * @param $page
@@ -92,6 +95,7 @@ class Api
     }
 
     /**
+     * @test 730968
      * @param $id
      * @param bool $hash
      * @return array|bool
@@ -105,6 +109,8 @@ class Api
     }
 
     /**
+     * @test 730968
+     * @softfail true
      * @param $id
      * @param $page
      * @return array|bool
@@ -119,6 +125,8 @@ class Api
     }
 
     /**
+     * @test 730968
+     * @softfail true
      * @param $id
      * @param $page
      * @return array|bool
@@ -133,6 +141,7 @@ class Api
     }
 
     /**
+     * @test 730968
      * @param $id
      * @param int $kind
      * @return array|bool
@@ -144,6 +153,7 @@ class Api
     }
 
     /**
+     * @test 9231253336202687179
      * @param $id
      * @return array|bool
      */
@@ -154,6 +164,7 @@ class Api
     }
 
     /**
+     * @test 9231253336202687179
      * @param $id
      * @param $page
      * @return array|bool
@@ -168,6 +179,7 @@ class Api
     }
 
     /**
+     * @test 19984723346535274
      * @param $id
      * @param $page
      * @return array|bool
@@ -182,6 +194,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneBanners()
@@ -190,6 +203,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneNews()
@@ -198,6 +212,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneTopics()
@@ -206,6 +221,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneNotices()
@@ -214,6 +230,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneMaintenance()
@@ -222,6 +239,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneUpdates()
@@ -230,6 +248,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getLodestoneStatus()
@@ -238,6 +257,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array
      */
     public function getWorldStatus()
@@ -246,6 +266,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return mixed
      */
     public function getDevBlog()
@@ -254,6 +275,7 @@ class Api
     }
 
     /**
+     * @test .
      * @return array|bool
      */
     public function getDevPosts()
@@ -295,6 +317,7 @@ class Api
     /**
      * Get params from: http://eu.finalfantasyxiv.com/lodestone/ranking/thefeast/
      *
+     * @test .
      * @param bool $season
      * @param array $params
      * @return array
@@ -318,6 +341,7 @@ class Api
     /**
      * Get params from: http://eu.finalfantasyxiv.com/lodestone/ranking/deepdungeon/
      *
+     * @test .
      * @param array $params
      * @return array
      */

@@ -296,10 +296,10 @@ class Api
      * Get params from: http://eu.finalfantasyxiv.com/lodestone/ranking/thefeast/
      *
      * @param bool $season
-     * @param bool $params
+     * @param array $params
      * @return array
      */
-    public function getFeast($season = false, $params = false)
+    public function getFeast($season = false, $params = [])
     {
         $url = Routes::LODESTONE_FEAST_CURRENT;
         switch($season) {
@@ -318,10 +318,10 @@ class Api
     /**
      * Get params from: http://eu.finalfantasyxiv.com/lodestone/ranking/deepdungeon/
      *
-     * @param bool $params
+     * @param array $params
      * @return array
      */
-    public function getDeepDungeon($params = false)
+    public function getDeepDungeon($params = [])
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->addMulti($params);

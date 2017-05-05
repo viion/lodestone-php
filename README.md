@@ -13,9 +13,9 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 
 ## Information
 
-|Language|PHP|7.0+|
-|---|---|---|
-|Parse|Lodestone|(Tokyo)|
+|Language|Website|
+|---|---|
+|PHP 7.0|Lodestone (Tokyo)|
 
 
 

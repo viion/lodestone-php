@@ -105,12 +105,12 @@ class Character extends ParserHelper
 
         foreach($data['mounts'] as $mount) {
             // mount _ value
-            $arr[] = 'mount_'. strtolower($mount);
+            $arr[] = 'mount_'. strtolower($mount['name']);
         }
 
         foreach($data['minions'] as $minion) {
             // minion _ value
-            $arr[] = 'minion_'. strtolower($minion);
+            $arr[] = 'minion_'. strtolower($minion['name']);
         }
 
         foreach($data['gear'] as $gear) {

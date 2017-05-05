@@ -19,9 +19,11 @@ if (!$option) {
 $api = new \Lodestone\Api;
 
 // switch on options
+$hash = false;
 switch($option) {
     case 'character':
         $data = $api->getCharacter($id ? $id : 730968, $hash);
+        $hash = $api->getCharacterHash($data);
         break;
 
     case 'fc':
@@ -37,4 +39,5 @@ switch($option) {
 
 // Array of character data
 print_r($data);
+print_r($hash);
 print_r("\n");

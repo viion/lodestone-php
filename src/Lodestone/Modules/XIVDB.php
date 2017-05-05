@@ -9,9 +9,13 @@ namespace Lodestone\Modules;
 class XIVDB
 {
     const HOST = 'https://api.xivdb.com';
+    const HOST_SECURE = 'https://secure.xivdb.com';
     const CACHE = __DIR__.'/xivdb.json';
 
+    /** @var HttpRequest */
     private $Http;
+
+    /** @var array */
     private $data;
 
     /**
@@ -30,13 +34,24 @@ class XIVDB
     {
         // if no cache file, get the data
         if (!file_exists(self::CACHE)) {
-            $this->query('exp_table', '/data/exp_table');
-            $this->query('classjobs', '/data/classjobs');
-            $this->query('grand_company', '/data/grand_company');
-            $this->query('minions', '/minion?columns=id,name_en');
-            $this->query('mounts', '/mount?columns=id,name_en');
-            $this->query('items', '/item?columns=id,name_en,lodestone_id');
+            $list = [
+                ['exp_table', '/data/exp_table'],
+                ['classjobs', '/data/classjobs'],
+                ['gc', '/data/gc'],
+                ['baseparams', '/data/baseparams'],
+                ['towns', '/data/towns'],
+                ['guardians', '/data/guardians'],
+                ['minions', '/minion?columns=id,name_en,icon'],
+                ['mounts', '/mount?columns=id,name_en,icon'],
+                ['items', '/item?columns=id,name_en,lodestone_id'],
+            ];
 
+            foreach($list as $dataset) {
+                list($index, $query) = $dataset;
+                $this->query($index, $query);
+            }
+
+            // array some data
             $this->arrange();
 
             // simplify contents
@@ -102,11 +117,9 @@ class XIVDB
      */
     public function getRoleId($name)
     {
-        $classjobs = $this->data['classjobs'];
-
-        foreach($classjobs as $cj) {
-            if (strtolower($cj['name_en']) == strtolower($name)) {
-                return $cj['id'];
+        foreach($this->data['classjobs'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
             }
         }
 
@@ -119,9 +132,9 @@ class XIVDB
      */
     public function searchForItem($name)
     {
-        foreach($this->data['items'] as $item) {
-            if (strtolower($item['name_en']) == strtolower($name)) {
-                return $item;
+        foreach($this->data['items'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj;
             }
         }
 
@@ -129,22 +142,170 @@ class XIVDB
     }
 
     /**
+     * @param $name
+     * @return bool
+     */
+    public function getMinionId($name)
+    {
+        foreach($this->data['minions'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getMountId($name)
+    {
+        foreach($this->data['mounts'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getBaseParamId($name)
+    {
+        foreach($this->data['baseparam'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getGrandCompanyId($name)
+    {
+        foreach($this->data['gc'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getGuardianId($name)
+    {
+        foreach($this->data['guardians'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getTownId($name)
+    {
+        foreach($this->data['towns'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $id
+     * @return mixed|string
+     */
+    public function getMountIcon($id)
+    {
+        if (!isset($this->data['mounts'][$id])) {
+            return false;
+        }
+
+        $icon = $this->data['mounts'][$id]['icon'];
+        $icon = $this->iconize($icon);
+        $icon = str_ireplace('004', '068', $icon) .'.png';
+        return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
+    }
+
+    /**
+     * @param $id
+     * @return mixed|string
+     */
+    public function getMinionIcon($id)
+    {
+        if (!isset($this->data['minions'][$id])) {
+            return false;
+        }
+
+        $icon = $this->data['minions'][$id]['icon'];
+        $icon = $this->iconize($icon);
+        $icon = str_ireplace('004', '068', $icon) .'.png';
+        return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
+    }
+
+    /**
+     * @param $number
+     * @return string
+     */
+    public function iconize($number)
+    {
+        $number = intval($number);
+
+        $path = [];
+
+        if (strlen($number) >= 6) {
+            $icon = str_pad($number, 5, "0", STR_PAD_LEFT);
+            $path[] = $icon[0] . $icon[1] . $icon[2] .'000';
+        } else {
+            $icon = '0' . str_pad($number, 5, "0", STR_PAD_LEFT);
+            $path[] = '0'. $icon[1] . $icon[2] .'000';
+        }
+
+        $path[] = $icon;
+        $icon = implode('/', $path);
+        return $icon;
+    }
+
+    /**
      * Arrange some data from the api
      */
     private function arrange()
     {
+        $data = [];
+
         // build array of items against their lodestone id
         foreach($this->data['items'] as $i => $obj) {
-            unset($this->data['items'][$i]);
-
             $id = $obj['lodestone_id'] ? $obj['lodestone_id'] : 'game_'. $obj['id'];
-            $this->data['items'][$id] = $obj;
+            $dataa['items'][$id] = $obj;
         }
 
-        // build array of items against their lodestone id
-        foreach($this->data['classjobs'] as $i => $obj) {
-            unset($this->data['classjobs'][$i]);
-            $this->data['classjobs'][$obj['id']] = $obj;
+        // build array of other content against their ids
+        foreach(['classjobs', 'minions', 'mounts', 'gc', 'baseparams', 'towns', 'guardians'] as $index) {
+            foreach($this->data[$index] as $i => $obj) {
+                $data[$index][$obj['id']] = $obj;
+            }
         }
+
+        $this->data = $data;
     }
 }

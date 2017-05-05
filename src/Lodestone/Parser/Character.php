@@ -11,6 +11,16 @@ use Lodestone\Modules\Logger,
  */
 class Character extends ParserHelper
 {
+    private $xivdb;
+
+    /**
+     * Character constructor.
+     */
+    function __construct()
+    {
+        $this->xivdb = new XIVDB();
+    }
+
     /**
      * @param bool $html
      * @return array|bool
@@ -196,18 +206,24 @@ class Character extends ParserHelper
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
+        $name = $node->find('.character-block__name', 0)->plaintext;
+        $id = $this->xivdb->getGuardianId($name);
         $this->add('guardian', [
+            'id' => $id,
             'icon' => explode('?', $node->find('img', 0)->src)[0],
-            'name' => $node->find('.character-block__name', 0)->plaintext,
+            'name' => $name,
         ]);
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         // city
         $box = $this->getDocumentFromRangeCustom(42,47);
+        $name = $box->find('.character-block__name', 0)->plaintext;
+        $id = $this->xivdb->getTownId($name);
         $this->add('city', [
+            'id' => $id,
             'icon' => explode('?', $box->find('img', 0)->src)[0],
-            'name' => $box->find('.character-block__name', 0)->plaintext,
+            'name' => $name,
         ]);
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
@@ -222,7 +238,10 @@ class Character extends ParserHelper
             // Grand Company
             if ($gcNode = $box->find('.character-block__name', 0)) {
                 list($name, $rank) = explode('/', $gcNode->plaintext);
+                $id = $this->xivdb->getGrandCompanyId(trim($name));
+
                 $this->add('grand_company', [
+                    'id' => $id,
                     'icon' => explode('?', $box->find('img', 0)->src)[0],
                     'name' => trim($name),
                     'rank' => trim($rank),
@@ -266,6 +285,9 @@ class Character extends ParserHelper
                 $name = trim($li->find('.character__job__name', 0)->plaintext);
                 $nameIndex = strtolower($name);
 
+                // get id
+                $id = $this->xivdb->getRoleId($name);
+
                 // level
                 $level = trim($li->find('.character__job__level', 0)->plaintext);
                 $level = ($level == '-') ? 0 : intval($level);
@@ -277,6 +299,7 @@ class Character extends ParserHelper
 
                 // store
                 $cj[$nameIndex] = [
+                    'id' => $id,
                     'name' => $name,
                     'level' => $level,
                     'exp' => [
@@ -303,27 +326,29 @@ class Character extends ParserHelper
     {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-        $xivdb = new XIVDB();
         $box = $this->getDocumentFromClassname('.character__profile__detail', 0);
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
+        // level
         $level = trim($box->find('.character__class__data p', 0)->plaintext);
         $level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
+        // name
         $name = $box->find('.db-tooltip__item__category', 0)->plaintext;
         $name = explode("'", $name)[0];
         $name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
         $name = trim($name);
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-        $id = $xivdb->getRoleId($name);
+        // classjob id
+        $id = $this->xivdb->getRoleId($name);
 
         // Handle jobs
         $gear = $this->get('gear');
         $soulcrystal = isset($gear['soulcrystal']) ? $gear['soulcrystal']['id'] : false;
-        if ($soulcrystal) {
 
+        if ($soulcrystal) {
             $soulArray = [
                 '67fd81c209e' => 19, // pld
                 'a03321484cc' => 20, // mnk
@@ -344,10 +369,11 @@ class Character extends ParserHelper
 
             if ($jobId) {
                 $jobId = $soulArray[$soulcrystal];
-                $name = $xivdb->get('classjobs')[$jobId]['name_en'];
+                $name = $this->xivdb->get('classjobs')[$jobId]['name_en'];
                 $id = $jobId;
             }
         }
+
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         $this->add('active_class', [
@@ -458,7 +484,16 @@ class Character extends ParserHelper
         $mounts = [];
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__mounts ul li') as $node) {
-            $mounts[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+            // name
+            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+            $id = $this->xivdb->getMountId($name);
+            $icon = $this->xivdb->getMountIcon($id);
+
+            $mounts[] = [
+                'id' => $id,
+                'name' => $name,
+                'icon' => $icon,
+            ];
         }
 
         $this->add('mounts', $mounts);
@@ -467,7 +502,16 @@ class Character extends ParserHelper
         $minions = [];
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__minion ul li') as $node) {
-            $minions[] = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+            // name
+            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+            $id = $this->xivdb->getMinionId($name);
+            $icon = $this->xivdb->getMinionIcon($id);
+
+            $minions[] = [
+                'id' => $id,
+                'name' => $name,
+                'icon' => $icon,
+            ];
         }
 
         $this->add('minions', $minions);

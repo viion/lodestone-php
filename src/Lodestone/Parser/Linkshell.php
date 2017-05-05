@@ -31,7 +31,10 @@ class Linkshell extends ParserHelper
         if ($this->getDocument()->find('.parts__zero', 0)) {
             return false;
         }
-
+        
+        $box = $this->getDocumentFromClassname('.ldst__window .heading__linkshell', 0);
+        $data = trim($box->find('.heading__linkshell__name')->plaintext);
+        $this->add('name', $data);
         $started = microtime(true);
         $this->pageCount();
         $this->parseList();

@@ -49,7 +49,10 @@ class HttpRequest
         unset($handle);
 
         Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
-
-        return $data;
+	if ($httpCode == 404) {
+		return 404;
+	} else {
+        	return $data;
+        }
     }
 }

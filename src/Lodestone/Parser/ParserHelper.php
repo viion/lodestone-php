@@ -259,15 +259,6 @@ class ParserHelper
     }
 
     /**
-     * States if a lodestone page is 404 not found.
-     * @return bool
-     */
-    protected function is404($html)
-    {
-        return (stripos($html, 'The page you are searching for has either been removed, or the designated URL address is incorrect.') > -1);
-    }
-
-    /**
      * @param $html
      * @return false|null|string
      */

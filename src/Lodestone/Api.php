@@ -109,6 +109,17 @@ class Api
     }
 
     /**
+     * Get character has from pre-existing data
+     *
+     * @param $data
+     * @return mixed
+     */
+    public function getCharacterHash($data)
+    {
+        return (new Character())->setData((array)$data)->hash();
+    }
+
+    /**
      * @test 730968
      * @softfail true
      * @param $id

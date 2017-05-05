@@ -22,6 +22,15 @@ class ParserHelper
     public $html;
 
     /**
+     * @param $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
+    /**
      * @param $url
      * @return $this
      */

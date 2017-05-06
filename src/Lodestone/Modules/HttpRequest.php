@@ -31,37 +31,31 @@ class HttpRequest
      */
     public function get($url)
     {
-        $tries = 0;
-        do {
-	        $url = str_ireplace(' ', '+', $url);
-	        Logger::write(__CLASS__, __LINE__, 'GET: '. $url);
-	
-	        // build handle
-	        $handle = curl_init();
-	        curl_setopt_array($handle, self::CURL_OPTIONS);
-	        curl_setopt($handle, CURLOPT_URL, $url);
-	
-	        // handle response
-	        $response = curl_exec($handle);
-	        $hlength = curl_getinfo($handle, CURLINFO_HEADER_SIZE);
-	        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-	        $data = substr($response, $hlength);
-	
-	        curl_close($handle);
-	        unset($handle);
-	
-	        Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
-		if ($httpCode == 404) {
-			return 404;
-		}
-		if (empty($data)) {
-			$tries++;
-			sleep(5);
-			continue;
-		} else {
-		       	return $data;
-	        }
-        } while($tries < 5);
-        return false;
+        $url = str_ireplace(' ', '+', $url);
+        Logger::write(__CLASS__, __LINE__, 'GET: '. $url);
+
+        // build handle
+        $handle = curl_init();
+        curl_setopt_array($handle, self::CURL_OPTIONS);
+        curl_setopt($handle, CURLOPT_URL, $url);
+
+        // handle response
+        $response = curl_exec($handle);
+        $hlength = curl_getinfo($handle, CURLINFO_HEADER_SIZE);
+        $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        $data = substr($response, $hlength);
+
+        curl_close($handle);
+        unset($handle);
+
+        Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
+	if ($httpCode == 404) {
+		return 404;
+	}
+	if (empty($data)) {
+		return false;
+	} else {
+	       	return $data;
+        }
     }
 }

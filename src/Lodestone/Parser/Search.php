@@ -13,7 +13,9 @@ class Search extends ParserHelper
      */
     public function parseCharacterSearch()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -48,7 +50,9 @@ class Search extends ParserHelper
      */
     public function parseFreeCompanySearch()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -88,7 +92,9 @@ class Search extends ParserHelper
      */
     public function parseLinkshellSearch()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');

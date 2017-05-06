@@ -27,7 +27,9 @@ class Lodestone extends ParserHelper
      */
     public function parseBanners()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $this->setInitialDocument($html);
@@ -51,7 +53,9 @@ class Lodestone extends ParserHelper
      */
     public function parseTopics()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -79,7 +83,9 @@ class Lodestone extends ParserHelper
      */
     public function parseNotices()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -105,7 +111,9 @@ class Lodestone extends ParserHelper
      */
     public function parseMaintenance()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -136,7 +144,9 @@ class Lodestone extends ParserHelper
      */
     public function parseUpdates()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -162,7 +172,9 @@ class Lodestone extends ParserHelper
      */
     public function parseStatus()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -193,7 +205,9 @@ class Lodestone extends ParserHelper
      */
     public function parseWorldStatus()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
@@ -218,7 +232,9 @@ class Lodestone extends ParserHelper
      */
     public function parseFeast()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $this->setInitialDocument($html);
@@ -255,7 +271,9 @@ class Lodestone extends ParserHelper
      */
     public function parseDeepDungeon()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $this->setInitialDocument($html);
@@ -311,7 +329,9 @@ class Lodestone extends ParserHelper
      */
     public function parseDevTrackingUrl($lang = 'en')
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
 
@@ -333,7 +353,9 @@ class Lodestone extends ParserHelper
      */
     public function parseDevPostLinks()
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
 
@@ -354,7 +376,9 @@ class Lodestone extends ParserHelper
      */
     public function parseDevPost($postId)
     {
-        $this->ensureHtml();
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
+        }
 
         $html = $this->html;
         $this->setInitialDocument($html);

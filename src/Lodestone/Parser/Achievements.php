@@ -15,10 +15,9 @@ class Achievements extends ParserHelper
      */
     public function parse()
     {
-        if ($this->html == 404 || ($this->html == false) {
+        if ($this->html == 404 || $this->html == false) {
         	return $this->html;
         }
-        $this->ensureHtml();
         $html = $this->html;
 
         // check if private

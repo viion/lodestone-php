@@ -27,10 +27,9 @@ class Character extends ParserHelper
      */
     public function parse($hash = false)
     {
-        if ($this->html == 404 || ($this->html == false) {
+        if ($this->html == 404 || $this->html == false)) {
         	return $this->html;
         }
-        $this->ensureHtml();
         $html = $this->html;
 
 

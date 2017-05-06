@@ -42,16 +42,6 @@ class ParserHelper
     }
 
     /**
-     * @throws \Exception
-     */
-    protected function ensureHtml()
-    {
-        if (!$this->html) {
-            throw new \Exception('HTML not set, please run $parser->url() first');
-        }
-    }
-
-    /**
      * Get a new document
      * @param $html
      * @return Document

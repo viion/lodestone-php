@@ -15,13 +15,11 @@ class Linkshell extends ParserHelper
      */
     public function parse()
     {
+        if ($this->html == 404) {
+        	return 404;
+        }
         $this->ensureHtml();
         $html = $this->html;
-
-        // check exists
-        if ($this->is404($html)) {
-            return false;
-        }
 
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
@@ -31,7 +29,10 @@ class Linkshell extends ParserHelper
         if ($this->getDocument()->find('.parts__zero', 0)) {
             return false;
         }
-
+        
+        $box = $this->getDocumentFromClassname('.ldst__window .heading__linkshell', 0);
+        $data = trim($box->find('.heading__linkshell__name')->plaintext);
+        $this->add('name', $data);
         $started = microtime(true);
         $this->pageCount();
         $this->parseList();

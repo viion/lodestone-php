@@ -38,6 +38,7 @@ class XIVDB
                 ['exp_table', '/data/exp_table'],
                 ['classjobs', '/data/classjobs'],
                 ['gc', '/data/gc'],
+                //['gc_ranks', '/data/gc_ranks'],
                 ['baseparams', '/data/baseparams'],
                 ['towns', '/data/towns'],
                 ['guardians', '/data/guardians'],
@@ -177,7 +178,23 @@ class XIVDB
      */
     public function getBaseParamId($name)
     {
-        foreach($this->data['baseparam'] as $obj) {
+        // special, Lodestone only returns "Fire" "Water" etc
+        // however the attribute is named "Fire Resistance", to
+        // reduce multi-language, I will manually convert these
+        $manual = [
+            'fire' => 37,
+            'ice' => 38,
+            'wind' => 39,
+            'earth' => 40,
+            'thunder' => 41,
+            'water' => 42.
+        ];
+
+        if (isset($manual[strtolower($name)])) {
+            return $manual[strtolower($name)];
+        }
+
+        foreach($this->data['baseparams'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -193,6 +210,21 @@ class XIVDB
     public function getGrandCompanyId($name)
     {
         foreach($this->data['gc'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getGrandCompanyRankId($name)
+    {
+        foreach($this->data['gc_ranks'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }

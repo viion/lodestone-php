@@ -239,9 +239,11 @@ class Character extends ParserHelper
             if ($gcNode = $box->find('.character-block__name', 0)) {
                 list($name, $rank) = explode('/', $gcNode->plaintext);
                 $id = $this->xivdb->getGrandCompanyId(trim($name));
+                //$rankId = $this->xivdb->getGrandCompanyRankId(trim($rank));
 
                 $this->add('grand_company', [
                     'id' => $id,
+                    //'rank_id' => $rankId,
                     'icon' => explode('?', $box->find('img', 0)->src)[0],
                     'name' => trim($name),
                     'rank' => trim($rank),
@@ -392,7 +394,6 @@ class Character extends ParserHelper
     {
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__AttributesPart1();
-        //$box = $this->getDocumentFromClassname('.character__content', 1);
 
         $stats = [];
 
@@ -400,32 +401,52 @@ class Character extends ParserHelper
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->find('td')->plaintext);
-            $stats['attributes'][$name] = $value;
+            $stats['attributes'][] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         // offensive properties
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 1)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->find('td')->plaintext);
-            $stats['offensive'][$name] = $value;
+            $stats['offensive'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         // defensive properties
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 2)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->find('td')->plaintext);
-            $stats['defensive'][$name] = $value;
+            $stats['defensive'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         // mental properties
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 4)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->find('td')->plaintext);
-            $stats['mental'][$name] = $value;
+            $stats['mental'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         $box = $this->getSpecial__AttributesPart2();
@@ -434,8 +455,13 @@ class Character extends ParserHelper
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->find('td')->plaintext);
-            $stats['resistances'][$name] = $value;
+            $stats['resistances'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         $box = $this->getSpecial__AttributesPart3();
@@ -444,8 +470,13 @@ class Character extends ParserHelper
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('li') as $node) {
             $name = $node->find('.character__param__text')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->find('span')->plaintext);
-            $stats['core'][$name] = $value;
+            $stats['core'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         $box = $this->getSpecial__AttributesPart4();
@@ -455,8 +486,13 @@ class Character extends ParserHelper
         foreach($box->find('li') as $node) {
             $name = explode('__', $node->innerHtml())[1];
             $name = explode(' ', $name)[0];
+            $id = $this->xivdb->getBaseParamId($name);
             $value = intval($node->plaintext);
-            $stats['elemental'][$name] = $value;
+            $stats['elemental'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
         }
 
         Logger::printtime(__FUNCTION__.'#'.__LINE__);

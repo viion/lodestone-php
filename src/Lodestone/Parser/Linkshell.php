@@ -15,9 +15,6 @@ class Linkshell extends ParserHelper
      */
     public function parse()
     {
-        if ($this->html == 404) {
-        	return 404;
-        }
         $this->ensureHtml();
         $html = $this->html;
 

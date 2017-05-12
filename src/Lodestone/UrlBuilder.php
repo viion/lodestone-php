@@ -1,6 +1,7 @@
 <?php
 
 namespace Lodestone;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class UrlBuilder
@@ -33,9 +34,10 @@ class UrlBuilder
             return;
         }
 
-        if (!is_array($params)) {
-            throw new \Exception('Query params provided to the API function must be an array');
-        }
+        $validation  = new BaseValidator($params, "Query params provided to the API");
+        $validation
+            ->isArray()
+            ->validate();
 
         foreach($params as $param => $value) {
             if (in_array($param, ['class_job', 'subtype'])) {

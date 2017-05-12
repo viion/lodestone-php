@@ -10,14 +10,10 @@ use Lodestone\Modules\Logger;
 class FreeCompany extends ParserHelper
 {
     /**
-     * @param bool|string $html
      * @return array|bool
      */
-    public function parse($html = false)
+    public function parse()
     {
-        if ($this->html == 404) {
-        	return 404;
-        }
         $this->ensureHtml();
         $html = $this->html;
 

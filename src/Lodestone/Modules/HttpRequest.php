@@ -51,8 +51,11 @@ class HttpRequest
         Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
 	if ($httpCode == 404) {
 		return 404;
+	}
+	if (empty($data)) {
+		return false;
 	} else {
-        	return $data;
+	       	return $data;
         }
     }
 }

@@ -15,10 +15,9 @@ class CharacterFriends extends ParserHelper
      */
     public function parse()
     {
-        if ($this->html == 404) {
-        	return 404;
+        if ($this->html == 404 || $this->html == false) {
+        	return $this->html;
         }
-        $this->ensureHtml();
         $html = $this->html;
 
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');

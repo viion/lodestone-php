@@ -274,7 +274,13 @@ class ParserHelper
         return $timestamp ? date('Y-m-d H:i:s', $timestamp) : null;
     }
 
-    protected function checkIfPageExists() {
+    /**
+     * Very basic check if page is 404 or not.
+     *
+     * @throws \Exception
+     */
+    protected function checkIfPageExists()
+    {
         if ($this->html == 404) {
             throw new \Exception("Page not found.");
         }

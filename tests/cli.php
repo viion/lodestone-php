@@ -33,6 +33,10 @@ switch($option) {
     case 'ls':
         $data = $api->getLinkshellMembers($id ? $id : '19984723346535274');
         break;
+
+    case 'devposts':
+        $data = $api->getDevPosts();
+        break;
 }
 
 

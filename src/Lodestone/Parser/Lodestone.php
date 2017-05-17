@@ -453,7 +453,11 @@ class Lodestone extends ParserHelper
         ];
 
         $message = str_ireplace($remove, null, $message);
-        $message = str_ireplace(['<body>', '</body>'], ['<article>', '</article>'], $message);
+        $message = str_ireplace([
+            '<body>', '</body>', '&#xE2;&#x80;&#x99;',
+        ], [
+            '<article>', '</article>', "'",
+        ], $message);
 
         $data['time'] = $now->format('Y-m-d H:i:s');
         $data['message'] = trim($message);

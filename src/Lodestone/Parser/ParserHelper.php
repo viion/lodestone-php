@@ -3,6 +3,7 @@
 namespace Lodestone\Parser;
 
 use Lodestone\Dom\Document;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class ParserHelper
@@ -46,9 +47,12 @@ class ParserHelper
      */
     protected function ensureHtml()
     {
-        if (!$this->html) {
-            throw new \Exception('HTML not set, please run $parser->url() first');
-        }
+        $this->checkIfPageExists();
+
+        $validator = new BaseValidator($this->html, "HTML");
+        $validator
+            ->isInitialized()
+            ->validate();
     }
 
     /**
@@ -268,5 +272,17 @@ class ParserHelper
         $timestamp = trim(explode('(', $timestamp)[2]);
         $timestamp = trim(explode(',', $timestamp)[0]);
         return $timestamp ? date('Y-m-d H:i:s', $timestamp) : null;
+    }
+
+    /**
+     * Very basic check if page is 404 or not.
+     *
+     * @throws \Exception
+     */
+    protected function checkIfPageExists()
+    {
+        if ($this->html == 404) {
+            throw new \Exception("Page not found.");
+        }
     }
 }

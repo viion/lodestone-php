@@ -2,6 +2,9 @@
 
 namespace Lodestone\Modules;
 
+use Lodestone\Validator\HttpRequestValidator;
+use Lodestone\Validator\ValidationException;
+
 /**
  * Class HttpRequest
  * @package src\Modules
@@ -25,10 +28,11 @@ class HttpRequest
         CURLOPT_ENCODING => '',
     ];
 
-    /**
-     * @param $url
-     * @return bool|string
-     */
+  /**
+   * @param $url
+   * @return bool|string
+   * @throws ValidationException
+   */
     public function get($url)
     {
         $url = str_ireplace(' ', '+', $url);
@@ -51,9 +55,10 @@ class HttpRequest
         Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
 
         // specific conditions to return code on
-        if (in_array($httpCode, [403, 404, 500])) {
-            return $httpCode;
-        }
+        $validator = new HttpRequestValidator($httpCode, 'HTTP Response Code');
+        $validator
+            ->isNotHttpError()
+            ->validate();
 
         return $data;
     }

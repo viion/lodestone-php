@@ -39,8 +39,8 @@ class BaseValidator
      */
     public function isInitialized()
     {
-        if (!$this->object) {
-            $this->errors[] = new ValidationException($this->name . ' not set, please run url parser first');
+        if (is_null($this->object)) {
+            $this->errors[] = new ValidationException($this->name . ' not set.');
         }
 
         return $this;
@@ -51,7 +51,7 @@ class BaseValidator
      */
     public function isNotEmpty()
     {
-        if (!empty($this->object)) {
+        if (empty($this->object)) {
             $this->errors[] = ValidationException::emptyValidation($this->name);
         }
 

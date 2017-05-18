@@ -3,11 +3,6 @@
 namespace Lodestone\Validator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Stefan
- * Date: 18.05.2017
- * Time: 11:28
- *
  * Class HttpRequestValidator
  * @package Lodestone\Validator
  */

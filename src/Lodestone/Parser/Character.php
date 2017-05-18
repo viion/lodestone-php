@@ -2,7 +2,8 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger,
+use Lodestone\Validator\CharacterValidator,
+    Lodestone\Modules\Logger,
     Lodestone\Modules\XIVDB;
 
 /**
@@ -30,7 +31,6 @@ class Character extends ParserHelper
         $this->ensureHtml();
         $html = $this->html;
 
-
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
         $this->setInitialDocument($html);
@@ -43,6 +43,9 @@ class Character extends ParserHelper
         $this->parseEquipGear();
         $this->parseActiveClass();
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
+
+        // validate
+        $this->validate();
 
         if ($hash) {
             return $this->hash();
@@ -133,11 +136,28 @@ class Character extends ParserHelper
     }
 
     /**
+     * Validate character data
+     */
+    public function validate()
+    {
+        $validator = new CharacterValidator();
+
+        // run checks
+        $validator
+            ->set($this->data['id'], 'ID')->isNumeric()
+            ->set($this->data['name'], 'Name')->isValidCharacerName()
+            ->set($this->data['server'], 'Server')->isString()
+            ->set($this->data['title'], 'Title')->isString(true);
+
+        // validate all our checks
+        $validator->validate();
+    }
+
+    /**
      * Parse main profile bits
      */
     private function parseProfile()
     {
-
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
@@ -175,7 +195,6 @@ class Character extends ParserHelper
         $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
         $data = trim($box->plaintext);
         $this->add('biography', $data);
-
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         // ----------------------

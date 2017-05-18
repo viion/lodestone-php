@@ -9,9 +9,9 @@ namespace Lodestone\Validator;
  */
 class BaseValidator
 {
-    protected $object;
-    protected $name;
-    protected $errors;
+    public $object;
+    public $name;
+    public $errors;
 
     /**
      * BaseValidator constructor.
@@ -19,11 +19,21 @@ class BaseValidator
      * @param $object
      * @param $name
      */
-    public function __construct($object, $name)
+    public function __construct($object = null, $name = null)
+    {
+        $this->set($object, $name);
+        $this->errors = [];
+    }
+
+    /**
+     * @param $object
+     * @param $name
+     */
+    public function set($object, $name)
     {
         $this->object = $object;
         $this->name = $name;
-        $this->errors = [];
+        return $this;
     }
 
     /**
@@ -40,7 +50,7 @@ class BaseValidator
     public function isInitialized()
     {
         if (is_null($this->object)) {
-            $this->errors[] = new ValidationException($this->name . ' not set.');
+            $this->errors[] = ValidationException::notInitialized($this);
         }
 
         return $this;
@@ -52,7 +62,7 @@ class BaseValidator
     public function isNotEmpty()
     {
         if (empty($this->object)) {
-            $this->errors[] = ValidationException::emptyValidation($this->name);
+            $this->errors[] = ValidationException::emptyValidation($this);
         }
 
         return $this;
@@ -64,7 +74,7 @@ class BaseValidator
     public function isInteger()
     {
         if (!is_int($this->object)) {
-            $this->errors[] = ValidationException::integerValidation($this->name);
+            $this->errors[] = ValidationException::integerValidation($this);
         }
 
         return $this;
@@ -73,10 +83,27 @@ class BaseValidator
     /**
      * @return $this
      */
-    public function isString()
+    public function isNumeric()
     {
+        if (!is_numeric($this->object)) {
+            $this->errors[] = ValidationException::numericValidation($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $allowEmpty - if allow empty strings or not
+     * @return $this
+     */
+    public function isString($allowEmpty = false)
+    {
+        if ($allowEmpty && strlen($this->object) == 0) {
+            return $this;
+        }
+
         if (!is_string($this->object)) {
-            $this->errors[] = ValidationException::stringValidation($this->name);
+            $this->errors[] = ValidationException::stringValidation($this);
         }
 
         return $this;
@@ -88,7 +115,7 @@ class BaseValidator
     public function isArray()
     {
         if (!is_array($this->object)) {
-            $this->errors[] = ValidationException::arrayValidation($this->name);
+            $this->errors[] = ValidationException::arrayValidation($this);
         }
 
         return $this;

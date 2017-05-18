@@ -1,4 +1,9 @@
 <?php
+/**
+ * ----------------------------------------------------
+ * CLI tool to quickly test/debug specific API methods.
+ * ----------------------------------------------------
+ */
 
 // composer auto loader
 require __DIR__.'/../vendor/autoload.php';
@@ -38,8 +43,6 @@ switch($option) {
         $data = $api->getDevPosts();
         break;
 }
-
-
 
 // Array of character data
 print_r($data);

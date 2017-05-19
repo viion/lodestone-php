@@ -25,12 +25,25 @@ class ValidationException extends Exception
     }
 
     /**
+     * @param $validator
+     * @return string
+     */
+    public static function notInitialized($validator)
+    {
+        return new ValidationException($validator->name . ' is not set.');
+    }
+
+    /**
      * @param $name
      * @return ValidationException
      */
-    public static function emptyValidation($name)
+    public static function emptyValidation($validator)
     {
-        return new ValidationException($name . ' cannot be empty');
+        $message = sprintf("%s cannot be empty.",
+            $validator->name
+        );
+
+        return new ValidationException($message);
     }
 
     /**
@@ -38,35 +51,52 @@ class ValidationException extends Exception
      * @param $type
      * @return ValidationException
      */
-    public static function typeValidation($name, $type)
+    public static function typeValidation($validator, $type)
     {
-        return new ValidationException($name . ' is not of type ' . $type);
+        // convert values to string acceptable values
+        $name = $validator->name;
+        $object = is_array($validator->object)
+            ? json_encode($validator->object)
+            : $validator->object;
+
+        $message = sprintf("%s (%s) is not of type: %s.\n", $name, $object, $type);
+
+        return new ValidationException($message);
     }
 
     /**
-     * @param $name
+     * @param $validator
      * @return ValidationException
      */
-    public static function integerValidation($name)
+    public static function integerValidation($validator)
     {
-        return ValidationException::typeValidation($name, 'Integer');
+        return ValidationException::typeValidation($validator, 'Integer');
     }
 
     /**
-     * @param $name
+     * @param $validator
      * @return ValidationException
      */
-    public static function stringValidation($name)
+    public static function numericValidation($validator)
     {
-        return ValidationException::typeValidation($name, 'String');
+        return ValidationException::typeValidation($validator, 'Numeric');
     }
 
     /**
-     * @param $name
+     * @param $validator
      * @return ValidationException
      */
-    public static function arrayValidation($name)
+    public static function stringValidation($validator)
     {
-        return ValidationException::typeValidation($name, 'Array');
+        return ValidationException::typeValidation($validator, 'String');
+    }
+
+    /**
+     * @param $validator
+     * @return ValidationException
+     */
+    public static function arrayValidation($validator)
+    {
+        return ValidationException::typeValidation($validator, 'Array');
     }
 }

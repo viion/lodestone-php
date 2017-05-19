@@ -144,10 +144,10 @@ class Character extends ParserHelper
 
         // run checks
         $validator
-            ->set($this->data['id'], 'ID')->isNumeric()
-            ->set($this->data['name'], 'Name')->isValidCharacerName()
-            ->set($this->data['server'], 'Server')->isString()
-            ->set($this->data['title'], 'Title')->isString(true);
+            ->checkIf($this->data['id'], 'ID')->isNumeric()
+            ->checkIf($this->data['name'], 'Name')->isValidCharacerName()
+            ->checkIf($this->data['server'], 'Server')->isString()
+            ->checkIf($this->data['title'], 'Title')->isString(true);
 
         // validate all our checks
         $validator->validate();

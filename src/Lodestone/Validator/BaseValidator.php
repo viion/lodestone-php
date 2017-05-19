@@ -21,15 +21,16 @@ class BaseValidator
      */
     public function __construct($object = null, $name = null)
     {
-        $this->set($object, $name);
+        $this->checkIf($object, $name);
         $this->errors = [];
     }
 
-    /**
-     * @param $object
-     * @param $name
-     */
-    public function set($object, $name)
+  /**
+   * @param $object
+   * @param $name
+   * @return $this
+   */
+    public function checkIf( $object, $name)
     {
         $this->object = $object;
         $this->name = $name;

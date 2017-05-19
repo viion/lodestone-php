@@ -96,9 +96,9 @@ class Character extends ParserHelper
         }
 
         foreach($data['stats'] as $statlist) {
-            foreach($statlist as $name => $value) {
+            foreach($statlist as $name => $attr) {
                 // stat _ value
-                $arr[] = 'stat_'. $value;
+                $arr[] = 'stat_'. $attr['value'];
             }
         }
 

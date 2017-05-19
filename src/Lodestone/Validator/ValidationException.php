@@ -30,7 +30,7 @@ class ValidationException extends Exception
      */
     public static function notInitialized($validator)
     {
-        return new ValidationException($validator->object . ' is not set');
+        return new ValidationException($validator->name . ' is not set.');
     }
 
     /**
@@ -39,9 +39,8 @@ class ValidationException extends Exception
      */
     public static function emptyValidation($validator)
     {
-        $message = sprintf("%s (%s) cannot be empty.",
-            $validator->name,
-            $validator->object
+        $message = sprintf("%s cannot be empty.",
+            $validator->name
         );
 
         return new ValidationException($message);
@@ -54,9 +53,8 @@ class ValidationException extends Exception
      */
     public static function typeValidation($validator, $type)
     {
-        $message = sprintf("%s (%s) is not of type: %s.\n",
+        $message = sprintf("%s is not of type: %s.",
             $validator->name,
-            $validator->object,
             $type
         );
 

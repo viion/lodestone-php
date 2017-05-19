@@ -47,7 +47,7 @@ class BaseValidatorTest extends TestCase
 
             self::fail('Expected ValidationException');
         } catch (ValidationException $vex) {
-            self::assertEquals($this->name . ' not set.', $vex->getMessage());
+            self::assertEquals($this->name . ' is not set.', $vex->getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ class BaseValidatorTest extends TestCase
             self::fail('Expected ValidationException');
         } catch(ValidationException $vex) {
             // expected
-            self::assertEquals($this->name . ' cannot be empty', $vex->getMessage());
+            self::assertEquals($this->name . ' cannot be empty.', $vex->getMessage());
         }
     }
 
@@ -120,14 +120,29 @@ class BaseValidatorTest extends TestCase
         try {
             // when
             $validator
-              ->isString()
-              ->validate();
+                ->isString()
+                ->validate();
 
             self::fail('Expected ValidationException');
         } catch (ValidationException $vex) {
             // then
-            self::assertEquals($this->name . ' is not of type String', $vex->getMessage());
+            self::assertEquals($this->name . ' is not of type: String.', $vex->getMessage());
         }
+    }
+
+    /**
+     * Test if an empty string can pass the isString check
+     */
+    public function testIsStringWithEmptyString() {
+        // given
+        $string =  '';
+        $validator = new BaseValidator($string, 'Empty String');
+
+        // when
+        $result = $validator->isString()->validate();
+
+        // then
+        self::assertTrue($result);
     }
 
     /**
@@ -159,13 +174,13 @@ class BaseValidatorTest extends TestCase
         try {
             // when
             $validator
-              ->isArray()
-              ->validate();
+                ->isArray()
+                ->validate();
 
             self::fail('Expected ValidationException');
         } catch (ValidationException $vex) {
             // then
-            self::assertEquals($this->name . ' is not of type Array', $vex->getMessage());
+            self::assertEquals($this->name . ' is not of type: Array.', $vex->getMessage());
         }
     }
 
@@ -198,13 +213,58 @@ class BaseValidatorTest extends TestCase
         try {
             // when
             $validator
-            ->isInteger()
-            ->validate();
+                ->isInteger()
+                ->validate();
 
             self::fail('Expected ValidationException');
         } catch (ValidationException $vex) {
             // then
-            self::assertEquals($this->name . ' is not of type Integer', $vex->getMessage());
+            self::assertEquals($this->name . ' is not of type: Integer.', $vex->getMessage());
+        }
+    }
+
+    /**
+     * Test a validation of multiple values with checkIf
+     */
+    public function testComplexExampleWithMultipleObjects() {
+        // given
+        $stringValue = 'A String';
+        $intValue = 42;
+        $arrayValues = ['foo', 'bar'];
+        $validator = new BaseValidator();
+
+        // when
+        $result = $validator
+            ->checkIf($stringValue, 'String')->isString()
+            ->checkIf($intValue, 'Integer')->isInteger()
+            ->checkIf($arrayValues, 'Array')->isArray()
+            ->validate();
+
+        // then
+        self::assertTrue($result);
+    }
+
+    /**
+     * Test a validation of multiple values with checkIf where one is failing
+     */
+    public function testComplexExampleWithMultipleObjectsInCaseOfFailure() {
+        // given
+        $stringValue = 'A String';
+        $arrayValues = ['foo', 'bar'];
+        $validator = new BaseValidator();
+
+        try {
+            // when
+            $validator
+                ->checkIf($stringValue, 'String')->isString()
+                ->checkIf($arrayValues, 'Wrong')->isInteger()
+                ->checkIf($arrayValues, 'Array')->isArray()
+                ->validate();
+
+            self::fail('Expected ValidationException');
+        } catch (ValidationException $vex) {
+            // then
+            self::assertEquals('Wrong is not of type: Integer.', $vex->getMessage());
         }
     }
 }

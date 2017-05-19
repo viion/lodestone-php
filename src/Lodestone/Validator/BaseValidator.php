@@ -30,7 +30,7 @@ class BaseValidator
    * @param $name
    * @return $this
    */
-    public function checkIf( $object, $name)
+    public function checkIf($object, $name)
     {
         $this->object = $object;
         $this->name = $name;
@@ -94,14 +94,10 @@ class BaseValidator
     }
 
     /**
-     * @param $allowEmpty - if allow empty strings or not
      * @return $this
      */
-    public function isString($allowEmpty = false)
+    public function isString()
     {
-        if ($allowEmpty && strlen($this->object) == 0) {
-            return $this;
-        }
 
         if (!is_string($this->object)) {
             $this->errors[] = ValidationException::stringValidation($this);

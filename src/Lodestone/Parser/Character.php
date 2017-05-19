@@ -451,6 +451,19 @@ class Character extends ParserHelper
             ];
         }
 
+        // physical properties
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        foreach($box->find('.character__param__list', 3)->find('tr') as $node) {
+            $name = $node->find('th')->plaintext;
+            $id = $this->xivdb->getBaseParamId($name);
+            $value = intval($node->find('td')->plaintext);
+            $stats['physical'][$name] = [
+                'id' => $id,
+                'name' => $name,
+                'value' => $value
+            ];
+        }
+
         // mental properties
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 4)->find('tr') as $node) {

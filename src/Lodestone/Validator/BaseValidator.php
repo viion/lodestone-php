@@ -98,6 +98,21 @@ class BaseValidator
      */
     public function isString()
     {
+        if (!is_string($this->object)) {
+            $this->errors[] = ValidationException::stringValidation($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function isStringOrEmpty()
+    {
+        if (empty($this->object)) {
+            return $this;
+        }
 
         if (!is_string($this->object)) {
             $this->errors[] = ValidationException::stringValidation($this);

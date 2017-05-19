@@ -235,9 +235,9 @@ class BaseValidatorTest extends TestCase
 
         // when
         $result = $validator
-            ->checkIf($stringValue, 'String')->isString()
-            ->checkIf($intValue, 'Integer')->isInteger()
-            ->checkIf($arrayValues, 'Array')->isArray()
+            ->check($stringValue, 'String')->isString()
+            ->check($intValue, 'Integer')->isInteger()
+            ->check($arrayValues, 'Array')->isArray()
             ->validate();
 
         // then
@@ -256,9 +256,9 @@ class BaseValidatorTest extends TestCase
         try {
             // when
             $validator
-                ->checkIf($stringValue, 'String')->isString()
-                ->checkIf($arrayValues, 'Wrong')->isInteger()
-                ->checkIf($arrayValues, 'Array')->isArray()
+                ->check($stringValue, 'String')->isString()
+                ->check($arrayValues, 'Wrong')->isInteger()
+                ->check($arrayValues, 'Array')->isArray()
                 ->validate();
 
             self::fail('Expected ValidationException');

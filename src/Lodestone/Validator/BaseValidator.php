@@ -21,7 +21,7 @@ class BaseValidator
      */
     public function __construct($object = null, $name = null)
     {
-        $this->checkIf($object, $name);
+        $this->check($object, $name);
         $this->errors = [];
     }
 
@@ -30,7 +30,7 @@ class BaseValidator
    * @param $name
    * @return $this
    */
-    public function checkIf($object, $name)
+    public function check($object, $name)
     {
         $this->object = $object;
         $this->name = $name;

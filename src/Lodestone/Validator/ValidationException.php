@@ -53,10 +53,13 @@ class ValidationException extends Exception
      */
     public static function typeValidation($validator, $type)
     {
-        $message = sprintf("%s is not of type: %s.",
-            $validator->name,
-            $type
-        );
+        // convert values to string acceptable values
+        $name = $validator->name;
+        $object = is_array($validator->object)
+            ? json_encode($validator->object)
+            : $validator->object;
+
+        $message = sprintf("%s (%s) is not of type: %s.\n", $name, $object, $type);
 
         return new ValidationException($message);
     }

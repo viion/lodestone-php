@@ -114,11 +114,7 @@ class BaseValidator
             return $this;
         }
 
-        if (!is_string($this->object)) {
-            $this->errors[] = ValidationException::stringValidation($this);
-        }
-
-        return $this;
+       return isString();
     }
 
     /**

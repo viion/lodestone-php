@@ -458,6 +458,10 @@ class Lodestone extends ParserHelper
         ], [
             '<article>', '</article>', "'",
         ], $message);
+        
+        // dirty fix for iframes
+        // https://github.com/viion/lodestone-php/issues/22
+        $message = str_ireplace(['allowfullscreen=""/>'], ['allowfullscreen=""></iframe>'], $message);
 
         $data['time'] = $now->format('Y-m-d H:i:s');
         $data['message'] = trim($message);

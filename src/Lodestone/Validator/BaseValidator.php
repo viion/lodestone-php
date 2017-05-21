@@ -114,7 +114,7 @@ class BaseValidator
             return $this;
         }
 
-       return isString();
+       return $this->isString();
     }
 
     /**

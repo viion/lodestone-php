@@ -2,7 +2,11 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Validator\CharacterValidator,
+use Lodestone\Dom\Document;
+use Lodestone\Dom\Element;
+use Lodestone\Dom\NodeList;
+use Lodestone\Entities\Character\Collectable;
+use Lodestone\Entities\Character\Profile,
     Lodestone\Modules\Logger,
     Lodestone\Modules\XIVDB;
 
@@ -13,7 +17,6 @@ use Lodestone\Validator\CharacterValidator,
 class Character extends ParserHelper
 {
     private $xivdb;
-
     /**
      * Character constructor.
      */
@@ -23,7 +26,7 @@ class Character extends ParserHelper
     }
 
     /**
-     * @param bool $html
+     * @param bool $hash
      * @return array|bool
      */
     public function parse($hash = false)
@@ -37,15 +40,13 @@ class Character extends ParserHelper
 
         $started = microtime(true);
         $this->parseProfile();
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION PROFILE: %s ms', round(microtime(true) - $started, 3)));
         $this->parseClassJobs();
         $this->parseAttributes();
         $this->parseCollectables();
         $this->parseEquipGear();
         $this->parseActiveClass();
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
-
-        // validate
-        $this->validate();
 
         if ($hash) {
             return $this->hash();
@@ -134,23 +135,204 @@ class Character extends ParserHelper
         // provide sha1
         return sha1($arr);
     }
+    /**
+     * Extract id of character from html
+     *
+     * @param $box
+     * @param Profile $profile
+     */
+    private function parseProfileId(Document $box, Profile $profile) {
+        $id = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
+        $profile->setId($id);
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
 
     /**
-     * Validate character data
+     * Extract name of character from html
+     *
+     * @param $box
+     * @param Profile $profile
      */
-    public function validate()
-    {
-        $validator = new CharacterValidator();
+    private function parseProfileName(Document $box, Profile $profile) {
+        $name = $box->find('.frame__chara__name', 0)->plaintext;
+        $profile->setName($name);
 
-        // run checks
-        $validator
-            ->check($this->data['id'], 'ID')->isNumeric()
-            ->check($this->data['name'], 'Name')->isValidCharacerName()
-            ->check($this->data['server'], 'Server')->isString()
-            ->check($this->data['title'], 'Title')->isStringOrEmpty();
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
 
-        // validate all our checks
-        $validator->validate();
+    /**
+     * Extract server name of character from html
+     *
+     * @param $box
+     * @param Profile $profile
+     */
+    private function parseProfileServer(Document $box, Profile $profile) {
+        $server = $box->find('.frame__chara__world', 0)->plaintext;
+        $profile->setServer($server);
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract title of Character from html
+     *
+     * @param $box
+     * @param Profile $profile
+     */
+    private function parseProfileTitle(Document $box, Profile $profile) {
+        if ($title = $box->find('.frame__chara__title', 0)) {
+            $profile->setTitle(trim($title));
+        }
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extracts Character image urls from html
+     *
+     * @param $box
+     * @param Profile $profile
+     */
+    private function parseProfilePicture(Document $box, Profile $profile) {
+        $data = trim(explode('?', $box->find('.frame__chara__face', 0)->find('img', 0)->src)[0]);
+        $profile
+            ->setAvatar($data)
+            ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $data));
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extracts Biography from html
+     *
+     * @param Profile $profile
+     */
+    private function parseProfileBiography(Profile $profile) {
+        $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
+        $profile->setBiography(trim($box->plaintext));
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract race, clan and gender from html
+     *
+     * @param Document $box
+     * @param Profile $profile
+     */
+    private function parseProfileDetails(Document $box, Profile $profile) {
+        $data = $box
+            ->find('.character-block', 0)
+                ->find('.character-block__name')
+                    ->innerHtml();
+
+        list($race, $data) = explode('<br>', html_entity_decode(trim($data)));
+        list($clan, $gender) = explode('/', $data);
+
+        $profile
+            ->setRace(strip_tags(trim($race)))
+            ->setClan(strip_tags(trim($clan)))
+            ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract Nameday from html
+     *
+     * @param NodeList $box
+     * @param Profile $profile
+     */
+    private function parseProfileNameDay(Element $box, Profile $profile) {
+        // nameday
+        $profile->setNameday(
+            $box->find('.character-block__birth', 0)
+                ->plaintext
+        );
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract Guardian details from html
+     *
+     * @param NodeList $box
+     * @param Profile $profile
+     */
+    private function parseProfileGuardian(Element $box, Profile $profile) {
+        $guardian = new Profile\Guardian();
+
+        $name = $box->find('.character-block__name', 0)->plaintext;
+        $id = $this->xivdb->getGuardianId($name);
+
+        $guardian
+            ->setName($name)
+            ->setId($id)
+            ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+
+        $profile->setGuardian($guardian);
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract city from html
+     *
+     * @param Profile $profile
+     */
+    private function parseProfileCity(Profile $profile) {
+        $city = new Profile\City();
+
+        $box = $this->getDocumentFromRangeCustom(42,47);
+        $name = $box->find('.character-block__name', 0)->plaintext;
+        $id = $this->xivdb->getTownId($name);
+
+        $city
+            ->setName($name)
+            ->setId($id)
+            ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+
+        $profile->setCity($city);
+
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract grand company details from html
+     *
+     * @param Document $box
+     * @param Profile $profile
+     */
+    private function parseProfileGrandcompany(Document $box, Profile $profile) {
+        if ($node = $box->find('.character-block__name', 0)) {
+            $grandcompany = new Profile\GrandCompany();
+
+            list($name, $rank) = explode('/', $node->plaintext);
+            $id = $this->xivdb->getGrandCompanyId(trim($name));
+
+            $grandcompany
+                ->setId($id)
+                ->setName($name)
+                ->setRank($rank)
+                ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+
+            $profile->setGrandcompany($grandcompany);
+        }
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+    }
+
+    /**
+     * Extract free company details from html
+     *
+     * @param Document $box
+     * @param Profile $profile
+     */
+    private function parseProfileFreeCompany(Document $box, Profile $profile) {
+        if ($node = $box->find('.character__freecompany__name', 0))
+        {
+            $profile->setFreecompany(explode('/', $node->find('a', 0)->href)[3]);
+        }
+        Logger::printtime(__FUNCTION__.'#'.__LINE__);
     }
 
     /**
@@ -158,124 +340,41 @@ class Character extends ParserHelper
      */
     private function parseProfile()
     {
+        $profile = new Profile();
+
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-        // id
-        $data = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
-        $this->add('id', trim($data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // name
-        $data = $box->find('.frame__chara__name', 0)->plaintext;
-        $this->add('name', trim($data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // server
-        $data = $box->find('.frame__chara__world', 0)->plaintext;
-        $this->add('server', trim($data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // title
-        $this->add('title', null);
-        if ($title = $box->find('.frame__chara__title', 0)) {
-            $this->add('title', trim($title->plaintext));
-        }
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // avatar
-        $data = $box->find('.frame__chara__face', 0)->find('img', 0)->src;
-        $data = trim(explode('?', $data)[0]);
-        $this->add('avatar', $data);
-        $this->add('portrait', str_ireplace('c0_96x96', 'l0_640x873', $data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // biography
-        $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
-        $data = trim($box->plaintext);
-        $this->add('biography', $data);
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        $this->parseProfileId($box, $profile);
+        $this->parseProfileName($box, $profile);
+        $this->parseProfileServer($box, $profile);
+        $this->parseProfileTitle($box, $profile);
+        $this->parseProfilePicture($box, $profile);
+        $this->parseProfileBiography($profile);
 
         // ----------------------
         // move to character profile detail
         $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
         // ----------------------
-
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
-        // race, clan, gender
-        $data = $box->find('.character-block', 0)->find('.character-block__name')->innerHtml();
-        list($race, $data) = explode('<br>', html_entity_decode(trim($data)));
-        list($clan, $gender) = explode('/', $data);
-        $this->add('race', strip_tags(trim($race)));
-        $this->add('clan', strip_tags(trim($clan)));
-        $this->add('gender', strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
+        $this->parseProfileDetails($box, $profile);
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // nameday
         $node = $box->find('.character-block', 1);
-        $data = $node->find('.character-block__birth', 0)->plaintext;
-        $this->add('nameday', $data);
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        $name = $node->find('.character-block__name', 0)->plaintext;
-        $id = $this->xivdb->getGuardianId($name);
-        $this->add('guardian', [
-            'id' => $id,
-            'icon' => explode('?', $node->find('img', 0)->src)[0],
-            'name' => $name,
-        ]);
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // city
-        $box = $this->getDocumentFromRangeCustom(42,47);
-        $name = $box->find('.character-block__name', 0)->plaintext;
-        $id = $this->xivdb->getTownId($name);
-        $this->add('city', [
-            'id' => $id,
-            'icon' => explode('?', $box->find('img', 0)->src)[0],
-            'name' => $name,
-        ]);
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // grand company (and sometimes FC if they're in an FC but not in a GC)
-        $this->add('grand_company', null);
-        $this->add('free_company', null);
+        $this->parseProfileNameDay($node, $profile);
+        $this->parseProfileGuardian($node, $profile);
+        $this->parseProfileCity($profile);
 
         $box = $this->getDocumentFromRangeCustom(48,64);
         if ($box)
         {
             // Grand Company
-            if ($gcNode = $box->find('.character-block__name', 0)) {
-                list($name, $rank) = explode('/', $gcNode->plaintext);
-                $id = $this->xivdb->getGrandCompanyId(trim($name));
-                //$rankId = $this->xivdb->getGrandCompanyRankId(trim($rank));
-
-                $this->add('grand_company', [
-                    'id' => $id,
-                    //'rank_id' => $rankId,
-                    'icon' => explode('?', $box->find('img', 0)->src)[0],
-                    'name' => trim($name),
-                    'rank' => trim($rank),
-                ]);
-            }
-
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+            $this->parseProfileGrandcompany($box, $profile);
 
             // Free Company
-            if ($node = $box->find('.character__freecompany__name', 0))
-            {
-                $id = explode('/', $node->find('a', 0)->href)[3];
-                $this->add('free_company', $id);
-            }
+            $this->parseProfileFreeCompany($box, $profile);
         }
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         unset($box);
         unset($node);
@@ -548,16 +647,7 @@ class Character extends ParserHelper
         $mounts = [];
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__mounts ul li') as $node) {
-            // name
-            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-            $id = $this->xivdb->getMountId($name);
-            $icon = $this->xivdb->getMountIcon($id);
-
-            $mounts[] = [
-                'id' => $id,
-                'name' => $name,
-                'icon' => $icon,
-            ];
+            $mounts[] = $this->fetchCollectable($node);
         }
 
         $this->add('mounts', $mounts);
@@ -566,22 +656,27 @@ class Character extends ParserHelper
         $minions = [];
         Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__minion ul li') as $node) {
-            // name
-            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-            $id = $this->xivdb->getMinionId($name);
-            $icon = $this->xivdb->getMinionIcon($id);
-
-            $minions[] = [
-                'id' => $id,
-                'name' => $name,
-                'icon' => $icon,
-            ];
+            $minions[] = $this->fetchCollectable($node);
         }
 
         $this->add('minions', $minions);
 
         // fin
         unset($box);
+    }
+
+    private function fetchCollectable($node) {
+        $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+        $id = $this->xivdb->getMountId($name);
+        $icon = $this->xivdb->getMountIcon($id);
+
+        Logger::write(__CLASS__, __LINE__, $icon);
+        $collectable = new Collectable();
+
+        return $collectable
+            ->setId($id)
+            ->setName($name)
+            ->setIcon($icon);
     }
 
     /**

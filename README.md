@@ -150,3 +150,10 @@ foreach($characters['results'] as $char) {
 ```php
 $character = $api->getCharacter(1234, true);
 ```
+
+# Contributors
+
+- [@shentschel](https://github.com/shentschel)
+- [@Simbiat](https://github.com/Simbiat)
+
+> If you contribute to this library, please add your github user here :)

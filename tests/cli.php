@@ -1,4 +1,9 @@
 <?php
+/**
+ * ----------------------------------------------------
+ * CLI tool to quickly test/debug specific API methods.
+ * ----------------------------------------------------
+ */
 
 // composer auto loader
 require __DIR__.'/../vendor/autoload.php';
@@ -33,9 +38,11 @@ switch($option) {
     case 'ls':
         $data = $api->getLinkshellMembers($id ? $id : '19984723346535274');
         break;
+
+    case 'devposts':
+        $data = $api->getDevPosts();
+        break;
 }
-
-
 
 // Array of character data
 print_r($data);

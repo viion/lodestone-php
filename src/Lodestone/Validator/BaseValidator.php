@@ -9,6 +9,8 @@ namespace Lodestone\Validator;
  */
 class BaseValidator
 {
+    const URL_REGEX = '/^https?:\/\//';
+
     public $object;
     public $name;
     public $errors;
@@ -124,6 +126,18 @@ class BaseValidator
     {
         if (!is_array($this->object)) {
             $this->errors[] = ValidationException::arrayValidation($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function isRelativeUrl()
+    {
+        if (preg_match(self::URL_REGEX, $this->object)) {
+            $this->errors[] = ValidationException::relativeUrlValidation($this);
         }
 
         return $this;

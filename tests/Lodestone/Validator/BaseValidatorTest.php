@@ -312,4 +312,46 @@ class BaseValidatorTest extends TestCase
             self::assertEquals($message, $vex->getMessage());
         }
     }
+
+    /**
+     * Test if a relative url is passing the validator
+     */
+    public function testRelativeUrl()
+    {
+        // given
+        $url = '/a/relative/url';
+        $validator = new BaseValidator();
+
+        // when
+        $result = $validator
+            ->check($url, 'relative url')
+            ->isRelativeUrl()
+            ->validate();
+
+        // then
+        self::assertTrue($result);
+    }
+
+    /**
+     * Test if an absolute url will fail passing the validator
+     */
+    public function testRelativeUrlWithAbsoluteUrl()
+    {
+        // given
+        $url = 'https://na.finalfantasxiv.com/a/simple/test';
+        $validator = new BaseValidator();
+
+        try {
+            // when
+            $validator
+                ->check($url, 'Absolute Url')
+                ->isRelativeUrl()
+                ->validate();
+
+            self::fail('Expected ValidationException');
+        } catch(ValidationException $vex) {
+            $message = "Absolute Url (https://na.finalfantasxiv.com/a/simple/test) is not a relative url.\n";
+            self::assertEquals($message, $vex->getMessage());
+        }
+    }
 }

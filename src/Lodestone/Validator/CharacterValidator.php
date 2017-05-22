@@ -8,7 +8,7 @@ namespace Lodestone\Validator;
  */
 class CharacterValidator extends BaseValidator
 {
-    const VALID_CHARACTER_REGEX = '/^[a-zA-Z\' ]+\s?$/';
+    const VALID_CHARACTER_REGEX = '/^[a-zA-Z\' \-]+\s?$/';
 
     /**
      * CharacterValidator constructor.

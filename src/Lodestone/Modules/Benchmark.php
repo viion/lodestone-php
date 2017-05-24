@@ -88,10 +88,11 @@ class Benchmark
 
         // remove "0." from microseconds
         $microseconds = explode('.', $microseconds)[1];
-        $microseconds = substr($microseconds, 0, strlen($microseconds) - 2);
+        $microseconds = substr($microseconds, 0, strlen($microseconds) - 4);
 
         // combine
-        $timestamp = intval($seconds . $microseconds);
+        $timestamp = ($seconds . $microseconds);
+        print_r($seconds . $microseconds .' == '. $timestamp . "\n");
 
         return $timestamp;
     }

@@ -92,7 +92,6 @@ class Benchmark
 
         // combine
         $timestamp = ($seconds . $microseconds);
-        print_r($seconds . $microseconds .' == '. $timestamp . "\n");
 
         return $timestamp;
     }

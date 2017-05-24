@@ -8,7 +8,8 @@
 // composer auto loader
 require __DIR__.'/../vendor/autoload.php';
 
-define('LOGGER_ENABLED', true);
+define('LOGGER_ENABLED', false);
+define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // parse characters
 // view Lodestone/Modules/Routes for more urls.
@@ -28,7 +29,7 @@ $hash = false;
 switch($option) {
     case 'character':
         $data = $api->getCharacter($id ? $id : 730968, $hash);
-        $hash = $api->getCharacterHash($data);
+        //$hash = $api->getCharacterHash($data);
         break;
 
     case 'fc':
@@ -45,6 +46,6 @@ switch($option) {
 }
 
 // Array of character data
-print_r($data);
-print_r($hash);
+//print_r($data);
+//print_r($hash);
 print_r("\n");

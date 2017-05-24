@@ -66,6 +66,9 @@ class Character extends ParserHelper
      */
     public function hash()
     {
+        // todo - this is broken with classes, can be fixed up later
+        return false;
+
         if (!$this->data) {
             Logger::write(__CLASS__, __LINE__, 'No data to hash against, have you done a parse() call?');
             return false;
@@ -151,7 +154,7 @@ class Character extends ParserHelper
         $id = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
         $profile->setId($id);
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -164,7 +167,7 @@ class Character extends ParserHelper
         $name = $box->find('.frame__chara__name', 0)->plaintext;
         $profile->setName($name);
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -177,7 +180,7 @@ class Character extends ParserHelper
         $server = $box->find('.frame__chara__world', 0)->plaintext;
         $profile->setServer($server);
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -191,7 +194,7 @@ class Character extends ParserHelper
             $profile->setTitle(trim($title));
         }
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -206,7 +209,7 @@ class Character extends ParserHelper
             ->setAvatar($data)
             ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $data));
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -218,7 +221,7 @@ class Character extends ParserHelper
         $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
         $profile->setBiography(trim($box->plaintext));
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -241,7 +244,7 @@ class Character extends ParserHelper
             ->setClan(strip_tags(trim($clan)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -256,7 +259,7 @@ class Character extends ParserHelper
             $box->find('.character-block__birth', 0)
                 ->plaintext
         );
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -278,7 +281,7 @@ class Character extends ParserHelper
 
         $profile->setGuardian($guardian);
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -300,7 +303,7 @@ class Character extends ParserHelper
 
         $profile->setCity($city);
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -324,7 +327,7 @@ class Character extends ParserHelper
 
             $profile->setGrandcompany($grandcompany);
         }
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -338,7 +341,7 @@ class Character extends ParserHelper
         {
             $profile->setFreecompany(explode('/', $node->find('a', 0)->href)[3]);
         }
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
     /**
@@ -348,9 +351,9 @@ class Character extends ParserHelper
     {
         $profile = new Profile();
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $this->parseProfileId($box, $profile);
         $this->parseProfileName($box, $profile);
@@ -363,7 +366,7 @@ class Character extends ParserHelper
         // move to character profile detail
         $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
         // ----------------------
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $this->parseProfileDetails($box, $profile);
 

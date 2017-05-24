@@ -12,7 +12,7 @@ define('LOGGER_ENABLED', true);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // settings
-$max = 300;
+$max = 30;
 $file = __DIR__.'/bench.json';
 
 // remove any existing bench file
@@ -40,14 +40,20 @@ $reports = array_values(array_filter($reports));
 $results = [
     'lines' => [],
     'highest' => [],
+    'memory' => [],
 ];
 foreach($reports as $report) {
     $report = json_decode($report, true);
 
     foreach($report as $class => $functions) {
         foreach($functions as $function => $details) {
+            //add time
             $results['lines'][$class .'___'. $function][] = $details['process_time'];
 
+            // add memory
+            $results['memory'][$class .'___'. $function][] = $highest['system_memory'];
+
+            // add highest line
             $highest = $details['highest_line'];
             $results['highest'][$class .'___'. $function.'___'. $highest['line']][] = $highest['time_difference'];
         }
@@ -59,7 +65,6 @@ foreach($reports as $report) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 print_r("\n\n-----------------\nBENCHMARK RESULTS\n-----------------\n\n");
-print_r($results);
 
 // view average line costs
 print_r("Average Line Costs\n");
@@ -69,7 +74,7 @@ foreach($results['lines'] as $method => $counts) {
 
     list($class, $function) = explode('___', $method);
 
-    print_r(sprintf("%s entries for: %s -> %s | Average Time: %s microseconds\n", $entries, $class, $function, $average));
+    print_r(sprintf("%s entries for: %s -> %s | Average time: %s microseconds\n", $entries, $class, $function, $average));
 }
 
 // view highest line costs
@@ -80,5 +85,16 @@ foreach($results['highest'] as $method => $counts) {
 
     list($class, $function, $line) = explode('___', $method);
 
-    print_r(sprintf("%s entries for: %s -> %s (Line: %s) | Average Time: %s microseconds\n", $entries, $class, $function, $line, $average));
+    print_r(sprintf("%s entries for: %s -> %s (Line: %s) | Average time: %s microseconds\n", $entries, $class, $function, $line, $average));
+}
+
+// view highest line costs
+print_r("\n\nAverage Memory Line Costs\n");
+foreach($results['memory'] as $method => $counts) {
+    $entries = count($counts);
+    $average = array_sum($counts) / count($counts);
+
+    list($class, $function) = explode('___', $method);
+
+    print_r(sprintf("%s entries for: %s -> %s | Average memory: %s mb\n", $entries, $class, $function, $average));
 }

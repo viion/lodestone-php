@@ -2,6 +2,7 @@
 
 namespace Lodestone\Parser;
 
+use Lodestone\Entities\Character\Profile;
 use Lodestone\Modules\Benchmark;
 use Lodestone\Entities\Character\Collectable;
 use Lodestone\Modules\{
@@ -21,11 +22,19 @@ class Character extends ParserHelper
     private $xivdb;
 
     /**
-     * Character constructor.
+     * @var Profile $profile
      */
-    function __construct()
+    private $profile;
+
+    /**
+     * Character constructor.
+     * @param int|null $id
+     */
+    function __construct(int $id = null)
     {
         $this->xivdb = new XIVDB();
+        $this->profile = new Profile();
+        $this->profile->setId($id);
     }
 
     /**
@@ -45,7 +54,6 @@ class Character extends ParserHelper
         Benchmark::start();
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $this->parseProfile();
-        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION PROFILE: %s ms', round(microtime(true) - $started, 3)));
         $this->parseClassJobs();
         $this->parseAttributes();
         $this->parseCollectables();
@@ -413,8 +421,16 @@ class Character extends ParserHelper
         // get mounts
         $mounts = [];
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-        foreach($box->find('.character__mounts ul li') as $node) {
-            $mounts[] = $this->fetchCollectable($node);
+        foreach($box->find('.character__mounts ul li') as &$node) {
+            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+            $id = $this->xivdb->getMountId($name);
+
+            $collectable = new Collectable();
+
+            $mounts[] = $collectable
+                ->setId($id)
+                ->setName($name)
+                ->setIcon($this->xivdb->getMountIcon($id));
         }
 
         $this->add('mounts', $mounts);
@@ -422,8 +438,16 @@ class Character extends ParserHelper
         // get minions
         $minions = [];
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-        foreach($box->find('.character__minion ul li') as $node) {
-            $minions[] = $this->fetchCollectable($node);
+        foreach($box->find('.character__minion ul li') as &$node) {
+            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+            $id = $this->xivdb->getMinionId($name);
+
+            $collectable = new Collectable();
+
+            $minions[] = $collectable
+                ->setId($id)
+                ->setName($name)
+                ->setIcon($this->xivdb->getMinionIcon($id));
         }
 
         $this->add('minions', $minions);
@@ -433,7 +457,7 @@ class Character extends ParserHelper
         unset($box);
     }
 
-    private function fetchCollectable($node) {
+    private function fetchCollectable(&$node) {
         $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
         $id = $this->xivdb->getMountId($name);
         $icon = $this->xivdb->getMountIcon($id);

@@ -88,6 +88,15 @@ class Profile extends AbstractEntity {
      */
     private $freecompany = null;
 
+    public function __construct() {
+        parent::__construct();
+
+        $this->grandcompany = new GrandCompany();
+        $this->city = new City();
+        $this->guardian = new Guardian();
+    }
+
+
     protected function initializeValidator() {
         $this->validator = new CharacterValidator();
     }

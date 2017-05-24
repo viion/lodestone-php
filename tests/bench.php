@@ -68,35 +68,44 @@ print_r("\n\n-----------------\nBENCHMARK RESULTS\n-----------------\n\n");
 
 // view average line costs
 print_r("Average Line Costs\n");
+$completeAvg = [];
 foreach($results['lines'] as $method => $counts) {
     $entries = count($counts);
     $average = array_sum($counts) / count($counts);
     $average = round($average, 3);
+    $completeAvg[] = $average;
 
     list($class, $function) = explode('___', $method);
 
     print_r(sprintf("%s entries for: %s -> %s | Average time: %s microseconds\n", $entries, $class, $function, $average));
 }
+print_r(sprintf('Complete: %s microseconds', round(array_sum($completeAvg) / count($results['lines']), 3)));
 
 // view highest line costs
 print_r("\n\nAverage Highest Line Costs\n");
+$completeHighest = [];
 foreach($results['highest'] as $method => $counts) {
     $entries = count($counts);
     $average = array_sum($counts) / count($counts);
     $average = round($average, 3);
 
+    $completeHighest[] = $average;
     list($class, $function, $line) = explode('___', $method);
 
     print_r(sprintf("%s entries for: %s -> %s (Line: %s) | Average time: %s microseconds\n", $entries, $class, $function, $line, $average));
 }
+print_r(sprintf('Complete: %s microseconds', round(array_sum($completeHighest), 3)));
 
 // view highest line costs
 print_r("\n\nAverage Memory Line Costs\n");
+$completeMemory = [];
 foreach($results['memory'] as $method => $counts) {
     $entries = count($counts);
     $average = array_sum($counts) / count($counts);
-
+    $completeMemory[] = $average;
     list($class, $function) = explode('___', $method);
+
 
     print_r(sprintf("%s entries for: %s -> %s | Average memory: %s mb\n", $entries, $class, $function, $average));
 }
+print_r(sprintf('Complete: %s mb', array_sum($completeMemory) / count($results['memory'])));

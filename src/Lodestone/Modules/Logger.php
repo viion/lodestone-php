@@ -49,6 +49,14 @@ class Logger
         self::$lastTime = $finish;
         $duration = $finish - self::$startTime;
         $duration = str_pad(round($duration < 0.0001 ? 0 : $duration, 6), 10, '0');
-        echo sprintf("%s \t---\t Time Overall: %s \t---\t Diff from last: %s \n", $msg, $duration, $difference);
+
+        // spacing
+        $spacing = 50;
+        $seperator = ' ';
+        $msg = str_pad($msg, $spacing, $seperator, STR_PAD_RIGHT);
+        $duration = str_pad('Time Overall: '. $duration, $spacing, $seperator, STR_PAD_RIGHT);
+        $difference = str_pad('Diff from last: '. $difference, $spacing, $seperator, STR_PAD_RIGHT);
+
+        echo sprintf("%s%s%s\n", $msg, $duration, $difference);
     }
 }

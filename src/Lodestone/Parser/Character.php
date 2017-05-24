@@ -4,7 +4,6 @@ namespace Lodestone\Parser;
 
 use Lodestone\Dom\Document;
 use Lodestone\Dom\Element;
-use Lodestone\Dom\NodeList;
 use Lodestone\Entities\Character\Collectable;
 use Lodestone\Entities\Character\Profile,
     Lodestone\Modules\Logger,
@@ -139,9 +138,9 @@ class Character extends ParserHelper
      * Extract id of character from html
      *
      * @param $box
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfileId(Document $box, Profile $profile) {
+    private function parseProfileId(Document &$box, Profile &$profile) {
         $id = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
         $profile->setId($id);
 
@@ -152,9 +151,9 @@ class Character extends ParserHelper
      * Extract name of character from html
      *
      * @param $box
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfileName(Document $box, Profile $profile) {
+    private function parseProfileName(Document &$box, Profile &$profile) {
         $name = $box->find('.frame__chara__name', 0)->plaintext;
         $profile->setName($name);
 
@@ -165,9 +164,9 @@ class Character extends ParserHelper
      * Extract server name of character from html
      *
      * @param $box
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfileServer(Document $box, Profile $profile) {
+    private function parseProfileServer(Document &$box, Profile &$profile) {
         $server = $box->find('.frame__chara__world', 0)->plaintext;
         $profile->setServer($server);
 
@@ -178,9 +177,9 @@ class Character extends ParserHelper
      * Extract title of Character from html
      *
      * @param $box
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfileTitle(Document $box, Profile $profile) {
+    private function parseProfileTitle(Document &$box, Profile &$profile) {
         if ($title = $box->find('.frame__chara__title', 0)) {
             $profile->setTitle(trim($title));
         }
@@ -192,9 +191,9 @@ class Character extends ParserHelper
      * Extracts Character image urls from html
      *
      * @param $box
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfilePicture(Document $box, Profile $profile) {
+    private function parseProfilePicture(Document &$box, Profile &$profile) {
         $data = trim(explode('?', $box->find('.frame__chara__face', 0)->find('img', 0)->src)[0]);
         $profile
             ->setAvatar($data)
@@ -206,9 +205,9 @@ class Character extends ParserHelper
     /**
      * Extracts Biography from html
      *
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfileBiography(Profile $profile) {
+    private function parseProfileBiography(Profile &$profile) {
         $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
         $profile->setBiography(trim($box->plaintext));
 
@@ -218,10 +217,10 @@ class Character extends ParserHelper
     /**
      * Extract race, clan and gender from html
      *
-     * @param Document $box
-     * @param Profile $profile
+     * @param Document &$box
+     * @param Profile &$profile
      */
-    private function parseProfileDetails(Document $box, Profile $profile) {
+    private function parseProfileDetails(Document &$box, Profile &$profile) {
         $data = $box
             ->find('.character-block', 0)
                 ->find('.character-block__name')
@@ -241,10 +240,10 @@ class Character extends ParserHelper
     /**
      * Extract Nameday from html
      *
-     * @param NodeList $box
-     * @param Profile $profile
+     * @param Element $box
+     * @param Profile &$profile
      */
-    private function parseProfileNameDay(Element $box, Profile $profile) {
+    private function parseProfileNameDay(Element &$box, Profile &$profile) {
         // nameday
         $profile->setNameday(
             $box->find('.character-block__birth', 0)
@@ -256,10 +255,10 @@ class Character extends ParserHelper
     /**
      * Extract Guardian details from html
      *
-     * @param NodeList $box
-     * @param Profile $profile
+     * @param Element $box
+     * @param Profile &$profile
      */
-    private function parseProfileGuardian(Element $box, Profile $profile) {
+    private function parseProfileGuardian(Element &$box, Profile &$profile) {
         $guardian = new Profile\Guardian();
 
         $name = $box->find('.character-block__name', 0)->plaintext;
@@ -278,9 +277,9 @@ class Character extends ParserHelper
     /**
      * Extract city from html
      *
-     * @param Profile $profile
+     * @param Profile &$profile
      */
-    private function parseProfileCity(Profile $profile) {
+    private function parseProfileCity(Profile &$profile) {
         $city = new Profile\City();
 
         $box = $this->getDocumentFromRangeCustom(42,47);
@@ -300,10 +299,10 @@ class Character extends ParserHelper
     /**
      * Extract grand company details from html
      *
-     * @param Document $box
-     * @param Profile $profile
+     * @param Document &$box
+     * @param Profile &$profile
      */
-    private function parseProfileGrandcompany(Document $box, Profile $profile) {
+    private function parseProfileGrandcompany(Document &$box, Profile &$profile) {
         if ($node = $box->find('.character-block__name', 0)) {
             $grandcompany = new Profile\GrandCompany();
 
@@ -324,10 +323,10 @@ class Character extends ParserHelper
     /**
      * Extract free company details from html
      *
-     * @param Document $box
-     * @param Profile $profile
+     * @param Document &$box
+     * @param Profile &$profile
      */
-    private function parseProfileFreeCompany(Document $box, Profile $profile) {
+    private function parseProfileFreeCompany(Document &$box, Profile &$profile) {
         if ($node = $box->find('.character__freecompany__name', 0))
         {
             $profile->setFreecompany(explode('/', $node->find('a', 0)->href)[3]);
@@ -376,8 +375,11 @@ class Character extends ParserHelper
             $this->parseProfileFreeCompany($box, $profile);
         }
 
+        // TODO: do something with profile
+
         unset($box);
         unset($node);
+        unset($profile);
     }
 
     /**

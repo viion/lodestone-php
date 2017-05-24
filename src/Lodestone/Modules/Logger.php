@@ -25,7 +25,7 @@ class Logger
         self::$log[] = $line;
 
         // only output if enabled
-        if (defined('LOGGER_ENABLED')) {
+        if (defined('LOGGER_ENABLED') && LOGGER_ENABLED) {
             echo $line;
         }
     }
@@ -35,7 +35,7 @@ class Logger
      */
     public static function printtime($msg)
     {
-        if (!defined('LOGGER_ENABLE_PRINT_TIME')) {
+        if (!defined('LOGGER_ENABLE_PRINT_TIME') || !LOGGER_ENABLE_PRINT_TIME) {
             return;
         }
 

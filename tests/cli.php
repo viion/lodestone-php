@@ -48,4 +48,4 @@ switch($option) {
 // Array of character data
 //print_r($data);
 //print_r($hash);
-print_r("\n");
+print_r(sprintf("Duration: %s - End\n\n", \Lodestone\Modules\Logger::$duration));

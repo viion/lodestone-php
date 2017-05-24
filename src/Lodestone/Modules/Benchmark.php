@@ -67,7 +67,7 @@ class Benchmark
 
         // send to logger if enabled
         if (defined('LOGGER_ENABLE_PRINT_TIME')) {
-            Logger::printtime($function .'#'. $line);
+            Logger::printtime($class, $function, $line);
         }
     }
 

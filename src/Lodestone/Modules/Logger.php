@@ -11,6 +11,7 @@ class Logger
 {
     public static $startTime = false;
     public static $lastTime = 0;
+    public static $duration = 0;
     public static $log = [];
 
     /**
@@ -33,7 +34,7 @@ class Logger
     /**
      * @param $msg
      */
-    public static function printtime($msg)
+    public static function printtime($class, $function, $line)
     {
         if (!defined('LOGGER_ENABLE_PRINT_TIME') || !LOGGER_ENABLE_PRINT_TIME) {
             return;
@@ -47,16 +48,22 @@ class Logger
         $difference = $finish - self::$lastTime;
         $difference = str_pad(round($difference < 0.0001 ? 0 : $difference, 6), 10, '0');
         self::$lastTime = $finish;
+
+        // unlikely something took 1000 seconds...
+        // so hacky :D
+        if ($difference > 1000) {
+            $difference = '0000000000';
+        }
+
         $duration = $finish - self::$startTime;
         $duration = str_pad(round($duration < 0.0001 ? 0 : $duration, 6), 10, '0');
+        self::$duration = $duration;
 
         // spacing
-        $spacing = 50;
-        $seperator = ' ';
-        $msg = str_pad($msg, $spacing, $seperator, STR_PAD_RIGHT);
-        $duration = str_pad('Time Overall: '. $duration, $spacing, $seperator, STR_PAD_RIGHT);
-        $difference = str_pad('Diff from last: '. $difference, $spacing, $seperator, STR_PAD_RIGHT);
+        $line = str_pad($line, 5, ' ');
+        $flag = $difference > 0.002 ? '!' : ' ';
 
-        echo sprintf("%s%s%s\n", $msg, $duration, $difference);
+        $string = "Duration: %s   + %s  %s     Line %s in  %s::%s\n";
+        echo sprintf($string, $duration, $difference, $flag, $line, $class, $function);
     }
 }

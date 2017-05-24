@@ -58,6 +58,8 @@ class Benchmark
             'time_previous' => self::$timeLastRecord,
             'time_finished' => $now,
             'time_difference' => $diff,
+            //'system_cpu' => self::cpu(),
+            'system_memory' => self::memory(),
         ];
 
         // set last recorded time
@@ -112,6 +114,7 @@ class Benchmark
                     'method' => $function,
                     'records_count' => count($records),
                     'records_microseconds' => [],
+                    'system_memory' => null,
                     'process_time' => 0,
                     'highest_line' => false,
                 ];
@@ -119,6 +122,7 @@ class Benchmark
                 // process times of each line
                 foreach ($records as $line => $record) {
                     $report[$class][$function]['records_microseconds']['Line:' . $line] = $record['time_difference'];
+                    $report[$class][$function]['records_memory']['Line:' . $line] = $record['system_memory'];
 
                     // record highest entry
                     if (!$report[$class][$function]['highest_line']
@@ -128,10 +132,31 @@ class Benchmark
                     }
 
                     $report[$class][$function]['process_time'] += $record['time_difference'];
+                    $report[$class][$function]['system_memory'] = $record['system_memory'];
                 }
             }
         }
 
         return $report;
+    }
+
+    /**
+     * Get memory
+     * @return string
+     */
+    public static function memory()
+    {
+        $size = memory_get_usage(true);
+        $unit = ['b','kb','mb','gb','tb','pb'];
+        return @round($size/pow(1024,($i=floor(log($size,1024)))),2) .' '. $unit[$i];
+    }
+
+    /**
+     * Get CPU
+     * @return mixed
+     */
+    public static function cpu()
+    {
+        return sys_getloadavg()[0];
     }
 }

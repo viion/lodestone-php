@@ -71,6 +71,7 @@ print_r("Average Line Costs\n");
 foreach($results['lines'] as $method => $counts) {
     $entries = count($counts);
     $average = array_sum($counts) / count($counts);
+    $average = round($average, 3);
 
     list($class, $function) = explode('___', $method);
 
@@ -82,6 +83,7 @@ print_r("\n\nAverage Highest Line Costs\n");
 foreach($results['highest'] as $method => $counts) {
     $entries = count($counts);
     $average = array_sum($counts) / count($counts);
+    $average = round($average, 3);
 
     list($class, $function, $line) = explode('___', $method);
 

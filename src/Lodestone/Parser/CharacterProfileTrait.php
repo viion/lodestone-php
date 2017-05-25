@@ -3,7 +3,6 @@
 namespace Lodestone\Parser;
 
 use Lodestone\Modules\Benchmark;
-use Lodestone\Entities\Character\Profile;
 use Lodestone\Dom\{
     Document,
     Element
@@ -45,8 +44,7 @@ trait CharacterProfileTrait
         $this->parseProfileCity();
 
         $box = $this->getDocumentFromRangeCustom(48,64);
-        if ($box)
-        {
+        if ($box) {
             // Grand Company
             $this->parseProfileGrandcompany($box);
 
@@ -70,7 +68,6 @@ trait CharacterProfileTrait
     {
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $this->profile->setName($box->find('.frame__chara__name', 0)->plaintext);
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
@@ -83,7 +80,6 @@ trait CharacterProfileTrait
     {
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $this->profile->setServer($box->find('.frame__chara__world', 0)->plaintext);
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
@@ -98,7 +94,6 @@ trait CharacterProfileTrait
         if ($title = $box->find('.frame__chara__title', 0)) {
             $this->profile->setTitle(trim($title->plaintext));
         }
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
@@ -114,7 +109,6 @@ trait CharacterProfileTrait
         $this->profile
             ->setAvatar($data)
             ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $data));
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
@@ -129,7 +123,6 @@ trait CharacterProfileTrait
                     ->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"')
                     ->plaintext)
         );
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
@@ -179,11 +172,10 @@ trait CharacterProfileTrait
     private function parseProfileGuardian(Element &$box)
     {
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-
         $name = $box->find('.character-block__name', 0)->plaintext;
         $id = $this->xivdb->getGuardianId($name);
-
-        $this->profile->getGuardian()
+        $this->profile
+            ->getGuardian()
             ->setName($name)
             ->setId($id)
             ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
@@ -196,12 +188,11 @@ trait CharacterProfileTrait
     private function parseProfileCity()
     {
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-
         $box = $this->getDocumentFromRangeCustom(42,47);
         $name = $box->find('.character-block__name', 0)->plaintext;
         $id = $this->xivdb->getTownId($name);
-
-        $this->profile->getCity()
+        $this->profile
+            ->getCity()
             ->setName($name)
             ->setId($id)
             ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
@@ -220,13 +211,13 @@ trait CharacterProfileTrait
             list($name, $rank) = explode('/', $node->plaintext);
             $id = $this->xivdb->getGrandCompanyId(trim($name));
 
-            $this->profile->getGrandcompany()
+            $this->profile
+                ->getGrandcompany()
                 ->setId($id)
                 ->setName($name)
                 ->setRank($rank)
                 ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
         }
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 
@@ -238,11 +229,9 @@ trait CharacterProfileTrait
     private function parseProfileFreeCompany(Document &$box)
     {
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-
         if ($node = $box->find('.character__freecompany__name', 0)) {
             $this->profile->setFreecompany(explode('/', $node->find('a', 0)->href)[3]);
         }
-
         Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
     }
 }

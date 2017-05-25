@@ -1,10 +1,16 @@
 <?php
+
 namespace Lodestone\Entities;
 
 use Lodestone\Validator\BaseValidator;
 
-class AbstractEntity{
-
+/**
+ * Class AbstractEntity
+ *
+ * @package Lodestone\Entities
+ */
+class AbstractEntity
+{
     /**
      * @var BaseValidator
      */
@@ -13,11 +19,17 @@ class AbstractEntity{
     /**
      * AbstractEntity constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->initializeValidator();
     }
 
-    protected function initializeValidator() {
+    /**
+     * @return $this
+     */
+    protected function initializeValidator()
+    {
         $this->validator = new BaseValidator();
+        return $this;
     }
 }

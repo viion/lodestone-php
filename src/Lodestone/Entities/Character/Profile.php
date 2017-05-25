@@ -1,18 +1,22 @@
 <?php
+
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
-use Lodestone\Entities\Character\Profile\City;
-use Lodestone\Entities\Character\Profile\GrandCompany;
-use Lodestone\Entities\Character\Profile\Guardian;
 use Lodestone\Validator\CharacterValidator;
+use Lodestone\Entities\Character\Profile\{
+    City,
+    GrandCompany,
+    Guardian
+};
 
 /**
  * Class Profile
+ *
  * @package Lodestone\Entities\Character
  */
-class Profile extends AbstractEntity {
-
+class Profile extends AbstractEntity
+{
     /**
      * @var string
      */
@@ -103,7 +107,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getId(): string {
+    public function getId(): string
+    {
         return $this->id;
     }
 
@@ -111,7 +116,8 @@ class Profile extends AbstractEntity {
      * @param string $id
      * @return $this
      */
-    public function setId(string $id) {
+    public function setId(string $id)
+    {
         $this->validator
             ->check($id, 'ID')
             ->isInitialized()
@@ -127,7 +133,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
@@ -135,7 +142,8 @@ class Profile extends AbstractEntity {
      * @param string $name
      * @return $this
      */
-    public function setName(string $name) {
+    public function setName(string $name)
+    {
         $this->validator
             ->check($name, 'Name')
             ->isInitialized()
@@ -143,6 +151,7 @@ class Profile extends AbstractEntity {
             ->isString()
             ->isValidCharacterName()
             ->validate();
+
         $this->name = $name;
 
         return $this;
@@ -151,7 +160,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getServer(): string {
+    public function getServer(): string
+    {
         return $this->server;
     }
 
@@ -159,7 +169,8 @@ class Profile extends AbstractEntity {
      * @param string $server
      * @return $this
      */
-    public function setServer(string $server) {
+    public function setServer(string $server)
+    {
         $this->validator
             ->check($server, 'Server')
             ->isInitialized()
@@ -183,7 +194,8 @@ class Profile extends AbstractEntity {
      * @param string $title
      * @return $this
      */
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->validator
             ->check($title, 'Title')
             ->isInitialized()
@@ -199,7 +211,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getAvatar(): string {
+    public function getAvatar(): string
+    {
         return $this->avatar;
     }
 
@@ -207,7 +220,8 @@ class Profile extends AbstractEntity {
      * @param string $avatar
      * @return $this
      */
-    public function setAvatar(string $avatar) {
+    public function setAvatar(string $avatar)
+    {
         $this->validator
             ->check($avatar, 'Avatar URL')
             ->isInitialized()
@@ -223,7 +237,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getPortrait(): string {
+    public function getPortrait(): string
+    {
         return $this->portrait;
     }
 
@@ -231,7 +246,8 @@ class Profile extends AbstractEntity {
      * @param string $portrait
      * @return $this
      */
-    public function setPortrait(string $portrait) {
+    public function setPortrait(string $portrait)
+    {
         $this->validator
             ->check($portrait, 'Portrait URL')
             ->isInitialized()
@@ -247,7 +263,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getBiography(): string {
+    public function getBiography(): string
+    {
         return $this->biography;
     }
 
@@ -255,7 +272,8 @@ class Profile extends AbstractEntity {
      * @param string $biography
      * @return $this
      */
-    public function setBiography(string $biography) {
+    public function setBiography(string $biography)
+    {
         $this->validator
             ->check($biography, 'Biography')
             ->isInitialized()
@@ -270,7 +288,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getRace(): string {
+    public function getRace(): string
+    {
         return $this->race;
     }
 
@@ -278,7 +297,8 @@ class Profile extends AbstractEntity {
      * @param string $race
      * @return $this
      */
-    public function setRace(string $race) {
+    public function setRace(string $race)
+    {
         $this->validator
             ->check($race, 'Race')
             ->isInitialized()
@@ -294,7 +314,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getClan(): string {
+    public function getClan(): string
+    {
         return $this->clan;
     }
 
@@ -302,7 +323,8 @@ class Profile extends AbstractEntity {
      * @param string $clan
      * @return $this
      */
-    public function setClan(string $clan) {
+    public function setClan(string $clan)
+    {
         $this->validator
             ->check($clan, 'Clan')
             ->isInitialized()
@@ -318,7 +340,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getGender(): string {
+    public function getGender(): string
+    {
         return $this->gender;
     }
 
@@ -326,7 +349,8 @@ class Profile extends AbstractEntity {
      * @param string $gender
      * @return $this
      */
-    public function setGender(string $gender) {
+    public function setGender(string $gender)
+    {
         $this->validator
             ->check($gender, 'Gender')
             ->isInitialized()
@@ -342,7 +366,8 @@ class Profile extends AbstractEntity {
     /**
      * @return string
      */
-    public function getNameday(): string {
+    public function getNameday(): string
+    {
         return $this->nameday;
     }
 
@@ -350,7 +375,8 @@ class Profile extends AbstractEntity {
      * @param string $nameday
      * @return $this
      */
-    public function setNameday(string $nameday) {
+    public function setNameday(string $nameday)
+    {
         $this->validator
             ->check($nameday, 'Nameday')
             ->isInitialized()
@@ -366,7 +392,8 @@ class Profile extends AbstractEntity {
     /**
      * @return Guardian
      */
-    public function getGuardian(): Guardian {
+    public function getGuardian(): Guardian
+    {
         return $this->guardian;
     }
 
@@ -374,7 +401,8 @@ class Profile extends AbstractEntity {
      * @param Guardian $guardian
      * @return $this
      */
-    public function setGuardian(Guardian $guardian) {
+    public function setGuardian(Guardian $guardian)
+    {
         $this->validator
             ->check($guardian, 'Guardian')
             ->isInitialized()
@@ -388,7 +416,8 @@ class Profile extends AbstractEntity {
     /**
      * @return City
      */
-    public function getCity(): City {
+    public function getCity(): City
+    {
         return $this->city;
     }
 
@@ -396,7 +425,8 @@ class Profile extends AbstractEntity {
      * @param City $city
      * @return $this
      */
-    public function setCity(City $city) {
+    public function setCity(City $city)
+    {
         $this->validator
             ->check($city, 'City')
             ->isInitialized()
@@ -410,7 +440,8 @@ class Profile extends AbstractEntity {
     /**
      * @return GrandCompany|null
      */
-    public function getGrandcompany() {
+    public function getGrandcompany()
+    {
         return $this->grandcompany;
     }
 
@@ -418,7 +449,8 @@ class Profile extends AbstractEntity {
      * @param GrandCompany $grandcompany
      * @return $this
      */
-    public function setGrandcompany($grandcompany) {
+    public function setGrandcompany($grandcompany)
+    {
         $this->validator
             ->check($grandcompany, 'Grand Company')
             ->isInitialized()
@@ -432,7 +464,8 @@ class Profile extends AbstractEntity {
     /**
      * @return null|string
      */
-    public function getFreecompany() {
+    public function getFreecompany()
+    {
         return $this->freecompany;
     }
 
@@ -440,7 +473,8 @@ class Profile extends AbstractEntity {
      * @param string $freecompany
      * @return $this
      */
-    public function setFreecompany($freecompany) {
+    public function setFreecompany($freecompany)
+    {
         $this->validator
             ->check($freecompany, 'Free Company')
             ->isInitialized()
@@ -452,6 +486,4 @@ class Profile extends AbstractEntity {
 
         return $this;
     }
-    
-    
 }

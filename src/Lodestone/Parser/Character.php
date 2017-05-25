@@ -2,9 +2,11 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Entities\Character\Profile;
 use Lodestone\Modules\Benchmark;
-use Lodestone\Entities\Character\Collectable;
+use Lodestone\Entities\Character\{
+    Collectable,
+    Profile
+};
 use Lodestone\Modules\{
     Logger,
     XIVDB
@@ -12,7 +14,8 @@ use Lodestone\Modules\{
 
 /**
  * Class Character
- * @package src\Parser
+ *
+ * @package Lodestone\Parser
  */
 class Character extends ParserHelper
 {

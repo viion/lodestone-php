@@ -30,7 +30,7 @@ class Character extends ParserHelper
      * Character constructor.
      * @param int|null $id
      */
-    function __construct(int $id = null)
+    function __construct(int $id)
     {
         $this->xivdb = new XIVDB();
         $this->profile = new Profile();

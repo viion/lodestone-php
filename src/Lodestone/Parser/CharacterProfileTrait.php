@@ -60,7 +60,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfileName(Document &$box)
+    private function parseProfileName(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setName($box->find('.frame__chara__name', 0)->plaintext);
@@ -72,7 +72,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfileServer(Document &$box)
+    private function parseProfileServer(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setServer($box->find('.frame__chara__world', 0)->plaintext);
@@ -98,7 +98,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfilePicture(Document &$box)
+    private function parseProfilePicture(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $data = trim(explode('?', $box->find('.frame__chara__face', 0)->find('img', 0)->src)[0]);
@@ -127,7 +127,7 @@ trait CharacterProfileTrait
      *
      * @param Document &$box
      */
-    private function parseProfileDetails(Document &$box)
+    private function parseProfileDetails(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $data = $box
@@ -150,7 +150,7 @@ trait CharacterProfileTrait
      *
      * @param Element $box
      */
-    private function parseProfileNameDay(Element &$box)
+    private function parseProfileNameDay(Element $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setNameday(
@@ -164,7 +164,7 @@ trait CharacterProfileTrait
      *
      * @param Element $box
      */
-    private function parseProfileGuardian(Element &$box)
+    private function parseProfileGuardian(Element $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $name = $box->find('.character-block__name', 0)->plaintext;

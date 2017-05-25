@@ -108,10 +108,6 @@ class Profile extends AbstractEntity
         $this->guardian = new Guardian();
     }
 
-
-    protected function initializeValidator() {
-        $this->validator = new CharacterValidator();
-    }
     /**
      * @return string
      */

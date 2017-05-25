@@ -13,6 +13,8 @@ class Benchmark
     private static $records = [];
     private static $recordsTimes = [];
 
+    const PRECISION = 5;
+
     /**
      * @param $function
      * @param $line
@@ -83,8 +85,11 @@ class Benchmark
         self::$records[$id]['finish_line'] = $line;
         self::$records[$id]['finish_time'] = self::timestamp();
 
+        $start = self::$records[$id]['starting_time'];
+        $finish = self::$records[$id]['finish_time'];
+
         // add duration
-        $duration = self::$records[$id]['finish_time'] - self::$records[$id]['starting_time'];
+        $duration = ($start == $finish) ? 0 : number_format(bcsub($finish, $start, 32), self::PRECISION);
         self::$records[$id]['duration'] = $duration;
 
         // add duration to history
@@ -132,7 +137,6 @@ class Benchmark
         // headers
         echo sprintf(" Completed in: \t %s ms\n", $duration);
         echo sprintf(" Memory Usage: \t %s\n", self::memory());
-        echo sprintf(" CPU Usage: \t %s\n", round(self::cpu(), 5));
         echo sprintf(" Records: \t %s\n\n", count(self::$records));
 
         // print results
@@ -140,11 +144,10 @@ class Benchmark
             $record = (object)$record;
 
             // round some values
-            $precision = 8;
-            $record->duration = round($record->duration, $precision);
-            $record->duration_lowest = round($record->duration_lowest, $precision);
-            $record->duration_highest = round($record->duration_highest, $precision);
-            $record->average = round($record->average, $precision);
+            $record->duration = number_format($record->duration, self::PRECISION);
+            $record->duration_lowest = number_format($record->duration_lowest, self::PRECISION);
+            $record->duration_highest = number_format($record->duration_highest, self::PRECISION);
+            $record->average = number_format($record->average, self::PRECISION);
 
             // flag?
             $flag = $record->average > 0.001 ? ' !! ' : '    ';
@@ -177,14 +180,5 @@ class Benchmark
         $size = memory_get_usage(true);
         $unit = ['b','kb','mb','gb','tb','pb'];
         return @round($size/pow(1024,($i=floor(log($size,1024)))),2) .' '. $unit[$i];
-    }
-
-    /**
-     * Get CPU
-     * @return mixed
-     */
-    public static function cpu()
-    {
-        return sys_getloadavg()[0];
     }
 }

@@ -85,10 +85,12 @@ class Benchmark
         // set finish times
         self::$records[$id]['finish_line'] = $line;
         self::$records[$id]['finish_time'] = self::timestamp();
-        self::$records[$id]['finish_memory'] = self::memory();
 
         $start = self::$records[$id]['starting_time'];
         $finish = self::$records[$id]['finish_time'];
+
+        // memory
+        $memory = self::memory();
 
         // add duration
         $duration = ($start == $finish) ? 0 : number_format(bcsub($finish, $start, 32), self::PRECISION);
@@ -97,14 +99,24 @@ class Benchmark
         // add duration to history
         self::$recordsTimes[$id][] = $duration;
 
-        // is this the lowest?
+        // is this the lowest time?
         if (!self::$records[$id]['duration_lowest'] || $duration < self::$records[$id]['duration_lowest']) {
             self::$records[$id]['duration_lowest'] = $duration;
         }
 
-        // is this the highest?
+        // is this the highest time?
         if (!self::$records[$id]['duration_highest'] || $duration > self::$records[$id]['duration_highest']) {
             self::$records[$id]['duration_highest'] = $duration;
+        }
+
+        // is this the lowest memory?
+        if (!self::$records[$id]['starting_memory'] || $memory < self::$records[$id]['starting_memory']) {
+            self::$records[$id]['starting_memory'] = $memory;
+        }
+
+        // is this the highest memory?
+        if (!self::$records[$id]['finish_memory'] || $memory > self::$records[$id]['finish_memory']) {
+            self::$records[$id]['finish_memory'] = $memory;
         }
 
         // work out average
@@ -152,7 +164,7 @@ class Benchmark
             $record->average = number_format($record->average, self::PRECISION);
 
             // flag?
-            $flag = $record->average > 0.001 ? ' !! ' : '    ';
+            $flag = $record->average > 0.002 ? ' !! ' : '    ';
 
             $line = "%s[%s] %s   line: %s to %s\n%saverage: %s ms     low: %s - high: %s     Mem: %s - %s\n\n";
 

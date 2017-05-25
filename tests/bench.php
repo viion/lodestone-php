@@ -51,7 +51,7 @@ foreach($reports as $report) {
             $results['lines'][$class .'___'. $function][] = $details['process_time'];
 
             // add memory
-            $results['memory'][$class .'___'. $function][] = $highest['system_memory'];
+            $results['memory'][$class .'___'. $function][] = $details['system_memory'];
 
             // add highest line
             $highest = $details['highest_line'];

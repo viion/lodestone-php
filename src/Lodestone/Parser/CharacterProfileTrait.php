@@ -20,9 +20,7 @@ trait CharacterProfileTrait
      */
     private function parseProfile()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $this->parseProfileName($box);
         $this->parseProfileServer($box);
@@ -34,7 +32,6 @@ trait CharacterProfileTrait
         // move to character profile detail
         $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
         // ----------------------
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $this->parseProfileDetails($box);
 
@@ -56,7 +53,6 @@ trait CharacterProfileTrait
 
         unset($box);
         unset($node);
-        unset($this->profile);
     }
 
     /**
@@ -66,9 +62,9 @@ trait CharacterProfileTrait
      */
     private function parseProfileName(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setName($box->find('.frame__chara__name', 0)->plaintext);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -78,9 +74,9 @@ trait CharacterProfileTrait
      */
     private function parseProfileServer(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setServer($box->find('.frame__chara__world', 0)->plaintext);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -90,11 +86,11 @@ trait CharacterProfileTrait
      */
     private function parseProfileTitle(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         if ($title = $box->find('.frame__chara__title', 0)) {
             $this->profile->setTitle(trim($title->plaintext));
         }
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -104,12 +100,12 @@ trait CharacterProfileTrait
      */
     private function parseProfilePicture(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $data = trim(explode('?', $box->find('.frame__chara__face', 0)->find('img', 0)->src)[0]);
         $this->profile
             ->setAvatar($data)
             ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $data));
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -117,13 +113,13 @@ trait CharacterProfileTrait
      */
     private function parseProfileBiography()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setBiography(trim(
-                $this
-                    ->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"')
-                    ->plaintext)
+            $this
+                ->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"')
+                ->plaintext)
         );
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -133,7 +129,7 @@ trait CharacterProfileTrait
      */
     private function parseProfileDetails(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $data = $box
             ->find('.character-block', 0)
             ->find('.character-block__name')
@@ -146,7 +142,7 @@ trait CharacterProfileTrait
             ->setRace(strip_tags(trim($race)))
             ->setClan(strip_tags(trim($clan)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -156,12 +152,11 @@ trait CharacterProfileTrait
      */
     private function parseProfileNameDay(Element &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-        // nameday
+        Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setNameday(
             $box->find('.character-block__birth', 0)->plaintext
         );
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -171,7 +166,7 @@ trait CharacterProfileTrait
      */
     private function parseProfileGuardian(Element &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $name = $box->find('.character-block__name', 0)->plaintext;
         $id = $this->xivdb->getGuardianId($name);
         $this->profile
@@ -179,7 +174,7 @@ trait CharacterProfileTrait
             ->setName($name)
             ->setId($id)
             ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -187,7 +182,7 @@ trait CharacterProfileTrait
      */
     private function parseProfileCity()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getDocumentFromRangeCustom(42,47);
         $name = $box->find('.character-block__name', 0)->plaintext;
         $id = $this->xivdb->getTownId($name);
@@ -196,7 +191,7 @@ trait CharacterProfileTrait
             ->setName($name)
             ->setId($id)
             ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -206,7 +201,7 @@ trait CharacterProfileTrait
      */
     private function parseProfileGrandcompany(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         if ($node = $box->find('.character-block__name', 0)) {
             list($name, $rank) = explode('/', $node->plaintext);
             $id = $this->xivdb->getGrandCompanyId(trim($name));
@@ -218,7 +213,7 @@ trait CharacterProfileTrait
                 ->setRank($rank)
                 ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
         }
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -228,10 +223,10 @@ trait CharacterProfileTrait
      */
     private function parseProfileFreeCompany(Document &$box)
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         if ($node = $box->find('.character__freecompany__name', 0)) {
             $this->profile->setFreecompany(explode('/', $node->find('a', 0)->href)[3]);
         }
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 }

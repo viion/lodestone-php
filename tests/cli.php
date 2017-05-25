@@ -8,6 +8,7 @@
 // composer auto loader
 require __DIR__.'/../vendor/autoload.php';
 
+define('BENCHMARK_ENABLED', true);
 define('LOGGER_ENABLED', false);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 

@@ -34,7 +34,7 @@ class Logger
     /**
      * @param $msg
      */
-    public static function printtime($class, $function, $line)
+    public static function printtime($function, $line)
     {
         if (!defined('LOGGER_ENABLE_PRINT_TIME') || !LOGGER_ENABLE_PRINT_TIME) {
             return;
@@ -63,7 +63,7 @@ class Logger
         $line = str_pad($line, 5, ' ');
         $flag = $difference > 0.002 ? '!' : ' ';
 
-        $string = "Duration: %s   + %s  %s     Line %s in  %s::%s\n";
-        echo sprintf($string, $duration, $difference, $flag, $line, $class, $function);
+        $string = "Duration: %s   + %s  %s     Line %s in  %s\n";
+        echo sprintf($string, $duration, $difference, $flag, $line, $function);
     }
 }

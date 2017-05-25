@@ -47,24 +47,19 @@ class Character extends ParserHelper
     public function parse($hash = false)
     {
         $this->ensureHtml();
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
-
-        $started = microtime(true);
+        $this->html = $this->trim($this->html, 'class="ldst__main"', 'class="ldst__side"');
+        $this->setInitialDocument($this->html);
 
         // parse
-        Benchmark::start();
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+        $started = microtime(true);
+        Benchmark::start(__METHOD__,__LINE__);
         $this->parseProfile();
         $this->parseClassJobs();
         $this->parseAttributes();
         $this->parseCollectables();
         $this->parseEquipGear();
         $this->parseActiveClass();
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
-        Benchmark::finish();
-
+        Benchmark::finish(__METHOD__,__LINE__);
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
         if ($hash) {
@@ -163,14 +158,13 @@ class Character extends ParserHelper
      */
     private function parseClassJobs()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
         // class jobs
         $cj = [];
         foreach($box->find('.character__job') as $node)
         {
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
             $node = $this->getDocumentFromHtml($node->outertext);
 
             foreach($node->find('li') as $li)
@@ -202,10 +196,9 @@ class Character extends ParserHelper
                     ],
                 ];
             }
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
         }
 
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $this->add('classjobs', $cj);
         unset($box);
@@ -218,22 +211,18 @@ class Character extends ParserHelper
      */
     private function parseActiveClass()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $box = $this->getDocumentFromClassname('.character__profile__detail', 0);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         // level
         $level = trim($box->find('.character__class__data p', 0)->plaintext);
         $level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         // name
         $name = $box->find('.db-tooltip__item__category', 0)->plaintext;
         $name = explode("'", $name)[0];
         $name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
         $name = trim($name);
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         // classjob id
         $id = $this->xivdb->getRoleId($name);
@@ -268,7 +257,6 @@ class Character extends ParserHelper
             }
         }
 
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
 
         $this->add('active_class', [
             'id' => $id,
@@ -284,13 +272,11 @@ class Character extends ParserHelper
      */
     private function parseAttributes()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $box = $this->getSpecial__AttributesPart1();
 
         $stats = [];
 
         // attributes
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -303,7 +289,6 @@ class Character extends ParserHelper
         }
 
         // offensive properties
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__param__list', 1)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -316,7 +301,6 @@ class Character extends ParserHelper
         }
 
         // defensive properties
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__param__list', 2)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -329,7 +313,6 @@ class Character extends ParserHelper
         }
 
         // physical properties
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__param__list', 3)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -342,7 +325,6 @@ class Character extends ParserHelper
         }
 
         // mental properties
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__param__list', 4)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -357,7 +339,6 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart2();
 
         // status resistances
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -372,7 +353,6 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart3();
 
         // hp, mp, tp, cp, gp etc
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('li') as $node) {
             $name = $node->find('.character__param__text')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -387,7 +367,6 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart4();
 
         // elementals
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('li') as $node) {
             $name = explode('__', $node->innerHtml())[1];
             $name = explode(' ', $name)[0];
@@ -400,7 +379,6 @@ class Character extends ParserHelper
             ];
         }
 
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $this->add('stats', $stats);
         unset($box);
     }
@@ -410,20 +388,17 @@ class Character extends ParserHelper
      */
     private function parseCollectables()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $box = $this->getSpecial__Collectables();
         if (!$box) {
             return;
         }
 
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         if (!$box->find('.character__mounts', 0) || !$box->find('.character__minion', 0)) {
             return;
         }
 
         // get mounts
         $mounts = [];
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__mounts ul li') as &$node) {
             $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
             $id = $this->xivdb->getMountId($name);
@@ -440,7 +415,6 @@ class Character extends ParserHelper
 
         // get minions
         $minions = [];
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         foreach($box->find('.character__minion ul li') as &$node) {
             $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
             $id = $this->xivdb->getMinionId($name);
@@ -456,7 +430,6 @@ class Character extends ParserHelper
         $this->add('minions', $minions);
 
         // fin
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         unset($box);
     }
 
@@ -479,19 +452,18 @@ class Character extends ParserHelper
      */
     private function parseEquipGear()
     {
-        Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
         $box = $this->getSpecial__EquipGear();
         //$box = $this->getDocumentFromClassname('.character__content', 0);
 
         $gear = [];
         foreach($box->find('.item_detail_box') as $i => $node) {
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
             $name = $node->find('.db-tooltip__item__name')->plaintext;
             $id = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
 
             // add mirage
             $mirageId = false;
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
             $mirageNode = $node->find('.db-tooltip__item__mirage');
             if ($mirageNode) {
                 $mirageNode = $mirageNode->find('a', 0);
@@ -502,7 +474,7 @@ class Character extends ParserHelper
 
             // add creator
             $creatorId = false;
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
             $creatorNode = $node->find('.db-tooltip__signature-character');
             if ($creatorNode) {
                 $creatorNode = $creatorNode->find('a',0);
@@ -513,7 +485,7 @@ class Character extends ParserHelper
 
             // add dye
             $dyeId = false;
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
             $dyeNode = $node->find('.stain');
             if ($dyeNode) {
                 $dyeNode = $dyeNode->find('a',0);
@@ -544,7 +516,7 @@ class Character extends ParserHelper
             }
 
             // slot conditions, based on category
-            Benchmark::record(__CLASS__,__FUNCTION__,__LINE__);
+
             $slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
 
             // if this is first item, its main-hand

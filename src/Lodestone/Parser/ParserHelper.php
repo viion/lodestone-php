@@ -59,7 +59,7 @@ class ParserHelper
      * @param $html
      * @return Document
      */
-    protected function getDocumentFromHtml(&$html)
+    protected function getDocumentFromHtml($html)
     {
         $dom = new Document($html);
         unset($html);
@@ -71,7 +71,7 @@ class ParserHelper
      * Set initial document
      * @param $html
      */
-    protected function setInitialDocument(&$html)
+    protected function setInitialDocument($html)
     {
         $this->dom = $this->getDocumentFromHtml($html);
     }

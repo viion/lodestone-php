@@ -42,10 +42,11 @@ class Character extends ParserHelper
 
     /**
      * @param bool $hash
-     * @return array|bool
+     * @return bool|Profile
      */
-    public function parse($hash = false)
+    public function parse()
     {
+        // setup html
         $this->ensureHtml();
         $this->html = $this->trim($this->html, 'class="ldst__main"', 'class="ldst__side"');
         $this->setInitialDocument($this->html);
@@ -62,95 +63,10 @@ class Character extends ParserHelper
         Benchmark::finish(__METHOD__,__LINE__);
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
-        if ($hash) {
-            return $this->hash();
-        }
+        // generate hash
+        $this->profile->generateHash();
 
-        return $this->data;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hash()
-    {
-        // todo - this is broken with classes, can be fixed up later
-        return false;
-
-        if (!$this->data) {
-            Logger::write(__CLASS__, __LINE__, 'No data to hash against, have you done a parse() call?');
-            return false;
-        }
-
-        // remove data that could change outside
-        // of the players controller (inconsistent fake hash)
-        $data = $this->data;
-
-        // ---
-        // Much of the data is pulled out and stripped down, this
-        // is to try keep it consistent and not use array keys
-        // that are implemented through the parser and are not
-        // part of lodestone, it also bypasses json config issues.
-        // ---
-
-        // build a tight small array
-        $arr = [];
-        $arr[] = $data['id'];
-        $arr[] = $data['name'];
-        $arr[] = $data['server'];
-        $arr[] = $data['title'];
-        $arr[] = $data['race'];
-        $arr[] = $data['clan'];
-        $arr[] = $data['gender'];
-        $arr[] = $data['nameday'];
-        $arr[] = $data['guardian']['name'];
-        $arr[] = $data['city']['name'];
-        $arr[] = $data['grand_company']['name'];
-        $arr[] = $data['grand_company']['rank'];
-
-        foreach($data['classjobs'] as $classjob) {
-            // classjob _ level _ current exp _ max exp
-            $arr[] = sprintf('classjob_%s_%s_%s', $classjob['level'], $classjob['exp']['current'], $classjob['exp']['max']);
-        }
-
-        foreach($data['stats'] as $statlist) {
-            foreach($statlist as $name => $attr) {
-                // stat _ value
-                $arr[] = 'stat_'. $attr['value'];
-            }
-        }
-
-        foreach($data['mounts'] as $mount) {
-            // mount _ value
-            $arr[] = 'mount_'. strtolower($mount['name']);
-        }
-
-        foreach($data['minions'] as $minion) {
-            // minion _ value
-            $arr[] = 'minion_'. strtolower($minion['name']);
-        }
-
-        foreach($data['gear'] as $gear) {
-            // gear _ id _ materia count _ dye id _ mirage id
-            $arr[] = sprintf('gear_%s_%s_%s_%s', $gear['id'], count($gear['materia']), $gear['dye_id'], $gear['mirage_id']);
-        }
-
-        // active role _ id _ level
-        $arr[] = 'active_role_'. $data['active_class']['id'] .'_'. $data['active_class']['level'];
-
-        // lower all values
-        array_walk($arr, function(&$value) {
-            $value = strtolower($value);
-        });
-
-        // ensure same sorting
-        asort($arr);
-
-        // reduce to string
-        $arr = implode('|', $arr);
-
-        // provide sha1
-        return sha1($arr);
+        return $this->profile->toArray();
     }
 
     /**

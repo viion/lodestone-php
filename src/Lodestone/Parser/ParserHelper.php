@@ -188,7 +188,7 @@ class ParserHelper
      * @param $find
      * @return bool
      */
-    protected function findDomLine(&$domArray, $find)
+    protected function findDomLine($domArray, $find)
     {
         foreach($domArray as $i => &$line) {
             if (stripos($line, $find) > -1) {

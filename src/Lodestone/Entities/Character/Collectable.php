@@ -13,17 +13,17 @@ class Collectable extends AbstractEntity
     /**
      * @var int id
      */
-    private $id;
+    public $id;
 
     /**
      * @var string name
      */
-    private $name;
+    public $name;
 
     /**
      * @var string icon
      */
-    private $icon;
+    public $icon;
 
     /**
      * @param int

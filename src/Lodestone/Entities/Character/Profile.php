@@ -20,77 +20,82 @@ class Profile extends AbstractEntity
     /**
      * @var string
      */
-    private $id;
+    public $hash;
 
     /**
      * @var string
      */
-    private $name;
+    public $id;
 
     /**
      * @var string
      */
-    private $server;
+    public $name;
+
+    /**
+     * @var string
+     */
+    public $server;
 
     /**
      * @var string|null
      */
-    private $title = null;
+    public $title = null;
 
     /**
      * @var string
      */
-    private $avatar;
+    public $avatar;
 
     /**
      * @var string
      */
-    private $portrait;
+    public $portrait;
 
     /**
      * @var string
      */
-    private $biography = '';
+    public $biography = '';
 
     /**
      * @var string
      */
-    private $race;
+    public $race;
 
     /**
      * @var string
      */
-    private $clan;
+    public $clan;
 
     /**
      * @var string
      */
-    private $gender;
+    public $gender;
 
     /**
      * @var string
      */
-    private $nameday;
+    public $nameday;
 
     /**
      * @var Guardian
      */
-    private $guardian;
+    public $guardian;
 
     /**
      * @var City
      */
-    private $city;
+    public $city;
 
     /**
      * @var GrandCompany|null
      */
-    private $grandcompany = null;
+    public $grandcompany = null;
 
     /**
      * @var string|null
      */
-    private $freecompany = null;
+    public $freecompany = null;
 
     /**
      * Profile constructor.

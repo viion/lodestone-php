@@ -14,17 +14,17 @@ class Guardian extends AbstractEntity
     /**
      * @var int
      */
-    private $id;
+    public $id;
 
     /**
      * @var string
      */
-    private $name;
+    public $name;
 
     /**
      * @var string
      */
-    private $icon;
+    public $icon;
 
     /**
      * @return int

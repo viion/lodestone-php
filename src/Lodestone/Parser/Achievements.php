@@ -39,12 +39,9 @@ class Achievements extends ParserHelper
     //
     private function parseList()
     {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $box = $this->getSpecial__Achievements();
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         $rows = $box->find('li');
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         $list = [];
         $listPossible = [];
@@ -73,7 +70,7 @@ class Achievements extends ParserHelper
                 'points' => $points,
                 'timestamp' => $timestamp,
             ];
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
         }
 
         $this->add('list', $list);

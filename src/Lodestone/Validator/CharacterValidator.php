@@ -12,8 +12,6 @@ class CharacterValidator extends BaseValidator
 
     /**
      * CharacterValidator constructor.
-     * @param $object
-     * @param $name
      */
     public function __construct()
     {
@@ -23,7 +21,7 @@ class CharacterValidator extends BaseValidator
     /**
      * @return $this
      */
-    public function isValidCharacerName()
+    public function isValidCharacterName()
     {
         if (!preg_match(self::VALID_CHARACTER_REGEX, $this->object)) {
             $this->errors[] = new ValidationException($this->object . ' is not a valid character name.');

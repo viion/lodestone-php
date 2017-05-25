@@ -46,7 +46,9 @@ class Api
 
     /**
      * @test Premium Virtue,Phoenix
-     * @param $id
+     * @param $name
+     * @param bool $server
+     * @param bool $page
      * @return array|bool
      */
     public function searchCharacter($name, $server = false, $page = false)
@@ -62,7 +64,9 @@ class Api
 
     /**
      * @test Equilibrium,Pheonix
-     * @param $id
+     * @param $name
+     * @param bool $server
+     * @param bool $page
      * @return array|bool
      */
     public function searchFreeCompany($name, $server = false, $page = false)
@@ -104,8 +108,8 @@ class Api
     {
         $url = sprintf(Routes::LODESTONE_CHARACTERS_URL, $id);
         return $hash
-            ? (new Character())->url($url)->parse(true)
-            : (new Character())->url($url)->parse();
+            ? (new Character($id))->url($url)->parse(true)
+            : (new Character($id))->url($url)->parse();
     }
 
     /**

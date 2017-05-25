@@ -2,283 +2,71 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Validator\CharacterValidator,
-    Lodestone\Modules\Logger,
-    Lodestone\Modules\XIVDB;
+use Lodestone\Modules\Benchmark;
+use Lodestone\Entities\Character\{
+    Collectable,
+    Profile
+};
+use Lodestone\Modules\{
+    Logger,
+    XIVDB
+};
 
 /**
  * Class Character
- * @package src\Parser
+ *
+ * @package Lodestone\Parser
  */
 class Character extends ParserHelper
 {
+    use CharacterProfileTrait;
+
+    /** @var XIVDB $xivdb */
     private $xivdb;
 
     /**
-     * Character constructor.
+     * @var Profile $profile
      */
-    function __construct()
+    private $profile;
+
+    /**
+     * Character constructor.
+     * @param int|null $id
+     */
+    function __construct(int $id)
     {
         $this->xivdb = new XIVDB();
+        $this->profile = new Profile();
+        $this->profile->setId($id);
     }
 
     /**
-     * @param bool $html
-     * @return array|bool
+     * @param bool $hash
+     * @return bool|Profile
      */
-    public function parse($hash = false)
+    public function parse()
     {
+        // setup html
         $this->ensureHtml();
-        $html = $this->html;
+        $this->html = $this->trim($this->html, 'class="ldst__main"', 'class="ldst__side"');
+        $this->setInitialDocument($this->html);
 
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-
-        $this->setInitialDocument($html);
-
+        // parse
         $started = microtime(true);
+        Benchmark::start(__METHOD__,__LINE__);
         $this->parseProfile();
         $this->parseClassJobs();
         $this->parseAttributes();
         $this->parseCollectables();
         $this->parseEquipGear();
         $this->parseActiveClass();
+        Benchmark::finish(__METHOD__,__LINE__);
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
-        // validate
-        $this->validate();
+        // generate hash
+        $this->profile->generateHash();
 
-        if ($hash) {
-            return $this->hash();
-        }
-
-        return $this->data;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hash()
-    {
-        if (!$this->data) {
-            Logger::write(__CLASS__, __LINE__, 'No data to hash against, have you done a parse() call?');
-            return false;
-        }
-
-        // remove data that could change outside
-        // of the players controller (inconsistent fake hash)
-        $data = $this->data;
-
-        // ---
-        // Much of the data is pulled out and stripped down, this
-        // is to try keep it consistent and not use array keys
-        // that are implemented through the parser and are not
-        // part of lodestone, it also bypasses json config issues.
-        // ---
-
-        // build a tight small array
-        $arr = [];
-        $arr[] = $data['id'];
-        $arr[] = $data['name'];
-        $arr[] = $data['server'];
-        $arr[] = $data['title'];
-        $arr[] = $data['race'];
-        $arr[] = $data['clan'];
-        $arr[] = $data['gender'];
-        $arr[] = $data['nameday'];
-        $arr[] = $data['guardian']['name'];
-        $arr[] = $data['city']['name'];
-        $arr[] = $data['grand_company']['name'];
-        $arr[] = $data['grand_company']['rank'];
-
-        foreach($data['classjobs'] as $classjob) {
-            // classjob _ level _ current exp _ max exp
-            $arr[] = sprintf('classjob_%s_%s_%s', $classjob['level'], $classjob['exp']['current'], $classjob['exp']['max']);
-        }
-
-        foreach($data['stats'] as $statlist) {
-            foreach($statlist as $name => $attr) {
-                // stat _ value
-                $arr[] = 'stat_'. $attr['value'];
-            }
-        }
-
-        foreach($data['mounts'] as $mount) {
-            // mount _ value
-            $arr[] = 'mount_'. strtolower($mount['name']);
-        }
-
-        foreach($data['minions'] as $minion) {
-            // minion _ value
-            $arr[] = 'minion_'. strtolower($minion['name']);
-        }
-
-        foreach($data['gear'] as $gear) {
-            // gear _ id _ materia count _ dye id _ mirage id
-            $arr[] = sprintf('gear_%s_%s_%s_%s', $gear['id'], count($gear['materia']), $gear['dye_id'], $gear['mirage_id']);
-        }
-
-        // active role _ id _ level
-        $arr[] = 'active_role_'. $data['active_class']['id'] .'_'. $data['active_class']['level'];
-
-        // lower all values
-        array_walk($arr, function(&$value) {
-            $value = strtolower($value);
-        });
-
-        // ensure same sorting
-        asort($arr);
-
-        // reduce to string
-        $arr = implode('|', $arr);
-
-        // provide sha1
-        return sha1($arr);
-    }
-
-    /**
-     * Validate character data
-     */
-    public function validate()
-    {
-        $validator = new CharacterValidator();
-
-        // run checks
-        $validator
-            ->check($this->data['id'], 'ID')->isNumeric()
-            ->check($this->data['name'], 'Name')->isValidCharacerName()
-            ->check($this->data['server'], 'Server')->isString()
-            ->check($this->data['title'], 'Title')->isStringOrEmpty();
-
-        // validate all our checks
-        $validator->validate();
-    }
-
-    /**
-     * Parse main profile bits
-     */
-    private function parseProfile()
-    {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-        $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // id
-        $data = explode('/', $box->find('.frame__chara__link', 0)->getAttribute('href'))[3];
-        $this->add('id', trim($data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // name
-        $data = $box->find('.frame__chara__name', 0)->plaintext;
-        $this->add('name', trim($data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // server
-        $data = $box->find('.frame__chara__world', 0)->plaintext;
-        $this->add('server', trim($data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // title
-        $this->add('title', null);
-        if ($title = $box->find('.frame__chara__title', 0)) {
-            $this->add('title', trim($title->plaintext));
-        }
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // avatar
-        $data = $box->find('.frame__chara__face', 0)->find('img', 0)->src;
-        $data = trim(explode('?', $data)[0]);
-        $this->add('avatar', $data);
-        $this->add('portrait', str_ireplace('c0_96x96', 'l0_640x873', $data));
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // biography
-        $box = $this->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"');
-        $data = trim($box->plaintext);
-        $this->add('biography', $data);
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // ----------------------
-        // move to character profile detail
-        $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
-        // ----------------------
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // race, clan, gender
-        $data = $box->find('.character-block', 0)->find('.character-block__name')->innerHtml();
-        list($race, $data) = explode('<br>', html_entity_decode(trim($data)));
-        list($clan, $gender) = explode('/', $data);
-        $this->add('race', strip_tags(trim($race)));
-        $this->add('clan', strip_tags(trim($clan)));
-        $this->add('gender', strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // nameday
-        $node = $box->find('.character-block', 1);
-        $data = $node->find('.character-block__birth', 0)->plaintext;
-        $this->add('nameday', $data);
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        $name = $node->find('.character-block__name', 0)->plaintext;
-        $id = $this->xivdb->getGuardianId($name);
-        $this->add('guardian', [
-            'id' => $id,
-            'icon' => explode('?', $node->find('img', 0)->src)[0],
-            'name' => $name,
-        ]);
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // city
-        $box = $this->getDocumentFromRangeCustom(42,47);
-        $name = $box->find('.character-block__name', 0)->plaintext;
-        $id = $this->xivdb->getTownId($name);
-        $this->add('city', [
-            'id' => $id,
-            'icon' => explode('?', $box->find('img', 0)->src)[0],
-            'name' => $name,
-        ]);
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        // grand company (and sometimes FC if they're in an FC but not in a GC)
-        $this->add('grand_company', null);
-        $this->add('free_company', null);
-
-        $box = $this->getDocumentFromRangeCustom(48,64);
-        if ($box)
-        {
-            // Grand Company
-            if ($gcNode = $box->find('.character-block__name', 0)) {
-                list($name, $rank) = explode('/', $gcNode->plaintext);
-                $id = $this->xivdb->getGrandCompanyId(trim($name));
-                //$rankId = $this->xivdb->getGrandCompanyRankId(trim($rank));
-
-                $this->add('grand_company', [
-                    'id' => $id,
-                    //'rank_id' => $rankId,
-                    'icon' => explode('?', $box->find('img', 0)->src)[0],
-                    'name' => trim($name),
-                    'rank' => trim($rank),
-                ]);
-            }
-
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-            // Free Company
-            if ($node = $box->find('.character__freecompany__name', 0))
-            {
-                $id = explode('/', $node->find('a', 0)->href)[3];
-                $this->add('free_company', $id);
-            }
-        }
-
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
-        unset($box);
-        unset($node);
+        return $this->profile->toArray();
     }
 
     /**
@@ -286,14 +74,13 @@ class Character extends ParserHelper
      */
     private function parseClassJobs()
     {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
         // class jobs
         $cj = [];
         foreach($box->find('.character__job') as $node)
         {
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
             $node = $this->getDocumentFromHtml($node->outertext);
 
             foreach($node->find('li') as $li)
@@ -325,13 +112,12 @@ class Character extends ParserHelper
                     ],
                 ];
             }
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
-        }
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        }
 
         $this->add('classjobs', $cj);
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -341,22 +127,18 @@ class Character extends ParserHelper
      */
     private function parseActiveClass()
     {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getDocumentFromClassname('.character__profile__detail', 0);
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         // level
         $level = trim($box->find('.character__class__data p', 0)->plaintext);
         $level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         // name
         $name = $box->find('.db-tooltip__item__category', 0)->plaintext;
         $name = explode("'", $name)[0];
         $name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
         $name = trim($name);
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         // classjob id
         $id = $this->xivdb->getRoleId($name);
@@ -391,7 +173,6 @@ class Character extends ParserHelper
             }
         }
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
 
         $this->add('active_class', [
             'id' => $id,
@@ -400,6 +181,7 @@ class Character extends ParserHelper
         ]);
 
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -407,13 +189,12 @@ class Character extends ParserHelper
      */
     private function parseAttributes()
     {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__AttributesPart1();
 
         $stats = [];
 
         // attributes
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -426,7 +207,6 @@ class Character extends ParserHelper
         }
 
         // offensive properties
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 1)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -439,7 +219,6 @@ class Character extends ParserHelper
         }
 
         // defensive properties
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 2)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -452,7 +231,6 @@ class Character extends ParserHelper
         }
 
         // physical properties
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 3)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -465,7 +243,6 @@ class Character extends ParserHelper
         }
 
         // mental properties
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 4)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -480,7 +257,6 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart2();
 
         // status resistances
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
             $name = $node->find('th')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -495,7 +271,6 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart3();
 
         // hp, mp, tp, cp, gp etc
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('li') as $node) {
             $name = $node->find('.character__param__text')->plaintext;
             $id = $this->xivdb->getBaseParamId($name);
@@ -510,7 +285,6 @@ class Character extends ParserHelper
         $box = $this->getSpecial__AttributesPart4();
 
         // elementals
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         foreach($box->find('li') as $node) {
             $name = explode('__', $node->innerHtml())[1];
             $name = explode(' ', $name)[0];
@@ -523,9 +297,9 @@ class Character extends ParserHelper
             ];
         }
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         $this->add('stats', $stats);
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -533,55 +307,56 @@ class Character extends ParserHelper
      */
     private function parseCollectables()
     {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__Collectables();
         if (!$box) {
             return;
         }
 
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
         if (!$box->find('.character__mounts', 0) || !$box->find('.character__minion', 0)) {
             return;
         }
 
         // get mounts
         $mounts = [];
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-        foreach($box->find('.character__mounts ul li') as $node) {
-            // name
-            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-            $id = $this->xivdb->getMountId($name);
-            $icon = $this->xivdb->getMountIcon($id);
-
-            $mounts[] = [
-                'id' => $id,
-                'name' => $name,
-                'icon' => $icon,
-            ];
+        foreach($box->find('.character__mounts ul li') as &$node) {
+            $mounts[] = $this->fetchCollectable($node, 'Mount');
         }
 
         $this->add('mounts', $mounts);
 
         // get minions
         $minions = [];
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
-        foreach($box->find('.character__minion ul li') as $node) {
-            // name
-            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-            $id = $this->xivdb->getMinionId($name);
-            $icon = $this->xivdb->getMinionIcon($id);
-
-            $minions[] = [
-                'id' => $id,
-                'name' => $name,
-                'icon' => $icon,
-            ];
+        foreach($box->find('.character__minion ul li') as &$node) {
+            $minions[] = $this->fetchCollectable($node, 'Minion');
         }
 
         $this->add('minions', $minions);
 
         // fin
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
+    }
+
+    /**
+     * @param $node
+     * @param $type
+     * @return Collectable
+     */
+    private function fetchCollectable(&$node, $type)
+    {
+        Benchmark::start(__METHOD__,__LINE__);
+        $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
+        $id = $this->xivdb->{'get'. $type .'Id'}($name);
+        $icon = $this->xivdb->{'get'. $type .'Icon'}($id);
+
+        $collectable = new Collectable();
+        Benchmark::finish(__METHOD__,__LINE__);
+
+        return $collectable
+            ->setId($id)
+            ->setName($name)
+            ->setIcon($icon);
     }
 
     /**
@@ -589,19 +364,19 @@ class Character extends ParserHelper
      */
     private function parseEquipGear()
     {
-        Logger::printtime(__FUNCTION__.'#'.__LINE__);
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__EquipGear();
         //$box = $this->getDocumentFromClassname('.character__content', 0);
 
         $gear = [];
         foreach($box->find('.item_detail_box') as $i => $node) {
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
             $name = $node->find('.db-tooltip__item__name')->plaintext;
             $id = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
 
             // add mirage
             $mirageId = false;
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
             $mirageNode = $node->find('.db-tooltip__item__mirage');
             if ($mirageNode) {
                 $mirageNode = $mirageNode->find('a', 0);
@@ -612,7 +387,7 @@ class Character extends ParserHelper
 
             // add creator
             $creatorId = false;
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
             $creatorNode = $node->find('.db-tooltip__signature-character');
             if ($creatorNode) {
                 $creatorNode = $creatorNode->find('a',0);
@@ -623,7 +398,7 @@ class Character extends ParserHelper
 
             // add dye
             $dyeId = false;
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
             $dyeNode = $node->find('.stain');
             if ($dyeNode) {
                 $dyeNode = $dyeNode->find('a',0);
@@ -654,7 +429,7 @@ class Character extends ParserHelper
             }
 
             // slot conditions, based on category
-            Logger::printtime(__FUNCTION__.'#'.__LINE__);
+
             $slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
 
             // if this is first item, its main-hand
@@ -682,5 +457,6 @@ class Character extends ParserHelper
 
         $this->add('gear', $gear);
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 }

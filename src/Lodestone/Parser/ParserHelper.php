@@ -24,6 +24,7 @@ class ParserHelper
 
     /**
      * @param $data
+     * @return $this
      */
     public function setData($data)
     {
@@ -114,7 +115,7 @@ class ParserHelper
     {
         $started = false;
         $html = [];
-        foreach(explode("\n", $this->dom->innerHtml()) as $i => $line) {
+        foreach(explode("\n", $this->dom->innerHtml()) as $i => &$line) {
             if (stripos($line, $start) > -1) {
                 $started = true;
             }
@@ -144,7 +145,7 @@ class ParserHelper
     {
         $html = explode("\n", $this->dom->innerHtml());
         if ($debug) {
-            $html = explode("\n", htmlentities($this->dom->innerHtml()));
+            $html = explode("\n", $this->dom->innerHtml());
             print_r($html);
             die;
         }
@@ -189,7 +190,7 @@ class ParserHelper
      */
     protected function findDomLine($domArray, $find)
     {
-        foreach($domArray as $i => $line) {
+        foreach($domArray as $i => &$line) {
             if (stripos($line, $find) > -1) {
                 return $line;
             }
@@ -233,7 +234,7 @@ class ParserHelper
         $finishIndex = 0;
 
         // truncate down to just the character
-        foreach($html as $i => $line) {
+        foreach($html as $i => &$line) {
             // start of code
             if (stripos($line, $startHtml) !== false) {
                 $startIndex = $i;

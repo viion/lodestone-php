@@ -400,15 +400,7 @@ class Character extends ParserHelper
         // get mounts
         $mounts = [];
         foreach($box->find('.character__mounts ul li') as &$node) {
-            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-            $id = $this->xivdb->getMountId($name);
-
-            $collectable = new Collectable();
-
-            $mounts[] = $collectable
-                ->setId($id)
-                ->setName($name)
-                ->setIcon($this->xivdb->getMountIcon($id));
+            $mounts[] = $this->fetchCollectable($node, 'Mount');
         }
 
         $this->add('mounts', $mounts);
@@ -416,35 +408,35 @@ class Character extends ParserHelper
         // get minions
         $minions = [];
         foreach($box->find('.character__minion ul li') as &$node) {
-            $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-            $id = $this->xivdb->getMinionId($name);
-
-            $collectable = new Collectable();
-
-            $minions[] = $collectable
-                ->setId($id)
-                ->setName($name)
-                ->setIcon($this->xivdb->getMinionIcon($id));
+            $minions[] = $this->fetchCollectable($node, 'Minion');
         }
 
         $this->add('minions', $minions);
 
         // fin
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
-    private function fetchCollectable(&$node) {
+    /**
+     * @param $node
+     * @param $type
+     * @return Collectable
+     */
+    private function fetchCollectable(&$node, $type)
+    {
+        Benchmark::start(__METHOD__,__LINE__);
         $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
-        $id = $this->xivdb->getMountId($name);
-        $icon = $this->xivdb->getMountIcon($id);
+        $id = $this->xivdb->{'get'. $type .'Id'}($name);
+        $icon = $this->xivdb->{'get'. $type .'Icon'}($id);
 
-        Logger::write(__CLASS__, __LINE__, $icon);
         $collectable = new Collectable();
 
         return $collectable
             ->setId($id)
             ->setName($name)
             ->setIcon($icon);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**

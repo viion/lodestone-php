@@ -351,12 +351,12 @@ class Character extends ParserHelper
         $icon = $this->xivdb->{'get'. $type .'Icon'}($id);
 
         $collectable = new Collectable();
+        Benchmark::finish(__METHOD__,__LINE__);
 
         return $collectable
             ->setId($id)
             ->setName($name)
             ->setIcon($icon);
-        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**

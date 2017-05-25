@@ -12,7 +12,7 @@ define('LOGGER_ENABLED', true);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // settings
-$max = 30;
+$max = isset($argv[1]) ? trim($argv[1]) : 10;
 $file = __DIR__.'/bench.json';
 
 // remove any existing bench file

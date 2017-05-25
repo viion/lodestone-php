@@ -10,7 +10,6 @@ require __DIR__.'/../vendor/autoload.php';
 
 define('BENCHMARK_ENABLED', true);
 define('LOGGER_ENABLED', true);
-define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // settings
 $max = isset($argv[1]) ? trim($argv[1]) : 10;

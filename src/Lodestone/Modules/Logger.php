@@ -55,15 +55,22 @@ class Logger
             $difference = '0000000000';
         }
 
+        // duration
         $duration = $finish - self::$startTime;
         $duration = str_pad(round($duration < 0.0001 ? 0 : $duration, 6), 10, '0');
         self::$duration = $duration;
 
+        // memory
+        $memory = memory_get_usage();
+        $memoryString = str_pad(number_format($memory), 15, ' ');
+
         // spacing
         $line = str_pad($line, 5, ' ');
         $flag = $difference > 0.002 ? '!' : ' ';
+        $flag = $memory > (1024 * 1024 * 5) ? '!' : $flag; // over 5 mb?
 
-        $string = "Duration: %s   + %s  %s     Line %s in  %s\n";
-        echo sprintf($string, $duration, $difference, $flag, $line, $function);
+
+        $string = "Duration: %s   + %s  %s    Mem: %s  Line %s in  %s\n";
+        echo sprintf($string, $duration, $difference, $flag, $memoryString, $line, $function);
     }
 }

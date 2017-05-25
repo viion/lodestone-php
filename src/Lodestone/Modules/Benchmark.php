@@ -43,12 +43,13 @@ class Benchmark
         if (!isset(self::$records[$id])) {
             // create record entry
             self::$records[$id] = [
-                'memory' => self::memory(),
                 'method' => $method,
                 'starting_line' => $line,
                 'starting_time' => self::timestamp(),
+                'starting_memory' => self::memory(),
                 'finish_line' => false,
                 'finish_time' => false,
+                'finish_memory' => false,
                 'duration' => false,
                 'duration_lowest' => 0,
                 'duration_highest' => 0,
@@ -84,6 +85,7 @@ class Benchmark
         // set finish times
         self::$records[$id]['finish_line'] = $line;
         self::$records[$id]['finish_time'] = self::timestamp();
+        self::$records[$id]['finish_memory'] = self::memory();
 
         $start = self::$records[$id]['starting_time'];
         $finish = self::$records[$id]['finish_time'];
@@ -152,19 +154,21 @@ class Benchmark
             // flag?
             $flag = $record->average > 0.001 ? ' !! ' : '    ';
 
-            $line = "%s%s    Line: %s to %s\n%s%s entries   average: %s ms   low: %s - high: %s\n\n";
+            $line = "%s[%s] %s   line: %s to %s\n%saverage: %s ms     low: %s - high: %s     Mem: %s - %s)\n\n";
 
             $line = sprintf(
                 $line,
                 $flag,
+                $record->entries,
                 $record->method,
                 $record->starting_line,
                 $record->finish_line,
                 $flag,
-                $record->entries,
                 $record->average,
                 $record->duration_lowest,
-                $record->duration_highest
+                $record->duration_highest,
+                $record->starting_memory,
+                $record->finish_memory
             );
 
             echo $line;
@@ -177,8 +181,7 @@ class Benchmark
      */
     public static function memory()
     {
-        $size = memory_get_usage(true);
-        $unit = ['b','kb','mb','gb','tb','pb'];
-        return @round($size/pow(1024,($i=floor(log($size,1024)))),2) .' '. $unit[$i];
+        $size = memory_get_usage();
+        return number_format(($size / 1024)) .' kb';
     }
 }

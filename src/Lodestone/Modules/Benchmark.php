@@ -154,7 +154,7 @@ class Benchmark
             // flag?
             $flag = $record->average > 0.001 ? ' !! ' : '    ';
 
-            $line = "%s[%s] %s   line: %s to %s\n%saverage: %s ms     low: %s - high: %s     Mem: %s - %s)\n\n";
+            $line = "%s[%s] %s   line: %s to %s\n%saverage: %s ms     low: %s - high: %s     Mem: %s - %s\n\n";
 
             $line = sprintf(
                 $line,

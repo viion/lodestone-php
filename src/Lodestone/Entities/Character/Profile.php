@@ -114,6 +114,16 @@ class Profile extends AbstractEntity
     }
 
     /**
+     * Generate a sha1 hash of this character
+     */
+    public function generateHash()
+    {
+        $this->hash = sha1(serialize($this->toArray()));
+    }
+
+    // ----
+
+    /**
      * @return string
      */
     public function getId(): string

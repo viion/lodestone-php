@@ -74,13 +74,13 @@ class Character extends ParserHelper
      */
     private function parseClassJobs()
     {
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
         // class jobs
         $cj = [];
         foreach($box->find('.character__job') as $node)
         {
-
             $node = $this->getDocumentFromHtml($node->outertext);
 
             foreach($node->find('li') as $li)
@@ -115,9 +115,9 @@ class Character extends ParserHelper
 
         }
 
-
         $this->add('classjobs', $cj);
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -127,7 +127,7 @@ class Character extends ParserHelper
      */
     private function parseActiveClass()
     {
-
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getDocumentFromClassname('.character__profile__detail', 0);
 
         // level
@@ -181,6 +181,7 @@ class Character extends ParserHelper
         ]);
 
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -188,6 +189,7 @@ class Character extends ParserHelper
      */
     private function parseAttributes()
     {
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__AttributesPart1();
 
         $stats = [];
@@ -297,6 +299,7 @@ class Character extends ParserHelper
 
         $this->add('stats', $stats);
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -304,6 +307,7 @@ class Character extends ParserHelper
      */
     private function parseCollectables()
     {
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__Collectables();
         if (!$box) {
             return;
@@ -360,6 +364,7 @@ class Character extends ParserHelper
      */
     private function parseEquipGear()
     {
+        Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__EquipGear();
         //$box = $this->getDocumentFromClassname('.character__content', 0);
 
@@ -452,5 +457,6 @@ class Character extends ParserHelper
 
         $this->add('gear', $gear);
         unset($box);
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 }

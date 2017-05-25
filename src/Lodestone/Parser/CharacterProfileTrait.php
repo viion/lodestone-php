@@ -28,28 +28,24 @@ trait CharacterProfileTrait
         $this->parseProfilePicture($box);
         $this->parseProfileBiography();
 
-        // ----------------------
         // move to character profile detail
         $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
-        // ----------------------
+        $this->parseProfileRaceClanGender($box);
 
-        $this->parseProfileDetails($box);
-
+        // move onto profile
         $node = $box->find('.character-block', 1);
         $this->parseProfileNameDay($node);
         $this->parseProfileGuardian($node);
         $this->parseProfileCity();
 
-        $box = $this->getDocumentFromRangeCustom(48,64);
-        if ($box) {
+        // handle grand company and free company
+        if ($box = $this->getDocumentFromRangeCustom(48,64)) {
             // Grand Company
             $this->parseProfileGrandcompany($box);
 
             // Free Company
             $this->parseProfileFreeCompany($box);
         }
-
-        // TODO: do something with profile
 
         unset($box);
         unset($node);
@@ -127,7 +123,7 @@ trait CharacterProfileTrait
      *
      * @param Document &$box
      */
-    private function parseProfileDetails(Document $box)
+    private function parseProfileRaceClanGender(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $data = $box
@@ -208,9 +204,9 @@ trait CharacterProfileTrait
 
             $this->profile
                 ->getGrandcompany()
-                ->setId($id)
-                ->setName($name)
-                ->setRank($rank)
+                ->setId(trim($id))
+                ->setName(trim($name))
+                ->setRank(trim($rank))
                 ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
         }
         Benchmark::finish(__METHOD__,__LINE__);

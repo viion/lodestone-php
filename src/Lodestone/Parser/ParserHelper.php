@@ -145,7 +145,7 @@ class ParserHelper
     {
         $html = explode("\n", $this->dom->innerHtml());
         if ($debug) {
-            $html = explode("\n", htmlentities($this->dom->innerHtml()));
+            $html = explode("\n", $this->dom->innerHtml());
             print_r($html);
             die;
         }

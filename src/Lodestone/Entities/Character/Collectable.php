@@ -5,30 +5,32 @@ use Lodestone\Entities\AbstractEntity;
 
 /**
  * Class Collectable
+ *
  * @package Lodestone\Entities\Character
  */
-class Collectable extends AbstractEntity {
-
+class Collectable extends AbstractEntity
+{
     /**
      * @var int id
      */
-    private $id;
+    public $id;
 
     /**
      * @var string name
      */
-    private $name;
+    public $name;
 
     /**
      * @var string icon
      */
-    private $icon;
+    public $icon;
 
     /**
      * @param int
      * @return $this
      */
-    public function setId(int $id) {
+    public function setId(int $id)
+    {
         $this->validator
             ->check($id, 'ID')
             ->isInitialized()
@@ -44,7 +46,8 @@ class Collectable extends AbstractEntity {
      * @param string
      * @return $this
      */
-    public function setName(string $name) {
+    public function setName(string $name)
+    {
         $this->validator
             ->check($name, 'Name')
             ->isInitialized()
@@ -61,7 +64,8 @@ class Collectable extends AbstractEntity {
      * @param string
      * @return $this
      */
-    public function setIcon(string $icon) {
+    public function setIcon(string $icon)
+    {
         $this->icon = $icon;
 
         return $this;
@@ -70,23 +74,24 @@ class Collectable extends AbstractEntity {
     /**
      * @return int
      */
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
     /**
      * @return string
      */
-    public function getIcon(): string {
+    public function getIcon(): string
+    {
         return $this->icon;
     }
-
-
 }

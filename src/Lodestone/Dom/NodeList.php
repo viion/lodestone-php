@@ -78,7 +78,7 @@ class NodeList extends \ArrayObject
             case 'innertext':
                 return $this->innerHtml();
             case 'plaintext':
-                return $this->text();
+                return trim($this->text());
         }
 
         return null;

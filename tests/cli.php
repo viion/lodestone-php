@@ -8,6 +8,7 @@
 // composer auto loader
 require __DIR__.'/../vendor/autoload.php';
 
+define('BENCHMARK_ENABLED', true);
 define('LOGGER_ENABLED', false);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 
@@ -16,7 +17,6 @@ define('LOGGER_ENABLE_PRINT_TIME', true);
 
 $option = isset($argv[1]) ? trim($argv[1]) : false;
 $id = isset($argv[2]) ? trim($argv[2]) : false;
-$hash = isset($argv[3]) ? trim($argv[3]) : false;
 if (!$option) {
     die('Please provide an option: character, fc, ls');
 }
@@ -28,8 +28,7 @@ $api = new \Lodestone\Api;
 $hash = false;
 switch($option) {
     case 'character':
-        $data = $api->getCharacter($id ? $id : 730968, $hash);
-        //$hash = $api->getCharacterHash($data);
+        $data = $api->getCharacter($id ? $id : 730968);
         break;
 
     case 'fc':
@@ -46,6 +45,5 @@ switch($option) {
 }
 
 // Array of character data
-//print_r($data);
-//print_r($hash);
+print_r($data);
 print_r(sprintf("Duration: %s - End\n\n", \Lodestone\Modules\Logger::$duration));

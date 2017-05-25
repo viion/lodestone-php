@@ -390,7 +390,7 @@ class Element implements \IteratorAggregate
             case 'innertext':
                 return $this->innerHtml();
             case 'plaintext':
-                return $this->text();
+                return trim($this->text());
             case 'tag'      :
                 return $this->node->nodeName;
             case 'attr'     :

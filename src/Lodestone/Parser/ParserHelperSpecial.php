@@ -2,6 +2,8 @@
 
 namespace Lodestone\Parser;
 
+use Lodestone\Dom\Document;
+
 /**
  * Bunch of custom helpers
  *
@@ -16,7 +18,7 @@ namespace Lodestone\Parser;
 trait ParserHelperSpecial
 {
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__AttributesPart1()
     {
@@ -37,7 +39,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__AttributesPart2()
     {
@@ -57,7 +59,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__AttributesPart3()
     {
@@ -78,7 +80,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__AttributesPart4()
     {
@@ -100,7 +102,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__ClassJobs()
     {
@@ -122,7 +124,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return bool
+     * @return bool|Document
      */
     protected function getSpecial__Collectables()
     {
@@ -148,7 +150,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__EquipGear()
     {
@@ -170,7 +172,7 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * @return Document
      */
     protected function getSpecial__Achievements()
     {

@@ -6,10 +6,11 @@ use Lodestone\Entities\AbstractEntity;
 
 /**
  * Class Guardian
+ *
  * @package Lodestone\Entities\Character\Profile
  */
-class Guardian extends AbstractEntity {
-
+class Guardian extends AbstractEntity
+{
     /**
      * @var int
      */
@@ -28,7 +29,8 @@ class Guardian extends AbstractEntity {
     /**
      * @return int
      */
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
@@ -36,7 +38,8 @@ class Guardian extends AbstractEntity {
      * @param int $id
      * @return $this
      */
-    public function setId(int $id) {
+    public function setId(int $id)
+    {
         $this->validator
             ->check($id, 'ID')
             ->isInitialized()
@@ -51,7 +54,8 @@ class Guardian extends AbstractEntity {
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
@@ -59,7 +63,8 @@ class Guardian extends AbstractEntity {
      * @param string $name
      * @return $this
      */
-    public function setName(string $name) {
+    public function setName(string $name)
+    {
         $this->validator
             ->check($name, 'Name')
             ->isInitialized()
@@ -75,7 +80,8 @@ class Guardian extends AbstractEntity {
     /**
      * @return string
      */
-    public function getIcon(): string {
+    public function getIcon(): string
+    {
         return $this->icon;
     }
 
@@ -83,7 +89,8 @@ class Guardian extends AbstractEntity {
      * @param string $icon
      * @return $this
      */
-    public function setIcon(string $icon) {
+    public function setIcon(string $icon)
+    {
         $this->validator
             ->check($icon, 'Icon URL')
             ->isInitialized()
@@ -95,7 +102,4 @@ class Guardian extends AbstractEntity {
 
         return $this;
     }
-
-
-
 }

@@ -74,7 +74,11 @@ class AbstractEntity
                     // if array, need to loop through it
                     case 'array':
                         foreach($this->{$property->name} as $i => $value) {
-                            $arr[$property->name][] = $value->toArray();
+                            if (method_exists($value, 'toArray')) {
+                                $arr[$property->name][] = $value->toArray();
+                            } else {
+                                $arr[$property->name] = $value;
+                            }
                         }
                         break;
 

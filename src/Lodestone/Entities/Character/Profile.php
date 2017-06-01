@@ -98,6 +98,11 @@ class Profile extends AbstractEntity
     public $classjobs = [];
 
     /**
+     * @var array
+     */
+    public $attributes = [];
+
+    /**
      * Profile constructor.
      *
      * @param $id

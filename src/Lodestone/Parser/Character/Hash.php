@@ -34,9 +34,10 @@ trait Hash
         // and could become malformed easily.
         unset($data['biography']);
 
-        print_r($data);
+        // remove stats, SE can change the formula
+        unset($data['stats']);
 
-        die;
+        //print_r($data); die;
 
         $this->hash = sha1(serialize($data));
     }

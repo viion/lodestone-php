@@ -14,6 +14,9 @@ class Logger
     public static $duration = 0;
     public static $log = [];
 
+    const MAX_TIME_INCREMENT = 0.002;
+    const MAX_MEMORY_USAGE = 20;
+
     /**
      * @param $class
      * @param $line
@@ -66,8 +69,8 @@ class Logger
 
         // spacing
         $line = str_pad($line, 5, ' ');
-        $flag = $difference > 0.002 ? '!' : ' ';
-        $flag = $memory > (1024 * 1024 * 5) ? '!' : $flag; // over 5 mb?
+        $flag = $difference > self::MAX_TIME_INCREMENT ? '!' : ' ';
+        $flag = $memory > (1024 * 1024 * self::MAX_MEMORY_USAGE) ? '!' : $flag; // over 5 mb?
 
 
         $string = "Duration: %s   + %s  %s    Mem: %s  Line %s in  %s\n";

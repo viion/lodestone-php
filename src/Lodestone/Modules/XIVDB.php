@@ -33,6 +33,7 @@ class XIVDB
         self::$initialized = true;
 
         Logger::write(__CLASS__, __LINE__, 'Starting XIVDB Module');
+        Benchmark::start(__METHOD__,__LINE__);
 
         // create http request object
         $this->Http = new HttpRequest;
@@ -69,6 +70,7 @@ class XIVDB
         self::$data = file_get_contents(self::CACHE);
         self::$data = json_decode(self::$data, true);
         Logger::write(__CLASS__, __LINE__, 'XIVDB Ready');
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
@@ -128,13 +130,17 @@ class XIVDB
      */
     public function getRoleId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['classjobs'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -144,13 +150,17 @@ class XIVDB
      */
     public function searchForItem($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['items'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj;
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -160,13 +170,17 @@ class XIVDB
      */
     public function getItemId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['items'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -176,13 +190,17 @@ class XIVDB
      */
     public function getMinionId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['minions'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -192,13 +210,17 @@ class XIVDB
      */
     public function getMountId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['mounts'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -208,6 +230,8 @@ class XIVDB
      */
     public function getBaseParamId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         // special, Lodestone only returns "Fire" "Water" etc
         // however the attribute is named "Fire Resistance", to
@@ -222,15 +246,18 @@ class XIVDB
         ];
 
         if (isset($manual[strtolower($name)])) {
+            Benchmark::finish(__METHOD__,__LINE__);
             return $manual[strtolower($name)];
         }
 
         foreach(self::$data['baseparams'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -240,13 +267,17 @@ class XIVDB
      */
     public function getGrandCompanyId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['gc'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -256,13 +287,17 @@ class XIVDB
      */
     public function getGrandCompanyRankId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['gc_ranks'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -272,13 +307,17 @@ class XIVDB
      */
     public function getGuardianId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['guardians'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -288,13 +327,17 @@ class XIVDB
      */
     public function getTownId($name)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         foreach(self::$data['towns'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
+                Benchmark::finish(__METHOD__,__LINE__);
                 return $obj['id'];
             }
         }
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return false;
     }
 
@@ -304,14 +347,19 @@ class XIVDB
      */
     public function getMountIcon($id)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         if (!isset(self::$data['mounts'][$id])) {
+            Benchmark::finish(__METHOD__,__LINE__);
             return false;
         }
 
         $icon = self::$data['mounts'][$id]['icon'];
         $icon = $this->iconize($icon);
         $icon = str_ireplace('004', '068', $icon) .'.png';
+
+        Benchmark::finish(__METHOD__,__LINE__);
         return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
     }
 
@@ -321,14 +369,19 @@ class XIVDB
      */
     public function getMinionIcon($id)
     {
+        Benchmark::start(__METHOD__,__LINE__);
+
         self::initialize();
         if (!isset(self::$data['minions'][$id])) {
+            Benchmark::finish(__METHOD__,__LINE__);
             return false;
         }
 
         $icon = self::$data['minions'][$id]['icon'];
         $icon = $this->iconize($icon);
         $icon = str_ireplace('004', '068', $icon) .'.png';
+
+        Benchmark::finish(__METHOD__,__LINE__);
         return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
     }
 

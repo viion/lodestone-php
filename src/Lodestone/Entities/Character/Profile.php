@@ -139,9 +139,6 @@ class Profile extends AbstractEntity
         $this->validator = new CharacterValidator();
 
         // profile classes
-        $this->grandcompany = new GrandCompany();
-        $this->city = new City();
-        $this->guardian = new Guardian();
         $this->collectables = new Collectables();
     }
 

@@ -14,6 +14,7 @@ class Benchmark
     private static $recordsTimes = [];
 
     const PRECISION = 5;
+    const MAX_TIME_INCREMENT = 0.002;
 
     /**
      * @param $function
@@ -164,7 +165,7 @@ class Benchmark
             $record->average = number_format($record->average, self::PRECISION);
 
             // flag?
-            $flag = $record->average > 0.002 ? ' !! ' : '    ';
+            $flag = $record->average > self::MAX_TIME_INCREMENT ? ' !! ' : '    ';
 
             $line = "%s[%s] %s   line: %s to %s\n%saverage: %s ms     low: %s - high: %s     Mem: %s - %s\n\n";
 

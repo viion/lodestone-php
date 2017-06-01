@@ -2,6 +2,9 @@
 
 namespace Lodestone\Parser\Character;
 
+use Lodestone\Entities\Character\City;
+use Lodestone\Entities\Character\GrandCompany;
+use Lodestone\Entities\Character\Guardian;
 use Lodestone\Modules\Benchmark;
 use Lodestone\Dom\{
     Document,
@@ -80,7 +83,7 @@ trait TraitProfile
      *
      * @param $box
      */
-    protected function parseProfileTitle(Document &$box)
+    protected function parseProfileTitle(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         if ($title = $box->find('.frame__chara__title', 0)) {
@@ -138,6 +141,7 @@ trait TraitProfile
             ->setRace(strip_tags(trim($race)))
             ->setClan(strip_tags(trim($clan)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
+
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -163,13 +167,19 @@ trait TraitProfile
     protected function parseProfileGuardian(Element $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
+
         $name = $box->find('.character-block__name', 0)->plaintext;
         $id = $this->xivdb->getGuardianId($name);
-        $this->profile
-            ->getGuardian()
+
+        $guardian = new Guardian();
+        $guardian
             ->setName($name)
             ->setId($id)
             ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+
+        $this->profile->guardian = $guardian;
+
+        unset($box);
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -180,13 +190,19 @@ trait TraitProfile
     {
         Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getDocumentFromRangeCustom(42,47);
+
         $name = $box->find('.character-block__name', 0)->plaintext;
         $id = $this->xivdb->getTownId($name);
-        $this->profile
-            ->getCity()
+
+        $city = new City();
+        $city
             ->setName($name)
             ->setId($id)
             ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+
+        $this->profile->city = $city;
+
+        unset($box);
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -195,20 +211,26 @@ trait TraitProfile
      *
      * @param Document &$box
      */
-    protected function parseProfileGrandcompany(Document &$box)
+    protected function parseProfileGrandcompany(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
+
         if ($node = $box->find('.character-block__name', 0)) {
             list($name, $rank) = explode('/', $node->plaintext);
             $id = $this->xivdb->getGrandCompanyId(trim($name));
 
-            $this->profile
-                ->getGrandcompany()
+            $grandcompany = new GrandCompany();
+            $grandcompany
                 ->setId(trim($id))
                 ->setName(trim($name))
                 ->setRank(trim($rank))
                 ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+
+            $this->profile->grandcompany = $grandcompany;
+
+            unset($node);
         }
+
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -217,11 +239,12 @@ trait TraitProfile
      *
      * @param Document &$box
      */
-    protected function parseProfileFreeCompany(Document &$box)
+    protected function parseProfileFreeCompany(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         if ($node = $box->find('.character__freecompany__name', 0)) {
             $this->profile->setFreecompany(explode('/', $node->find('a', 0)->href)[3]);
+            unset($node);
         }
         Benchmark::finish(__METHOD__,__LINE__);
     }

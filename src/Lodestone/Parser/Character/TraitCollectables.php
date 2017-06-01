@@ -47,7 +47,7 @@ trait TraitCollectables
      * @param $type
      * @return mixed
      */
-    protected function parseCollectableCommon(&$node, $type)
+    protected function parseCollectableCommon($node, $type)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
@@ -56,11 +56,14 @@ trait TraitCollectables
         $icon = $this->xivdb->{'get'. $type .'Icon'}($id);
 
         $collectable = new Collectable();
-        Benchmark::finish(__METHOD__,__LINE__);
-
-        return $collectable
+        $collectable
             ->setId($id)
             ->setName($name)
             ->setIcon($icon);
+
+        unset($node);
+        Benchmark::finish(__METHOD__,__LINE__);
+
+        return $collectable;
     }
 }

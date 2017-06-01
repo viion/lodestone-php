@@ -27,10 +27,11 @@ Below is a simple example for a try-catch statement:
 $api = new \Lodestone\Api();
 
 try {
-  $char = $api->character(<myCharId>);
+  $char = $api->getCharacter(<myCharId>);
   ... do something with $char ...
 } catch(\Lodestone\Validator\ValidationException $vex) {
   ... provide some fallback solution ...
+  echo $vex->getMessage();
 }
 ```
 
@@ -39,14 +40,21 @@ try {
 If the provided Validator does not contain a needed validation, it is possible to 
 extend the `\\Lodestone\\Validator\\BaseValidator Class` or one of its child classes.
 
+Validators have access after calling `check(x,y)` to:
+
+- `$this->object` - The object being checked/tested.
+- `$this->name` - A friendly name for the object.
+
 an Example for this would look like:
 
 ```php
 use \Lodestone\Validator\BaseValidator;
 use \Lodestone\Validator\ValidationException
 
-class MyValidator extends BaseValidator {
-  public function needsToStartWithA() {
+class MyValidator extends BaseValidator 
+{
+  public function needsToStartWithA() 
+  {
     if (!preg_match('/^[A|a]/', $this->object)) {
       $errors[] = throw new ValidationException($this->name . ' needs to start with an A or an a'.);
     }

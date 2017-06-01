@@ -103,6 +103,15 @@ class Profile extends AbstractEntity
     public $attributes = [];
 
     /**
+     * @var Collectables
+     */
+    public $collectables = null;
+
+    public $gear = null;
+
+    public $activeClassJob = null;
+
+    /**
      * Profile constructor.
      *
      * @param $id
@@ -127,6 +136,7 @@ class Profile extends AbstractEntity
         $this->grandcompany = new GrandCompany();
         $this->city = new City();
         $this->guardian = new Guardian();
+        $this->collectables = new Collectables();
     }
 
     /**

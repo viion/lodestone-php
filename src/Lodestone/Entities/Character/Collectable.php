@@ -1,4 +1,5 @@
 <?php
+
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
@@ -11,17 +12,17 @@ use Lodestone\Entities\AbstractEntity;
 class Collectable extends AbstractEntity
 {
     /**
-     * @var int id
+     * @var int
      */
     public $id;
 
     /**
-     * @var string name
+     * @var string
      */
     public $name;
 
     /**
-     * @var string icon
+     * @var string
      */
     public $icon;
 

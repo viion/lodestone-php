@@ -65,6 +65,7 @@ class AbstractEntity
                     // basic
                     case 'string':
                     case 'int':
+                    case 'integer':
                     case 'bool':
                     case 'float':
                         $arr[$property->name] = $this->{$property->name};

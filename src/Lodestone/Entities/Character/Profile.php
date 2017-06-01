@@ -112,6 +112,9 @@ class Profile extends AbstractEntity
      */
     public $gear = [];
 
+    /**
+     * @var ClassJob
+     */
     public $activeClassJob = null;
 
     /**

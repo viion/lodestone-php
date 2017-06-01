@@ -2,11 +2,8 @@
 
 namespace Lodestone\Parser\Character;
 
+use Lodestone\Entities\Character\{ClassJob,Item};
 use Lodestone\Modules\Benchmark;
-use Lodestone\Dom\{
-    Document,
-    Element
-};
 
 /**
  * Class TraitAttributes
@@ -16,27 +13,33 @@ use Lodestone\Dom\{
 trait TraitClassJobActive
 {
     /**
-     * Parse the characters active class/job
+     * Get the characters active class/job
+     *
      * THIS HAS TO RUN AFTER GEAR AS IT NEEDS
      * TO LOOK FOR SOUL CRYSTAL EQUIPPED
      */
     protected function parseActiveClass()
     {
         Benchmark::start(__METHOD__,__LINE__);
-        $box = $this->getDocumentFromClassname('.character__profile__detail', 0);
-        // level
-        $level = trim($box->find('.character__class__data p', 0)->plaintext);
-        $level = filter_var($level, FILTER_SANITIZE_NUMBER_INT);
-        // name
-        $name = $box->find('.db-tooltip__item__category', 0)->plaintext;
-        $name = explode("'", $name)[0];
-        $name = str_ireplace(['Two-handed', 'One-handed'], null, $name);
-        $name = trim($name);
-        // classjob id
-        $id = $this->xivdb->getRoleId($name);
+
+        // get main hand previously parsed
+        /** @var Item $mainhand */
+        $mainhand = $this->profile->gear['mainhand'];
+
+        // get class job id from mainhand category name
+        $id = $this->xivdb->getRoleId($mainhand->category);
+
+        // get classjob from the recorded class jobs and clone it
+        /** @var ClassJob $role */
+        $role = clone $this->profile->classjobs[$id];
+        $name = $role->name;
+
         // Handle jobs
-        $gear = $this->get('gear');
-        $soulcrystal = isset($gear['soulcrystal']) ? $gear['soulcrystal']['id'] : false;
+        $soulcrystal = isset($this->profile->gear['soulcrystal'])
+            ? $this->profile->gear['soulcrystal']->id
+            : false;
+
+        // if a soul crystal exists, get job id
         if ($soulcrystal) {
             $soulArray = [
                 '67fd81c209e' => 19, // pld
@@ -53,19 +56,25 @@ trait TraitClassJobActive
                 'b57f6b930d5' => 32, // drk
                 'fe184c7b6e2' => 33, // ast
             ];
+
             $jobId = array_key_exists($soulcrystal, $soulArray);
             if ($jobId) {
+                // convert soul id to job id
                 $jobId = $soulArray[$soulcrystal];
+
+                // set real name and id
                 $name = $this->xivdb->get('classjobs')[$jobId]['name_en'];
                 $id = $jobId;
             }
         }
-        $this->add('active_class', [
-            'id' => $id,
-            'level' => $level,
-            'name' => $name,
-        ]);
-        unset($box);
+
+        // set id and name
+        $role
+            ->setId($id)
+            ->setName($name);
+
+        // save
+        $this->profile->activeClassJob = $role;
         Benchmark::finish(__METHOD__,__LINE__);
     }
 }

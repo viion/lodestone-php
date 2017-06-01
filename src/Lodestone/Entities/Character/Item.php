@@ -34,6 +34,11 @@ class Item extends AbstractEntity
     /**
      * @var string
      */
+    public $category;
+
+    /**
+     * @var string
+     */
     public $mirageId;
 
     /**
@@ -142,6 +147,29 @@ class Item extends AbstractEntity
             ->validate();
 
         $this->slot = $slot;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory(string $category)
+    {
+        $this->validator
+            ->check($category, 'Item Category')
+            ->isInitialized()
+            ->isStringOrEmpty()
+            ->validate();
+
+        $this->category = $category;
         return $this;
     }
 

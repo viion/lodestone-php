@@ -33,6 +33,12 @@ trait TraitGear
                 ->setLodestoneId($lodestoneId)
                 ->setId($id);
 
+            // category
+            $category = $box->find('.db-tooltip__item__category', 0)->plaintext;
+            $category = explode("'", $category)[0];
+            $category = str_ireplace(['Two-handed', 'One-handed'], null, $category);
+            $item->setCategory(trim($category));
+
             // add mirage
             $mirageId = false;
             $mirageNode = $node->find('.db-tooltip__item__mirage');

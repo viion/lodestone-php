@@ -34,6 +34,12 @@ class Collectables extends AbstractEntity
      */
     public function setMinions(array $minions)
     {
+        $this->validator
+            ->check($minions, 'Minions array')
+            ->isInitialized()
+            ->isArray()
+            ->validate();
+
         $this->minions = $minions;
         return $this;
     }
@@ -61,7 +67,14 @@ class Collectables extends AbstractEntity
      */
     public function setMounts(array $mounts)
     {
+        $this->validator
+            ->check($mounts, 'Mounts array')
+            ->isInitialized()
+            ->isArray()
+            ->validate();
+
         $this->mounts = $mounts;
+        return $this;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Entities\Character\Profile;
+namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
 

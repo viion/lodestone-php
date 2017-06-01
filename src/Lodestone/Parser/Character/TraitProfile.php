@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Parser;
+namespace Lodestone\Parser\Character;
 
 use Lodestone\Modules\Benchmark;
 use Lodestone\Dom\{
@@ -13,12 +13,12 @@ use Lodestone\Dom\{
  *
  * @package Lodestone\Parser
  */
-trait CharacterProfileTrait
+trait TraitProfile
 {
     /**
      * Parse main profile bits
      */
-    private function parseProfile()
+    protected function parseProfile()
     {
         $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
 
@@ -56,7 +56,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfileName(Document $box)
+    protected function parseProfileName(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setName($box->find('.frame__chara__name', 0)->plaintext);
@@ -68,7 +68,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfileServer(Document $box)
+    protected function parseProfileServer(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setServer($box->find('.frame__chara__world', 0)->plaintext);
@@ -80,7 +80,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfileTitle(Document &$box)
+    protected function parseProfileTitle(Document &$box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         if ($title = $box->find('.frame__chara__title', 0)) {
@@ -94,7 +94,7 @@ trait CharacterProfileTrait
      *
      * @param $box
      */
-    private function parseProfilePicture(Document $box)
+    protected function parseProfilePicture(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $data = trim(explode('?', $box->find('.frame__chara__face', 0)->find('img', 0)->src)[0]);
@@ -107,7 +107,7 @@ trait CharacterProfileTrait
     /**
      * Extracts Biography from html
      */
-    private function parseProfileBiography()
+    protected function parseProfileBiography()
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setBiography(trim(
@@ -123,7 +123,7 @@ trait CharacterProfileTrait
      *
      * @param Document &$box
      */
-    private function parseProfileRaceClanGender(Document $box)
+    protected function parseProfileRaceClanGender(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $data = $box
@@ -146,7 +146,7 @@ trait CharacterProfileTrait
      *
      * @param Element $box
      */
-    private function parseProfileNameDay(Element $box)
+    protected function parseProfileNameDay(Element $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $this->profile->setNameday(
@@ -160,7 +160,7 @@ trait CharacterProfileTrait
      *
      * @param Element $box
      */
-    private function parseProfileGuardian(Element $box)
+    protected function parseProfileGuardian(Element $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $name = $box->find('.character-block__name', 0)->plaintext;
@@ -176,7 +176,7 @@ trait CharacterProfileTrait
     /**
      * Extract city from html
      */
-    private function parseProfileCity()
+    protected function parseProfileCity()
     {
         Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getDocumentFromRangeCustom(42,47);
@@ -195,7 +195,7 @@ trait CharacterProfileTrait
      *
      * @param Document &$box
      */
-    private function parseProfileGrandcompany(Document &$box)
+    protected function parseProfileGrandcompany(Document &$box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         if ($node = $box->find('.character-block__name', 0)) {
@@ -217,7 +217,7 @@ trait CharacterProfileTrait
      *
      * @param Document &$box
      */
-    private function parseProfileFreeCompany(Document &$box)
+    protected function parseProfileFreeCompany(Document &$box)
     {
         Benchmark::start(__METHOD__,__LINE__);
         if ($node = $box->find('.character__freecompany__name', 0)) {

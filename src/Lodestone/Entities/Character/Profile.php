@@ -4,11 +4,6 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
 use Lodestone\Validator\CharacterValidator;
-use Lodestone\Entities\Character\Profile\{
-    City,
-    GrandCompany,
-    Guardian
-};
 
 /**
  * Class Profile
@@ -98,11 +93,27 @@ class Profile extends AbstractEntity
     public $freecompany = null;
 
     /**
-     * Profile constructor.
+     * @var array
      */
-    public function __construct()
+    public $classjobs = [];
+
+    /**
+     * Profile constructor.
+     *
+     * @param $id
+     */
+    public function __construct($id)
     {
         parent::__construct();
+
+        $this->validator
+            ->check($id, 'ID')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isNumeric()
+            ->validate();
+
+        $this->id = $id;
 
         /** @var CharacterValidator $this->validator */
         $this->validator = new CharacterValidator();
@@ -114,14 +125,22 @@ class Profile extends AbstractEntity
     }
 
     /**
-     * Generate a sha1 hash of this character
+     * @return string
      */
-    public function generateHash()
+    public function getHash(): string
     {
-        $this->hash = sha1(serialize($this->toArray()));
+        return $this->hash;
     }
 
-    // ----
+    /**
+     * @param string $hash
+     * @return $this
+     */
+    public function setHash(string $hash)
+    {
+        $this->hash = $hash;
+        return $this;
+    }
 
     /**
      * @return string
@@ -129,24 +148,6 @@ class Profile extends AbstractEntity
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return $this
-     */
-    public function setId(string $id)
-    {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isNotEmpty()
-            ->isString()
-            ->validate();
-
-        $this->id = $id;
-
-        return $this;
     }
 
     /**

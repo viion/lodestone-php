@@ -3,10 +3,14 @@
 namespace Lodestone;
 
 // use all the things
-use Lodestone\Modules\{XIVDB, Logger,Routes};
+use Lodestone\Modules\{
+    XIVDB,
+    Logger,
+    Routes
+};
 use Lodestone\Parser\{
     Achievements,
-    Character,
+    Character\Parser as CharacterParser,
     CharacterFollowing,
     CharacterFriends,
     FreeCompany,
@@ -107,20 +111,7 @@ class Api
     public function getCharacter($id, $hash = false)
     {
         $url = sprintf(Routes::LODESTONE_CHARACTERS_URL, $id);
-        return $hash
-            ? (new Character($id))->url($url)->parse(true)
-            : (new Character($id))->url($url)->parse();
-    }
-
-    /**
-     * Get character has from pre-existing data
-     *
-     * @param $data
-     * @return mixed
-     */
-    public function getCharacterHash($data)
-    {
-        return (new Character())->setData((array)$data)->hash();
+        return (new CharacterParser($id))->url($url)->parse();
     }
 
     /**

@@ -7,7 +7,8 @@ use Lodestone\Validator\BaseValidator;
 
 /**
  * Class ParserHelper
- * @package src\Parser
+ *
+ * @package Lodestone\Parser
  */
 class ParserHelper
 {
@@ -41,6 +42,17 @@ class ParserHelper
         $http = new \Lodestone\Modules\HttpRequest();
         $this->html = $http->get($url);
         return $this;
+    }
+
+    /**
+     * Default setup that most parsers will use.
+     */
+    protected function initialize()
+    {
+        // setup html
+        $this->ensureHtml();
+        $this->html = $this->trim($this->html, 'class="ldst__main"', 'class="ldst__side"');
+        $this->setInitialDocument($this->html);
     }
 
     /**

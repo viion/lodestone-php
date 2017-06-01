@@ -1,12 +1,13 @@
 <?php
 
-namespace Lodestone\Entities\Character\Profile;
+namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
 
 /**
  * Class GrandCompany
- * @package Lodestone\Entities\Character\Profile
+ *
+ * @package Lodestone\Entities\Character
  */
 class GrandCompany extends AbstractEntity
 {

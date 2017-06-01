@@ -64,11 +64,17 @@ class AbstractEntity
                 switch(explode('|', $result['var'])[0]) {
                     // basic
                     case 'string':
-                    case 'array':
                     case 'int':
                     case 'bool':
                     case 'float':
                         $arr[$property->name] = $this->{$property->name};
+                        break;
+
+                    // if array, need to loop through it
+                    case 'array':
+                        foreach($this->{$property->name} as $i => $value) {
+                            $arr[$property->name][] = $value->toArray();
+                        }
                         break;
 
                     // assume a class, get its data
@@ -78,8 +84,8 @@ class AbstractEntity
                 }
             }
         }
-        Benchmark::finish(__METHOD__,__LINE__);
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return $arr;
     }
 }

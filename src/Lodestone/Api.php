@@ -105,10 +105,9 @@ class Api
     /**
      * @test 730968
      * @param $id
-     * @param bool $hash
      * @return array|bool
      */
-    public function getCharacter($id, $hash = false)
+    public function getCharacter($id)
     {
         $url = sprintf(Routes::LODESTONE_CHARACTERS_URL, $id);
         return (new CharacterParser($id))->url($url)->parse();

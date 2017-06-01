@@ -107,7 +107,10 @@ class Profile extends AbstractEntity
      */
     public $collectables = null;
 
-    public $gear = null;
+    /**
+     * @var array
+     */
+    public $gear = [];
 
     public $activeClassJob = null;
 

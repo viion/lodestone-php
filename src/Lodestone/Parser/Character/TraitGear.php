@@ -2,11 +2,8 @@
 
 namespace Lodestone\Parser\Character;
 
+use Lodestone\Entities\Character\Item;
 use Lodestone\Modules\Benchmark;
-use Lodestone\Dom\{
-    Document,
-    Element
-};
 
 /**
  * Class TraitAttributes
@@ -22,28 +19,34 @@ trait TraitGear
     {
         Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__EquipGear();
-        //$box = $this->getDocumentFromClassname('.character__content', 0);
 
-        $gear = [];
         foreach($box->find('.item_detail_box') as $i => $node) {
+            $item = new Item();
 
+            // name and id
             $name = $node->find('.db-tooltip__item__name')->plaintext;
-            $id = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
+            $lodestoneId = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
+            $id = $this->xivdb->getItemId($name);
+
+            $item
+                ->setName($name)
+                ->setLodestoneId($lodestoneId)
+                ->setId($id);
 
             // add mirage
             $mirageId = false;
-
             $mirageNode = $node->find('.db-tooltip__item__mirage');
             if ($mirageNode) {
                 $mirageNode = $mirageNode->find('a', 0);
                 if ($mirageNode) {
                     $mirageId = explode('/', $mirageNode->getAttribute('href'))[5];
+                    // todo - parse name and convert to ingame id
                 }
             }
+            $item->setMirageId($mirageId);
 
             // add creator
             $creatorId = false;
-
             $creatorNode = $node->find('.db-tooltip__signature-character');
             if ($creatorNode) {
                 $creatorNode = $creatorNode->find('a',0);
@@ -51,20 +54,21 @@ trait TraitGear
                     $creatorId = explode('/', $creatorNode->getAttribute('href'))[3];
                 }
             }
+            $item->setCreatorId($creatorId);
 
             // add dye
             $dyeId = false;
-
             $dyeNode = $node->find('.stain');
             if ($dyeNode) {
                 $dyeNode = $dyeNode->find('a',0);
                 if ($dyeNode) {
                     $dyeId = explode('/', $dyeNode->getAttribute('href'))[5];
+                    // todo - parse name and convert to ingame id
                 }
             }
+            $item->setDyeId($dyeId);
 
             // add materia
-            $materia = [];
             $materiaNodes = $node->find('.db-tooltip__materia',0);
             if ($materiaNodes) {
                 if ($materiaNodes = $materiaNodes->find('li')) {
@@ -76,16 +80,15 @@ trait TraitGear
 
                         list($mname, $mvalue) = explode('<br>', html_entity_decode($mhtml));
 
-                        $materia[] = [
+                        $item->addMateria([
                             'name' => trim(strip_tags($mname)),
                             'value' => trim(strip_tags($mvalue)),
-                        ];
+                        ]);
                     }
                 }
             }
 
             // slot conditions, based on category
-
             $slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
 
             // if this is first item, its main-hand
@@ -100,18 +103,13 @@ trait TraitGear
                 $slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
             }
 
+            $item->setSlot($slot);
+
+            // save
             $slot = str_ireplace(' ', '', $slot);
-            $gear[$slot] = [
-                'id' => $id,
-                'name' => $name,
-                'mirage_id' => $mirageId,
-                'creator_id' => $creatorId,
-                'dye_id' => $dyeId,
-                'materia' => $materia,
-            ];
+            $this->profile->gear[$slot] = $item;
         }
 
-        $this->add('gear', $gear);
         unset($box);
         Benchmark::finish(__METHOD__,__LINE__);
     }

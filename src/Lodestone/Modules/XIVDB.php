@@ -16,22 +16,27 @@ class XIVDB
     private $Http;
 
     /** @var array */
-    private $data;
+    private static $data;
+
+    /** @var bool */
+    private static $initialized = false;
 
     /**
      * XIVDB constructor.
      */
-    function __construct()
+    function initialize()
     {
-        $this->Http = new HttpRequest;
-        $this->init();
-    }
+        if (self::$initialized) {
+            return;
+        }
 
-    /**
-     * initialize
-     */
-    public function init()
-    {
+        self::$initialized = true;
+
+        Logger::write(__CLASS__, __LINE__, 'Starting XIVDB Module');
+
+        // create http request object
+        $this->Http = new HttpRequest;
+
         // if no cache file, get the data
         if (!file_exists(self::CACHE)) {
             $list = [
@@ -56,13 +61,13 @@ class XIVDB
             $this->arrange();
 
             // simplify contents
-            $data = json_encode($this->data);
+            $data = json_encode(self::$data);
             file_put_contents(self::CACHE, $data);
         }
 
         // decode data
-        $this->data = file_get_contents(self::CACHE);
-        $this->data = json_decode($this->data, true);
+        self::$data = file_get_contents(self::CACHE);
+        self::$data = json_decode(self::$data, true);
         Logger::write(__CLASS__, __LINE__, 'XIVDB Ready');
     }
 
@@ -73,7 +78,8 @@ class XIVDB
      */
     public function get($type)
     {
-        return $this->data[$type];
+        self::initialize();
+        return self::$data[$type];
     }
 
     /**
@@ -81,7 +87,8 @@ class XIVDB
      */
     public function getData()
     {
-        return $this->data;
+        self::initialize();
+        return self::$data;
     }
 
     /**
@@ -91,7 +98,8 @@ class XIVDB
     private function query($name, $route)
     {
         $data = $this->Http->get(self::HOST . $route);
-        $this->data[$name] = json_decode($data, true);
+        self::$data[$name] = json_decode($data, true);
+        Logger::write(__CLASS__, __LINE__, 'Obtained: '. $name);
     }
 
     /**
@@ -99,6 +107,7 @@ class XIVDB
      */
     public function clearCache()
     {
+        self::initialize();
         unlink(self::CACHE);
         Logger::write(__CLASS__, __LINE__, 'XIVDB Cache Cleared');
     }
@@ -109,6 +118,7 @@ class XIVDB
      */
     public function checkCache()
     {
+        self::initialize();
         // get latest patch
     }
 
@@ -118,7 +128,8 @@ class XIVDB
      */
     public function getRoleId($name)
     {
-        foreach($this->data['classjobs'] as $obj) {
+        self::initialize();
+        foreach(self::$data['classjobs'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -133,7 +144,8 @@ class XIVDB
      */
     public function searchForItem($name)
     {
-        foreach($this->data['items'] as $obj) {
+        self::initialize();
+        foreach(self::$data['items'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj;
             }
@@ -146,9 +158,26 @@ class XIVDB
      * @param $name
      * @return bool
      */
+    public function getItemId($name)
+    {
+        self::initialize();
+        foreach(self::$data['items'] as $obj) {
+            if (strtolower($obj['name_en']) == strtolower($name)) {
+                return $obj['id'];
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
     public function getMinionId($name)
     {
-        foreach($this->data['minions'] as $obj) {
+        self::initialize();
+        foreach(self::$data['minions'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -163,7 +192,8 @@ class XIVDB
      */
     public function getMountId($name)
     {
-        foreach($this->data['mounts'] as $obj) {
+        self::initialize();
+        foreach(self::$data['mounts'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -178,6 +208,7 @@ class XIVDB
      */
     public function getBaseParamId($name)
     {
+        self::initialize();
         // special, Lodestone only returns "Fire" "Water" etc
         // however the attribute is named "Fire Resistance", to
         // reduce multi-language, I will manually convert these
@@ -194,7 +225,7 @@ class XIVDB
             return $manual[strtolower($name)];
         }
 
-        foreach($this->data['baseparams'] as $obj) {
+        foreach(self::$data['baseparams'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -209,7 +240,8 @@ class XIVDB
      */
     public function getGrandCompanyId($name)
     {
-        foreach($this->data['gc'] as $obj) {
+        self::initialize();
+        foreach(self::$data['gc'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -224,7 +256,8 @@ class XIVDB
      */
     public function getGrandCompanyRankId($name)
     {
-        foreach($this->data['gc_ranks'] as $obj) {
+        self::initialize();
+        foreach(self::$data['gc_ranks'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -239,7 +272,8 @@ class XIVDB
      */
     public function getGuardianId($name)
     {
-        foreach($this->data['guardians'] as $obj) {
+        self::initialize();
+        foreach(self::$data['guardians'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -254,7 +288,8 @@ class XIVDB
      */
     public function getTownId($name)
     {
-        foreach($this->data['towns'] as $obj) {
+        self::initialize();
+        foreach(self::$data['towns'] as $obj) {
             if (strtolower($obj['name_en']) == strtolower($name)) {
                 return $obj['id'];
             }
@@ -269,11 +304,12 @@ class XIVDB
      */
     public function getMountIcon($id)
     {
-        if (!isset($this->data['mounts'][$id])) {
+        self::initialize();
+        if (!isset(self::$data['mounts'][$id])) {
             return false;
         }
 
-        $icon = $this->data['mounts'][$id]['icon'];
+        $icon = self::$data['mounts'][$id]['icon'];
         $icon = $this->iconize($icon);
         $icon = str_ireplace('004', '068', $icon) .'.png';
         return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
@@ -285,11 +321,12 @@ class XIVDB
      */
     public function getMinionIcon($id)
     {
-        if (!isset($this->data['minions'][$id])) {
+        self::initialize();
+        if (!isset(self::$data['minions'][$id])) {
             return false;
         }
 
-        $icon = $this->data['minions'][$id]['icon'];
+        $icon = self::$data['minions'][$id]['icon'];
         $icon = $this->iconize($icon);
         $icon = str_ireplace('004', '068', $icon) .'.png';
         return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
@@ -301,6 +338,7 @@ class XIVDB
      */
     public function iconize($number)
     {
+        self::initialize();
         $number = intval($number);
 
         $path = [];
@@ -323,21 +361,23 @@ class XIVDB
      */
     private function arrange()
     {
+        self::initialize();
+
         $data = [];
 
         // build array of items against their lodestone id
-        foreach($this->data['items'] as $i => $obj) {
+        foreach(self::$data['items'] as $i => $obj) {
             $id = $obj['lodestone_id'] ? $obj['lodestone_id'] : 'game_'. $obj['id'];
-            $dataa['items'][$id] = $obj;
+            $data['items'][$id] = $obj;
         }
 
         // build array of other content against their ids
         foreach(['classjobs', 'minions', 'mounts', 'gc', 'baseparams', 'towns', 'guardians'] as $index) {
-            foreach($this->data[$index] as $i => $obj) {
+            foreach(self::$data[$index] as $i => $obj) {
                 $data[$index][$obj['id']] = $obj;
             }
         }
 
-        $this->data = $data;
+        self::$data = $data;
     }
 }

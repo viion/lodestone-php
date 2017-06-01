@@ -1,6 +1,7 @@
 <?php
 
 namespace Lodestone\Modules;
+use Lodestone\Validator\ValidationException;
 
 /**
  * Class XIVDB
@@ -12,11 +13,27 @@ class XIVDB
     const HOST_SECURE = 'https://secure.xivdb.com';
     const CACHE = __DIR__.'/xivdb.json';
 
+    const API_CALLS = [
+        'exp_table' => '/data/exp_table',
+        'classjobs' => '/data/classjobs',
+        'gc' => '/data/gc',
+        //'gc_ranks' => '/data/gc_ranks',
+        'baseparams' => '/data/baseparams',
+        'towns' => '/data/towns',
+        'guardians' => '/data/guardians',
+        'minions' => '/minion?columns=id,name,icon',
+        'mounts' => '/mount?columns=id,name,icon',
+        'items' => '/item?columns=id,name',
+    ];
+
     /** @var HttpRequest */
     private $Http;
 
     /** @var array */
     private static $data;
+
+    /** @var array */
+    private static $icons;
 
     /** @var bool */
     private static $initialized = false;
@@ -40,35 +57,30 @@ class XIVDB
 
         // if no cache file, get the data
         if (!file_exists(self::CACHE)) {
-            $list = [
-                ['exp_table', '/data/exp_table'],
-                ['classjobs', '/data/classjobs'],
-                ['gc', '/data/gc'],
-                //['gc_ranks', '/data/gc_ranks'],
-                ['baseparams', '/data/baseparams'],
-                ['towns', '/data/towns'],
-                ['guardians', '/data/guardians'],
-                ['minions', '/minion?columns=id,name_en,icon'],
-                ['mounts', '/mount?columns=id,name_en,icon'],
-                ['items', '/item?columns=id,name_en,lodestone_id'],
-            ];
-
-            foreach($list as $dataset) {
-                list($index, $query) = $dataset;
+            foreach(self::API_CALLS as $index => $query) {
                 $this->query($index, $query);
             }
 
             // array some data
-            $this->arrange();
+            $this->handleIcons();
+            $this->handleCollection();
 
             // simplify contents
-            $data = json_encode(self::$data);
+            $data = json_encode([
+                'data' => self::$data,
+                'icons' => self::$icons,
+            ]);
+
             file_put_contents(self::CACHE, $data);
         }
 
         // decode data
-        self::$data = file_get_contents(self::CACHE);
-        self::$data = json_decode(self::$data, true);
+        $xivdb = file_get_contents(self::CACHE);
+        $xivdb = json_decode($xivdb, true);
+
+        self::$data = $xivdb['data'];
+        self::$icons = $xivdb['icons'];
+
         Logger::write(__CLASS__, __LINE__, 'XIVDB Ready');
         Benchmark::finish(__METHOD__,__LINE__);
     }
@@ -125,43 +137,128 @@ class XIVDB
     }
 
     /**
-     * @param $name
-     * @return bool
+     * Handle icons
      */
-    public function getRoleId($name)
+    private function handleIcons()
     {
-        Benchmark::start(__METHOD__,__LINE__);
+        $icons = [];
 
-        self::initialize();
-        foreach(self::$data['classjobs'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
+        foreach(['minions','mounts'] as $index) {
+            foreach(self::$data[$index] as $collectable) {
+                $id = $collectable['id'];
+                $icon = $collectable['icon'];
+
+                $icon = $this->iconize($icon);
+                $icon = str_ireplace('004', '068', $icon) .'.png';
+                $icon = sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
+
+                $icons[$index][$id] = $icon;
             }
         }
 
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
+        self::$icons = $icons;
+    }
+
+    /**
+     * Arrange some data from the api
+     */
+    private function handleCollection()
+    {
+        self::initialize();
+
+        $data = [];
+
+        // store everything by a hash of its name
+        foreach(array_keys(self::API_CALLS) as $index) {
+            foreach (self::$data[$index] as $i => $obj) {
+                $value = isset($obj['name'])
+                    ? $obj['name']
+                    : (isset($obj['name_en'])
+                        ? $obj['name_en']
+                        : $obj['id']);
+
+                if (!$index || !$value) {
+                    continue;
+                }
+
+                $hash = $this->getStorageHash($value);
+                $data[$index][$hash] = $obj['id'];
+            }
+        }
+
+        self::$data = $data;
+    }
+
+    /**
+     * Generate hash
+     *
+     * @param $value
+     * @return bool|string
+     */
+    private function getStorageHash($value)
+    {
+        // assuming no collisions for 8 characters,
+        // we don't have much data
+        return substr(md5(strtolower($value)), 0, 8);
+    }
+
+    /**
+     * Convert icon id to real path
+     *
+     * @param $number
+     * @return string
+     */
+    public function iconize($number)
+    {
+        $number = intval($number);
+        $path = [];
+        if (strlen($number) >= 6) {
+            $icon = str_pad($number, 5, "0", STR_PAD_LEFT);
+            $path[] = $icon[0] . $icon[1] . $icon[2] .'000';
+        } else {
+            $icon = '0' . str_pad($number, 5, "0", STR_PAD_LEFT);
+            $path[] = '0'. $icon[1] . $icon[2] .'000';
+        }
+        $path[] = $icon;
+        $icon = implode('/', $path);
+        return $icon;
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    /**
+     * Get data from xivdb
+     *
+     * @param $type
+     * @param $name
+     * @return mixed
+     */
+    public function getDataEntry($type, $name)
+    {
+        Benchmark::start(__METHOD__,__LINE__);
+        self::initialize();
+
+        $hash = $this->getStorageHash($name);
+        $value = isset(self::$data[$type][$hash]) ? self::$data[$type][$hash] : false;
+
+        if (!$value) {
+            throw new ValidationException(
+                sprintf('Could not find XIVDB ID for: Type: %s Hash: %s Name: %s',
+                    $type, $hash, $name
+                )
+            );
+        }
+
+        return $value;
     }
 
     /**
      * @param $name
      * @return bool
      */
-    public function searchForItem($name)
+    public function getRoleId($name)
     {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        foreach(self::$data['items'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj;
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
+        return $this->getDataEntry('classjobs', $name);
     }
 
     /**
@@ -170,18 +267,7 @@ class XIVDB
      */
     public function getItemId($name)
     {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        foreach(self::$data['items'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
+        return $this->getDataEntry('items', $name);
     }
 
     /**
@@ -190,18 +276,16 @@ class XIVDB
      */
     public function getMinionId($name)
     {
-        Benchmark::start(__METHOD__,__LINE__);
+        return $this->getDataEntry('minions', $name);
+    }
 
-        self::initialize();
-        foreach(self::$data['minions'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getMinionIcon($id)
+    {
+        return self::$icons['minions'][$id];
     }
 
     /**
@@ -210,18 +294,52 @@ class XIVDB
      */
     public function getMountId($name)
     {
-        Benchmark::start(__METHOD__,__LINE__);
+        return $this->getDataEntry('mounts', $name);
+    }
 
-        self::initialize();
-        foreach(self::$data['mounts'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getMountIcon($id)
+    {
+        return self::$icons['mounts'][$id];
+    }
 
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getGrandCompanyId($name)
+    {
+        return $this->getDataEntry('gc', $name);
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getGrandCompanyRankId($name)
+    {
+        return $this->getDataEntry('gc_ranks', $name);
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getGuardianId($name)
+    {
+        return $this->getDataEntry('guardians', $name);
+    }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function getTownId($name)
+    {
+        return $this->getDataEntry('towns', $name);
     }
 
     /**
@@ -233,6 +351,7 @@ class XIVDB
         Benchmark::start(__METHOD__,__LINE__);
 
         self::initialize();
+
         // special, Lodestone only returns "Fire" "Water" etc
         // however the attribute is named "Fire Resistance", to
         // reduce multi-language, I will manually convert these
@@ -250,187 +369,6 @@ class XIVDB
             return $manual[strtolower($name)];
         }
 
-        foreach(self::$data['baseparams'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getGrandCompanyId($name)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        foreach(self::$data['gc'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getGrandCompanyRankId($name)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        foreach(self::$data['gc_ranks'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getGuardianId($name)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        foreach(self::$data['guardians'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getTownId($name)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        foreach(self::$data['towns'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                Benchmark::finish(__METHOD__,__LINE__);
-                return $obj['id'];
-            }
-        }
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return false;
-    }
-
-    /**
-     * @param $id
-     * @return mixed|string
-     */
-    public function getMountIcon($id)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        if (!isset(self::$data['mounts'][$id])) {
-            Benchmark::finish(__METHOD__,__LINE__);
-            return false;
-        }
-
-        $icon = self::$data['mounts'][$id]['icon'];
-        $icon = $this->iconize($icon);
-        $icon = str_ireplace('004', '068', $icon) .'.png';
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
-    }
-
-    /**
-     * @param $id
-     * @return mixed|string
-     */
-    public function getMinionIcon($id)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        self::initialize();
-        if (!isset(self::$data['minions'][$id])) {
-            Benchmark::finish(__METHOD__,__LINE__);
-            return false;
-        }
-
-        $icon = self::$data['minions'][$id]['icon'];
-        $icon = $this->iconize($icon);
-        $icon = str_ireplace('004', '068', $icon) .'.png';
-
-        Benchmark::finish(__METHOD__,__LINE__);
-        return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
-    }
-
-    /**
-     * @param $number
-     * @return string
-     */
-    public function iconize($number)
-    {
-        self::initialize();
-        $number = intval($number);
-
-        $path = [];
-
-        if (strlen($number) >= 6) {
-            $icon = str_pad($number, 5, "0", STR_PAD_LEFT);
-            $path[] = $icon[0] . $icon[1] . $icon[2] .'000';
-        } else {
-            $icon = '0' . str_pad($number, 5, "0", STR_PAD_LEFT);
-            $path[] = '0'. $icon[1] . $icon[2] .'000';
-        }
-
-        $path[] = $icon;
-        $icon = implode('/', $path);
-        return $icon;
-    }
-
-    /**
-     * Arrange some data from the api
-     */
-    private function arrange()
-    {
-        self::initialize();
-
-        $data = [];
-
-        // build array of items against their lodestone id
-        foreach(self::$data['items'] as $i => $obj) {
-            $id = $obj['lodestone_id'] ? $obj['lodestone_id'] : 'game_'. $obj['id'];
-            $data['items'][$id] = $obj;
-        }
-
-        // build array of other content against their ids
-        foreach(['classjobs', 'minions', 'mounts', 'gc', 'baseparams', 'towns', 'guardians'] as $index) {
-            foreach(self::$data[$index] as $i => $obj) {
-                $data[$index][$obj['id']] = $obj;
-            }
-        }
-
-        self::$data = $data;
+        return $this->getDataEntry('baseparams', $name);
     }
 }

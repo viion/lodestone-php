@@ -29,6 +29,15 @@ trait TraitClassJobActive
         // get class job id from mainhand category name
         $id = $this->xivdb->getClassJobId($mainhand->category);
 
+        if (!$id) {
+            $role = new ClassJob();
+            $role->setName($mainhand->category);
+            $this->profile->activeClassJob = $role;
+
+            Benchmark::finish(__METHOD__,__LINE__);
+            return;
+        }
+
         // get classjob from the recorded class jobs and clone it
         /** @var ClassJob $role */
         $role = clone $this->profile->classjobs[$id];
@@ -63,8 +72,11 @@ trait TraitClassJobActive
                 $jobId = $soulArray[$soulcrystal];
 
                 // set real name and id
-                $name = $this->xivdb->getClassJobName($jobId);
-                $id = $jobId;
+                if ($jobId) {
+                    $name = $this->xivdb->getClassJobName($jobId);
+                    $id = $jobId;
+                }
+
             }
         }
 

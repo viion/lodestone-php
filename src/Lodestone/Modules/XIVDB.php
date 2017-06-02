@@ -21,11 +21,25 @@ class XIVDB
     /** @var HttpRequest */
     private $http;
 
+    /** @var bool $enabled */
+    public static $enabled = [
+        'items' => false,
+        'exp' => true,
+        'classjobs' => true,
+        'profile' => true,
+        'collectables' => true,
+        'attributes' => true,
+    ];
+
     /**
      * XIVDB constructor.
      */
     function __construct()
     {
+        // convert to object
+        self::$enabled = (Object)self::$enabled;
+
+        // initialize http request
         $this->http = new HttpRequest();
 
         if (!$this->isApiReady()) {
@@ -41,6 +55,18 @@ class XIVDB
 
             file_put_contents(self::CACHE_CHECK, time());
         }
+    }
+
+    /**
+     * Set options
+     *
+     * @param $options
+     * @return $this
+     */
+    public function setOptions($options)
+    {
+        self::$enabled = (Object)$options;
+        return $this;
     }
 
     /**

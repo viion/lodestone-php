@@ -40,14 +40,7 @@ class City extends AbstractEntity
      */
     public function setId(int $id)
     {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isInteger()
-            ->validate();
-
         $this->id = $id;
-
         return $this;
     }
 

@@ -67,7 +67,7 @@ class Parser extends ParserHelper
         // generate hash
         //$this->hash();
 
-        print_r($this->profile);
+        //print_r($this->profile);
         die;
 
         return $this->profile->toArray();

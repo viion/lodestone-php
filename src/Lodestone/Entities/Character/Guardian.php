@@ -38,16 +38,9 @@ class Guardian extends AbstractEntity
      * @param int $id
      * @return $this
      */
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isInteger()
-            ->validate();
-
         $this->id = $id;
-
         return $this;
     }
 

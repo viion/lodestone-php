@@ -21,6 +21,10 @@ trait XIVDBDataTrait
 
     public function getExpGained($level, $exp)
     {
+        if (!self::$enabled->exp) {
+            return false;
+        }
+
         $data = $this->getData('exp');
 
         // add up the total exp obtained
@@ -35,12 +39,20 @@ trait XIVDBDataTrait
 
     public function getTotalExp()
     {
+        if (!self::$enabled->exp) {
+            return false;
+        }
+
         $data = $this->getData('exp');
         return array_sum($data);
     }
 
     public function getBaseParamId($name)
     {
+        if (!self::$enabled->attributes) {
+            return false;
+        }
+
         // special, Lodestone only returns "Fire" "Water" etc
         // however the attribute is named "Fire Resistance", to
         // reduce multi-language, I will manually convert these
@@ -62,6 +74,10 @@ trait XIVDBDataTrait
 
     public function getItemId($name)
     {
+        if (!self::$enabled->items) {
+            return false;
+        }
+
         $method = sprintf('%s(%s)', __METHOD__, $name);
         Benchmark::start($method,__LINE__);
 
@@ -76,37 +92,65 @@ trait XIVDBDataTrait
 
     public function getClassJobId($name)
     {
+        if (!self::$enabled->classjobs) {
+            return false;
+        }
+
         return $this->commonGetNameFromId('classjobs', $name);
     }
 
     public function getClassJobName($id)
     {
+        if (!self::$enabled->classjobs) {
+            return false;
+        }
+
         $json = $this->getData('classjobs2');
         return $json[$id];
     }
 
     public function getGcId($name)
     {
+        if (!self::$enabled->profile) {
+            return false;
+        }
+
         return $this->commonGetNameFromId('gc', $name);
     }
 
     public function getTownId($name)
     {
+        if (!self::$enabled->profile) {
+            return false;
+        }
+
         return $this->commonGetNameFromId('towns', $name);
     }
 
     public function getGuardianId($name)
     {
+        if (!self::$enabled->profile) {
+            return false;
+        }
+
         return $this->commonGetNameFromId('guardians', $name);
     }
 
     public function getMinionId($name)
     {
+        if (!self::$enabled->collectables) {
+            return false;
+        }
+
         return $this->commonGetNameFromId('minions', $name);
     }
 
     public function getMountId($name)
     {
+        if (!self::$enabled->collectables) {
+            return false;
+        }
+
         return $this->commonGetNameFromId('mounts', $name);
     }
 

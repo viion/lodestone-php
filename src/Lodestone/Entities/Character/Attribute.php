@@ -37,14 +37,8 @@ class Attribute extends AbstractEntity
     /**
      * @param int $id
      */
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->validator
-            ->check($id, 'Attribute ID')
-            ->isInitialized()
-            ->isNumeric()
-            ->validate();
-
         $this->id = $id;
         return $this;
     }

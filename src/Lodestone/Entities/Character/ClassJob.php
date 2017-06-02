@@ -67,13 +67,8 @@ class ClassJob extends AbstractEntity
     /**
      * @param int $id
      */
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isInteger();
-
         $this->id = $id;
         return $this;
     }

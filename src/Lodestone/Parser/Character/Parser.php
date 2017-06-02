@@ -65,7 +65,7 @@ class Parser extends ParserHelper
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
         // generate hash
-        $this->hash();
+        //$this->hash();
 
         print_r($this->profile);
         die;

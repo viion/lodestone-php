@@ -29,12 +29,32 @@ class ClassJob extends AbstractEntity
     /**
      * @var int
      */
-    public $currentExp;
+    public $expLevel;
 
     /**
      * @var int
      */
-    public $maxExp;
+    public $expLevelTogo;
+
+    /**
+     * @var int
+     */
+    public $expLevelMax;
+
+    /**
+     * @var int
+     */
+    public $expTotal;
+
+    /**
+     * @var int
+     */
+    public $expTotalMax;
+
+    /**
+     * @var int
+     */
+    public $expTotalTogo;
 
     /**
      * @return int
@@ -108,46 +128,102 @@ class ClassJob extends AbstractEntity
     /**
      * @return int
      */
-    public function getCurrentExp(): int
+    public function getExpLevel(): int
     {
-        return $this->currentExp;
+        return $this->expLevel;
     }
 
     /**
-     * @param int $currentExp
+     * @param int $expLevel
      */
-    public function setCurrentExp(int $currentExp)
+    public function setExpLevel(int $expLevel)
     {
-        $this->validator
-            ->check($currentExp, 'Current EXP')
-            ->isInitialized()
-            ->isNumeric()
-            ->validate();
-
-        $this->currentExp = $currentExp;
+        $this->expLevel = $expLevel;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getMaxExp(): int
+    public function getExpLevelTogo(): int
     {
-        return $this->maxExp;
+        return $this->expLevelTogo;
     }
 
     /**
-     * @param int $maxExp
+     * @param int $expLevelTogo
      */
-    public function setMaxExp(int $maxExp)
+    public function setExpLevelTogo(int $expLevelTogo)
     {
-        $this->validator
-            ->check($maxExp, 'Max EXP')
-            ->isInitialized()
-            ->isNumeric()
-            ->validate();
+        $this->expLevelTogo = $expLevelTogo;
+        return $this;
+    }
 
-        $this->maxExp = $maxExp;
+    /**
+     * @return int
+     */
+    public function getExpLevelMax(): int
+    {
+        return $this->expLevelMax;
+    }
+
+    /**
+     * @param int $expLevelMax
+     */
+    public function setExpLevelMax(int $expLevelMax)
+    {
+        $this->expLevelMax = $expLevelMax;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpTotal(): int
+    {
+        return $this->expTotal;
+    }
+
+    /**
+     * @param int $expTotal
+     */
+    public function setExpTotal(int $expTotal)
+    {
+        $this->expTotal = $expTotal;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpTotalMax(): int
+    {
+        return $this->expTotalMax;
+    }
+
+    /**
+     * @param int $expTotalMax
+     */
+    public function setExpTotalMax(int $expTotalMax)
+    {
+        $this->expTotalMax = $expTotalMax;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExpTotalTogo(): int
+    {
+        return $this->expTotalTogo;
+    }
+
+    /**
+     * @param int $expTotalTogo
+     */
+    public function setExpTotalTogo(int $expTotalTogo)
+    {
+        $this->expTotalTogo = $expTotalTogo;
         return $this;
     }
 }

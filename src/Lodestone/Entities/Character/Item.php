@@ -67,13 +67,10 @@ class Item extends AbstractEntity
     /**
      * @param int $id
      */
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->validator
-            ->check($id, 'Item ID')
-            ->isInitialized()
-            ->isNumeric()
-            ->validate();
+        // Because XIVDB may not be updated
+        // immediately, we won't error when no id
 
         $this->id = $id;
         return $this;

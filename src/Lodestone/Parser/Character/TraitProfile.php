@@ -217,7 +217,7 @@ trait TraitProfile
 
         if ($node = $box->find('.character-block__name', 0)) {
             list($name, $rank) = explode('/', $node->plaintext);
-            $id = $this->xivdb->getGrandCompanyId(trim($name));
+            $id = $this->xivdb->getGcId(trim($name));
 
             $grandcompany = new GrandCompany();
             $grandcompany

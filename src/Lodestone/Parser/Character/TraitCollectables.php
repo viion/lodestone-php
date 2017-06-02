@@ -53,13 +53,11 @@ trait TraitCollectables
         $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
 
         $id = $this->xivdb->{'get'. $type .'Id'}($name);
-        $icon = $this->xivdb->{'get'. $type .'Icon'}($id);
 
         $collectable = new Collectable();
         $collectable
             ->setId($id)
-            ->setName($name)
-            ->setIcon($icon);
+            ->setName($name);
 
         unset($node);
         Benchmark::finish(__METHOD__,__LINE__);

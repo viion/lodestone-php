@@ -32,11 +32,10 @@ trait TraitClassJob
 
                 // class name
                 $name = trim($li->find('.character__job__name', 0)->plaintext);
-                $nameIndex = strtolower(str_ireplace(' ', null, $name));
                 $role->setName($name);
 
                 // get id
-                $id = $this->xivdb->getRoleId($name);
+                $id = $this->xivdb->getClassJobId($name);
                 $role->setId($id);
 
                 // level
@@ -48,9 +47,14 @@ trait TraitClassJob
                 list($current, $max) = explode('/', $li->find('.character__job__exp', 0)->plaintext);
                 $current = ($current == '-') ? 0 : intval($current);
                 $max = ($max == '-') ? 0 : intval($max);
+
                 $role
-                    ->setCurrentExp($current)
-                    ->setMaxExp($max);
+                    ->setExpLevel($current)
+                    ->setExpLevelMax($max)
+                    ->setExpLevelTogo($max - $current)
+                    ->setExpTotal($this->xivdb->getExpGained($level, $current))
+                    ->setExpTotalMax($this->xivdb->getTotalExp())
+                    ->setExpTotalTogo($role->expTotalMax - $role->expTotal);
 
                 // save
                 $this->profile->classjobs[$id] = $role;

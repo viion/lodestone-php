@@ -2,3 +2,4 @@ vendor
 .idea
 .vagrant
 tests/bench.json
+src/Lodestone/Modules/xivdb-api-cache/

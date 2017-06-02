@@ -22,11 +22,6 @@ class Collectable extends AbstractEntity
     public $name;
 
     /**
-     * @var string
-     */
-    public $icon;
-
-    /**
      * @param int
      * @return $this
      */
@@ -62,17 +57,6 @@ class Collectable extends AbstractEntity
     }
 
     /**
-     * @param string
-     * @return $this
-     */
-    public function setIcon(string $icon)
-    {
-        $this->icon = $icon;
-
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getId(): int
@@ -86,13 +70,5 @@ class Collectable extends AbstractEntity
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return $this->icon;
     }
 }

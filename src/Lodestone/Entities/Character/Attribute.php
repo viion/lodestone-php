@@ -3,6 +3,7 @@
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class Attribute
@@ -36,6 +37,7 @@ class Attribute extends AbstractEntity
 
     /**
      * @param int $id
+     * @return $this
      */
     public function setId($id)
     {
@@ -53,10 +55,11 @@ class Attribute extends AbstractEntity
 
     /**
      * @param string $name
+     * @return $this
      */
     public function setName(string $name)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($name, 'Attribute Name')
             ->isInitialized()
             ->isString()
@@ -76,10 +79,11 @@ class Attribute extends AbstractEntity
 
     /**
      * @param int $value
+     * @return $this
      */
     public function setValue(int $value)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($value, 'Attribute Value')
             ->isInitialized()
             ->isNumeric()

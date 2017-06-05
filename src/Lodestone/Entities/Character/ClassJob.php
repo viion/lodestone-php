@@ -3,6 +3,7 @@
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class ClassJob
@@ -66,6 +67,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $id
+     * @return $this
      */
     public function setId($id)
     {
@@ -83,10 +85,11 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param string $name
+     * @return $this
      */
     public function setName(string $name)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($name, 'Name')
             ->isInitialized()
             ->isNotEmpty()
@@ -106,10 +109,11 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $level
+     * @return $this
      */
     public function setLevel(int $level)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($level, 'Level')
             ->isInitialized()
             ->isNotEmpty()
@@ -130,6 +134,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $expLevel
+     * @return $this
      */
     public function setExpLevel(int $expLevel)
     {
@@ -147,6 +152,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $expLevelTogo
+     * @return $this
      */
     public function setExpLevelTogo(int $expLevelTogo)
     {
@@ -164,6 +170,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $expLevelMax
+     * @return $this
      */
     public function setExpLevelMax(int $expLevelMax)
     {
@@ -181,6 +188,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $expTotal
+     * @return $this
      */
     public function setExpTotal(int $expTotal)
     {
@@ -198,6 +206,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $expTotalMax
+     * @return $this
      */
     public function setExpTotalMax(int $expTotalMax)
     {
@@ -215,6 +224,7 @@ class ClassJob extends AbstractEntity
 
     /**
      * @param int $expTotalTogo
+     * @return $this
      */
     public function setExpTotalTogo(int $expTotalTogo)
     {

@@ -3,6 +3,7 @@
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class Guardian
@@ -58,7 +59,7 @@ class Guardian extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($name, 'Name')
             ->isInitialized()
             ->isNotEmpty()
@@ -84,7 +85,7 @@ class Guardian extends AbstractEntity
      */
     public function setIcon(string $icon)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($icon, 'Icon URL')
             ->isInitialized()
             ->isNotEmpty()

@@ -161,10 +161,13 @@ class BaseValidator
      */
     public function validate()
     {
-        if (count($this->errors) > 0) {
+        $errors = $this->errors;
+        $this->errors = [];
+
+        if (count($errors) > 0) {
             // only throw one exception at a time.
             // Maybe this can be improved to stack exceptions
-            throw $this->errors[0];
+            throw $errors[0];
         }
 
         return true;

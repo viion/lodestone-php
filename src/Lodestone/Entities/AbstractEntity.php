@@ -13,28 +13,6 @@ use Lodestone\Validator\BaseValidator;
 class AbstractEntity
 {
     /**
-     * @var BaseValidator
-     */
-    protected $validator;
-
-    /**
-     * AbstractEntity constructor.
-     */
-    public function __construct()
-    {
-        $this->initializeValidator();
-    }
-
-    /**
-     * @return $this
-     */
-    protected function initializeValidator()
-    {
-        $this->validator = new BaseValidator();
-        return $this;
-    }
-
-    /**
      * Map all class attributes
      *
      * @return array

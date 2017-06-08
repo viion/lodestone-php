@@ -10,10 +10,20 @@ class CharacterValidator extends BaseValidator
 {
     const VALID_CHARACTER_REGEX = '/^[a-zA-Z\' \-]+\s?$/';
 
+    private static $instance = null;
+
+    public static function getInstance() {
+        if (null === self::$instance) {
+            self::$instance = new CharacterValidator();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * CharacterValidator constructor.
      */
-    public function __construct()
+    protected function __construct()
     {
         parent::__construct();
     }

@@ -3,6 +3,7 @@
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class Collectables
@@ -31,10 +32,11 @@ class Collectables extends AbstractEntity
 
     /**
      * @param array $minions
+     * @return $this
      */
     public function setMinions(array $minions)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($minions, 'Minions array')
             ->isInitialized()
             ->isArray()
@@ -64,10 +66,11 @@ class Collectables extends AbstractEntity
 
     /**
      * @param array $mounts
+     * @return $this
      */
     public function setMounts(array $mounts)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($mounts, 'Mounts array')
             ->isInitialized()
             ->isArray()

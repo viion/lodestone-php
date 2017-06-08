@@ -3,6 +3,7 @@
 namespace Lodestone\Entities\Character;
 
 use Lodestone\Entities\AbstractEntity;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class Collectable
@@ -27,6 +28,7 @@ class Collectable extends AbstractEntity
      */
     public function setId($id)
     {
+        $this->id = $id;
         return $this;
     }
 
@@ -36,7 +38,7 @@ class Collectable extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($name, 'Name')
             ->isInitialized()
             ->isNotEmpty()

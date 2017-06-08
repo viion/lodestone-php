@@ -20,10 +20,10 @@ class HttpRequestValidatorTest extends TestCase
     {
         // given
         $httpCode = 200;
-        $validator = new HttpRequestValidator($httpCode, 'test http code');
 
         // when
-        $result = $validator
+        $result = HttpRequestValidator::getInstance()
+            ->check($httpCode, 'test http code')
             ->isNotHttpError()
             ->validate();
 
@@ -37,13 +37,13 @@ class HttpRequestValidatorTest extends TestCase
     {
         // given
         $httpCode = 199;
-        $validator = new HttpRequestValidator($httpCode, 'test http code');
 
         try {
             // when
-            $validator
-            ->isNotHttpError()
-            ->validate();
+            HttpRequestValidator::getInstance()
+                ->check($httpCode, 'test http code')
+                ->isNotHttpError()
+                ->validate();
 
             self::fail("Expected ValidationException");
         } catch(ValidationException $vex) {
@@ -59,13 +59,13 @@ class HttpRequestValidatorTest extends TestCase
     {
         // given
         $httpCode = 309;
-        $validator = new HttpRequestValidator($httpCode, 'test http code');
 
         try {
             // when
-            $validator
-            ->isNotHttpError()
-            ->validate();
+            HttpRequestValidator::getInstance()
+                ->check($httpCode, 'test http code')
+                ->isNotHttpError()
+                ->validate();
 
             self::fail("Expected ValidationException");
         } catch(ValidationException $vex) {

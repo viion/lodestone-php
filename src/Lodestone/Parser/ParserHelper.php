@@ -60,8 +60,8 @@ class ParserHelper
      */
     protected function ensureHtml()
     {
-        $validator = new BaseValidator($this->html, "HTML");
-        $validator
+        BaseValidator::getInstance()
+            ->check($this->html, "HTML")
             ->isInitialized()
             ->validate();
     }

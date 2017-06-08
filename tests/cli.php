@@ -26,12 +26,12 @@ if (!$option) {
 $api = new \Lodestone\Api;
 
 $api->xivdb->setOptions([
-    'items' => false,
-    'exp' => false,
-    'classjobs' => false,
-    'profile' => false,
-    'collectables' => false,
-    'attributes' => false,
+    'items' => true,
+    'exp' => true,
+    'classjobs' => true,
+    'profile' => true,
+    'collectables' => true,
+    'attributes' => true,
 ]);
 
 // switch on options

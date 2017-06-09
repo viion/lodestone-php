@@ -2,6 +2,7 @@
 
 namespace Lodestone\Parser\Character;
 
+use Lodestone\Dom\NodeList;
 use Lodestone\Entities\Character\Item;
 use Lodestone\Modules\Benchmark;
 
@@ -28,63 +29,81 @@ trait TraitGear
         foreach($box->find('.item_detail_box') as $i => $node) {
             $item = new Item();
 
-            // name and id
-            $name = $node->find('.db-tooltip__item__name')->plaintext;
-            $lodestoneId = explode('/', $node->find('.db-tooltip__bt_item_detail', 0)->find('a', 0)->getAttribute('href'))[5];
-            $id = $this->xivdb->getItemId($name);
+            /** @var NodeList $node */
+            $html = $this->getPlaintextHtmlArray($node->innerHtml());
 
-            $item
-                ->setName($name)
-                ->setLodestoneId($lodestoneId)
-                ->setId($id);
+            // get name
+            $name = $this->findEntryFromHtmlRange($html, 'db-tooltip__item__name', 1);
 
-            // category - only important on first one as it's used
-            // to determine active class
-            if ($i == 0) {
-                $category = $node->find('.db-tooltip__item__category')->plaintext;
-                $category = explode("'", $category)[0];
-                $category = str_ireplace(['Two-handed', 'One-handed'], null, $category);
-                $item->setCategory(trim($category));
+            // If this slot has no item name html
+            // it's safe to assume empty slot
+            if (!$name) {
+                continue;
             }
 
+            $name = strip_tags($name[1]);
+            $item->setName($name);
 
+            // get real id from xivdb
+            $id = $this->xivdb->getItemId($name);
+            $item->setId($id);
 
+            // get lodestone id
+            $lodestoneId = $this->findEntryFromHtmlRange($html, 'db-tooltip__bt_item_detail', 1);
+            $lodestoneId = trim(explode('/', $lodestoneId[1])[5]);
+            $item->setLodestoneId($lodestoneId);
 
-            /*
+            // get category
+            $category = $this->findEntryFromHtmlRange($html, 'db-tooltip__item__category', 1);
+            $category = trim(strip_tags($category[1]));
+            $item->setCategory($category);
+
+            // get slot from category
+            $slot = ($i == 0) ? 'mainhand' : strtolower($category);
+
+            // if item is secondary tool or shield, its off-hand
+            $slot = (stripos($slot, 'secondary tool') !== false) ? 'offhand' : $slot;
+            $slot = ($slot == 'shield') ? 'offhand' : $slot;
+
+            // if item is a ring, check if its ring 1 or 2
+            if ($slot == 'ring') {
+                $slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
+            }
+
+            // save slot
+            $slot = str_ireplace(' ', '', $slot);
+            $item->setSlot($slot);
 
             // add mirage
-            $mirageNode = $node->find('.db-tooltip__item__mirage');
-            if ($mirageNode) {
-               $mirageNode = $mirageNode->find('a', 0);
-               if ($mirageNode) {
-                   $mirageId = explode('/', $mirageNode->getAttribute('href'))[5];
-                   $item->setMirageId($mirageId);
-                   // todo - parse name and convert to ingame id
-
-               }
+            $mirage = $this->findEntryFromHtmlRange($html, 'db-tooltip__item__mirage', 8);
+            if ($mirage) {
+                $mirage = explode("/", $mirage[6]);
+                $mirage = trim($mirage[5]);
+                $item->setMirageId($mirage);
             }
 
+
             // add creator
-            $creatorNode = $node->find('.db-tooltip__signature-character');
-            if ($creatorNode) {
-               $creatorNode = $creatorNode->find('a',0);
-               if ($creatorNode) {
-                   $creatorId = explode('/', $creatorNode->getAttribute('href'))[3];
-                   $item->setCreatorId($creatorId);
-               }
+            $creator = $this->findEntryFromHtmlRange($html, 'db-tooltip__signature-character', 4);
+            if ($creator) {
+                $creator = explode("/", $creator[1]);
+                $creator = trim($creator[3]);
+                $item->setCreatorId($creator);
             }
 
             // add dye
-            $dyeNode = $node->find('.stain');
-            if ($dyeNode) {
-               $dyeNode = $dyeNode->find('a',0);
-               if ($dyeNode) {
-                   $dyeId = explode('/', $dyeNode->getAttribute('href'))[5];
-                   $item->setDyeId($dyeId);
-                   // todo - parse name and convert to ingame id
-               }
+            $dye = $this->findEntryFromHtmlRange($html, 'class="stain"', 4);
+            if ($dye) {
+                $dye = explode("/", $dye[1]);
+                $dye = trim($dye[3]);
+                $item->setDyeId($dye);
             }
 
+            // tricky as there can be multiple, will have to do a "from - to" range, similar
+            // to "trim"
+            //$materia = $this->findEntryFromHtmlRange($html, 'class="stain"', 4);
+
+            /*
             // add materia
             $materiaNodes = $node->find('.db-tooltip__materia',0);
             if ($materiaNodes) {
@@ -104,28 +123,10 @@ trait TraitGear
                    }
                }
             }
-
             */
 
-            // slot conditions, based on category
-            $slot = $node->find('.db-tooltip__item__category', 0)->plaintext;
-
-            // if this is first item, its main-hand
-            $slot = ($i == 0) ? 'mainhand' : strtolower($slot);
-
-            // if item is secondary tool or shield, its off-hand
-            $slot = (stripos($slot, 'secondary tool') !== false) ? 'offhand' : $slot;
-            $slot = ($slot == 'shield') ? 'offhand' : $slot;
-
-            // if item is a ring, check if its ring 1 or 2
-            if ($slot == 'ring') {
-                $slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
-            }
-
-            $item->setSlot($slot);
-
             // save
-            $slot = str_ireplace(' ', '', $slot);
+
             $this->profile->gear[$slot] = $item;
         }
 
@@ -137,5 +138,7 @@ trait TraitGear
 
         print_r('X = '. $b . "\n");
         print_r("\n");
+
+        die;
     }
 }

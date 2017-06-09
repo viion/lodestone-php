@@ -80,6 +80,53 @@ class ParserHelper
     }
 
     /**
+     * Splits up html per div tag for later parsing
+     *
+     * @param $html
+     * @return array|mixed
+     */
+    protected function getPlaintextHtmlArray($html)
+    {
+        $html = str_ireplace(">", ">\n", $html);
+        $html = explode("\n", $html);
+        return $html;
+    }
+
+    /**
+     * Get a series of html lines based on finding
+     * some text and then a length of lines after
+     * the found text.
+     *
+     * @param $html
+     * @param $find
+     * @param $length
+     * @return array
+     */
+    protected function findEntryFromHtmlRange($html, $find, $length)
+    {
+        $arr = [];
+        $found = false;
+        $count = 0;
+
+        foreach($html as $line) {
+            if (stripos($line, $find) !== false) {
+                $found = true;
+            }
+
+            if ($found) {
+                $arr[] = $line;
+                $count++;
+            }
+
+            if ($count > $length) {
+                break;
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
      * Set initial document
      * @param $html
      */

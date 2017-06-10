@@ -16,6 +16,7 @@ class Logger
 
     const MAX_TIME_INCREMENT = 0.002;
     const MAX_MEMORY_USAGE = 20;
+    const LOG_FILE = __DIR__.'/log.txt';
 
     /**
      * @param $class
@@ -72,8 +73,17 @@ class Logger
         $flag = $difference > self::MAX_TIME_INCREMENT ? '!' : ' ';
         $flag = $memory > (1024 * 1024 * self::MAX_MEMORY_USAGE) ? '!' : $flag; // over 5 mb?
 
-
         $string = "Duration: %s   + %s  %s    Mem: %s  Line %s in  %s\n";
         echo sprintf($string, $duration, $difference, $flag, $memoryString, $line, $function);
+    }
+
+    /**
+     * Write to log file
+     *
+     * @param $text
+     */
+    public static function save($text)
+    {
+        file_put_contents(self::LOG_FILE, $text."\n", FILE_APPEND);
     }
 }

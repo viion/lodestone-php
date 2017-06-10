@@ -25,15 +25,6 @@ if (!$option) {
 // create api instance
 $api = new \Lodestone\Api;
 
-$api->xivdb->setOptions([
-    'items' => true,
-    'exp' => true,
-    'classjobs' => true,
-    'profile' => true,
-    'collectables' => true,
-    'attributes' => true,
-]);
-
 // switch on options
 $hash = false;
 switch($option) {

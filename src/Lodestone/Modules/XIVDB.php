@@ -15,30 +15,18 @@ class XIVDB
     const MAX_LEVEL = 60;
     const HOST = 'https://api.xivdb.com';
     const HOST_SECURE = 'https://secure.xivdb.com';
-    const CACHE_DIR = __DIR__.'/xivdb-api-cache';
-    const CACHE_CHECK = self::CACHE_DIR .'/cache';
+    const CACHE = __DIR__.'/data.php';
 
     /** @var HttpRequest */
     private $http;
 
-    /** @var bool $enabled */
-    public static $enabled = [
-        'items' => false,
-        'exp' => true,
-        'classjobs' => true,
-        'profile' => true,
-        'collectables' => true,
-        'attributes' => true,
-    ];
+    protected static $data = [];
 
     /**
      * XIVDB constructor.
      */
     function __construct()
     {
-        // convert to object
-        self::$enabled = (Object)self::$enabled;
-
         // initialize http request
         $this->http = new HttpRequest();
 
@@ -53,20 +41,18 @@ class XIVDB
             $this->apiMinions();
             $this->apiMounts();
 
-            file_put_contents(self::CACHE_CHECK, time());
+            $this->save();
         }
     }
 
     /**
-     * Set options
+     * Set data
      *
-     * @param $options
-     * @return $this
+     * @param $data
      */
-    public function setOptions($options)
+    public static function setData($data)
     {
-        self::$enabled = (Object)$options;
-        return $this;
+        self::$data = $data;
     }
 
     /**
@@ -77,7 +63,7 @@ class XIVDB
     public function clearCache()
     {
         if ($this->isApiReady()) {
-            unlink(self::CACHE_CHECK);
+            unlink(self::CACHE);
         }
     }
 
@@ -93,4 +79,28 @@ class XIVDB
         // we don't have much data
         return substr(md5(strtolower($value)), 0, $length);
     }
+
+    /**
+     * Save XIVDB data to a PHP file
+     */
+    private function save()
+    {
+        self::$data['_CACHED_'] = time();
+
+        $string = [];
+        $string[] = "<?php";
+        $string[] = "//";
+        $string[] = "// THIS FILE IS AUTO GENERATED";
+        $string[] = "// DO NOT EDIT, DELETE FILE TO UPDATE";
+        $string[] = "//";
+        $string[] = "return " . var_export(self::$data, true) . ";";
+        $string = implode("\n", $string);
+
+        file_put_contents(self::CACHE, $string);
+    }
+}
+
+// php cached datas
+if (file_exists(XIVDB::CACHE)) {
+    XIVDB::setData(require_once XIVDB::CACHE);
 }

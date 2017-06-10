@@ -25,9 +25,10 @@ trait TraitClassJobActive
         // get main hand previously parsed
         /** @var Item $mainhand */
         $mainhand = $this->profile->gear['mainhand'];
+        $role = explode("'", $mainhand->category)[0];
 
         // get class job id from mainhand category name
-        $id = $this->xivdb->getClassJobId($mainhand->category);
+        $id = $this->xivdb->getClassJobId($role);
 
         if (!$id) {
             $role = new ClassJob();

@@ -50,7 +50,7 @@ class Parser extends ParserHelper
     {
         $this->initialize();
 
-        $started = microtime(true);
+        $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);
 
         // parser stuff (order is important)
@@ -62,7 +62,10 @@ class Parser extends ParserHelper
         $this->parseActiveClass();
 
         Benchmark::finish(__METHOD__,__LINE__);
-        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
+        $finished = Benchmark::milliseconds();
+        $duration = $finished - $started;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
+        Logger::save($duration);
 
         // generate hash
         //$this->hash();

@@ -18,9 +18,6 @@ trait TraitGear
      */
     protected function parseEquipGear()
     {
-        $a = round(microtime(true) * 1000);
-
-        print_r("\n");
         Benchmark::start(__METHOD__,__LINE__);
 
         $box = $this->getSpecial__EquipGear();
@@ -99,12 +96,9 @@ trait TraitGear
                 $item->setDyeId($dye);
             }
 
-            // tricky as there can be multiple, will have to do a "from - to" range, similar
-            // to "trim"
-            //$materia = $this->findEntryFromHtmlRange($html, 'class="stain"', 4);
-
-            /*
             // add materia
+            // todo : Improve, adds on avg 18ms - Difficulty is due to
+            // todo       unknown length of html (1-5 materia slots)
             $materiaNodes = $node->find('.db-tooltip__materia',0);
             if ($materiaNodes) {
                if ($materiaNodes = $materiaNodes->find('li')) {
@@ -123,22 +117,11 @@ trait TraitGear
                    }
                }
             }
-            */
-
-            // save
 
             $this->profile->gear[$slot] = $item;
         }
 
         unset($box);
         Benchmark::finish(__METHOD__,__LINE__);
-
-        $b = round(microtime(true) * 1000) - $a;
-        file_put_contents(__DIR__.'/gear.log', $b . "\n", FILE_APPEND);
-
-        print_r('X = '. $b . "\n");
-        print_r("\n");
-
-        die;
     }
 }

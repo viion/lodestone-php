@@ -25,8 +25,7 @@ trait XIVDBApiTrait
      */
     public function apiStorage($index, $data)
     {
-        $data = json_encode($data);
-        file_put_contents(self::CACHE_DIR . '/'. $index .'.json', $data);
+        self::$data[$index] = $data;
     }
 
     /**
@@ -35,11 +34,9 @@ trait XIVDBApiTrait
      */
     public function isApiReady()
     {
-        if (!is_dir(self::CACHE_DIR)) {
-            mkdir(self::CACHE_DIR, 0777, true);
-        }
+        $status = count(self::$data);
 
-        return file_exists(self::CACHE_CHECK);
+        return $status;
     }
 
     /**
@@ -60,7 +57,7 @@ trait XIVDBApiTrait
         }
 
         foreach($arr as $file => $items) {
-            $this->apiStorage('items.'. $file, $items);
+            $this->apiStorage('items_'. $file, $items);
         }
     }
 

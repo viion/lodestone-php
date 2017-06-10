@@ -15,16 +15,18 @@ trait XIVDBDataTrait
      */
     private function getData($index)
     {
-        $json = file_get_contents(self::CACHE_DIR .'/'. $index .'.json');
-        return json_decode($json, true);
+        return self::$data[$index];
     }
 
+    /**
+     * Get total EXP Gained
+     *
+     * @param $level
+     * @param $exp
+     * @return bool
+     */
     public function getExpGained($level, $exp)
     {
-        if (!self::$enabled->exp) {
-            return false;
-        }
-
         $data = $this->getData('exp');
 
         // add up the total exp obtained
@@ -37,22 +39,25 @@ trait XIVDBDataTrait
         return $exp;
     }
 
+    /**
+     * Get total possible EXP
+     *
+     * @return float|int
+     */
     public function getTotalExp()
     {
-        if (!self::$enabled->exp) {
-            return false;
-        }
-
         $data = $this->getData('exp');
         return array_sum($data);
     }
 
+    /**
+     * Get ID for base parameter stat
+     *
+     * @param $name
+     * @return array|mixed
+     */
     public function getBaseParamId($name)
     {
-        if (!self::$enabled->attributes) {
-            return false;
-        }
-
         // special, Lodestone only returns "Fire" "Water" etc
         // however the attribute is named "Fire Resistance", to
         // reduce multi-language, I will manually convert these
@@ -72,85 +77,101 @@ trait XIVDBDataTrait
         return $this->commonGetNameFromId('baseparams', $name);
     }
 
+    /**
+     * Get ID for an item
+     *
+     * @param $name
+     * @return mixed
+     */
     public function getItemId($name)
     {
-        if (!self::$enabled->items) {
-            return false;
-        }
-
         $method = sprintf('%s(%s)', __METHOD__, $name);
         Benchmark::start($method,__LINE__);
 
         $hash = $this->getStorageHash($name);
         $file = $this->getStorageHash($name, 2);
-        $json = $this->getData('items.'. $file);
+        $json = $this->getData('items_'. $file);
 
         Benchmark::finish($method,__LINE__);
 
         return $json[$hash];
     }
 
+    /**
+     * Get ID for a job class
+     *
+     * @param $name
+     * @return array
+     */
     public function getClassJobId($name)
     {
-        if (!self::$enabled->classjobs) {
-            return false;
-        }
-
         return $this->commonGetNameFromId('classjobs', $name);
     }
 
+    /**
+     * Get name of a class job from an id
+     *
+     * @param $id
+     * @return mixed
+     */
     public function getClassJobName($id)
     {
-        if (!self::$enabled->classjobs) {
-            return false;
-        }
-
         $json = $this->getData('classjobs2');
         return $json[$id];
     }
 
+    /**
+     * Get ID for a Grand Company
+     *
+     * @param $name
+     * @return array
+     */
     public function getGcId($name)
     {
-        if (!self::$enabled->profile) {
-            return false;
-        }
-
         return $this->commonGetNameFromId('gc', $name);
     }
 
+    /**
+     * Get ID for a town
+     *
+     * @param $name
+     * @return array
+     */
     public function getTownId($name)
     {
-        if (!self::$enabled->profile) {
-            return false;
-        }
-
         return $this->commonGetNameFromId('towns', $name);
     }
 
+    /**
+     * Get ID for a Guardian
+     *
+     * @param $name
+     * @return array
+     */
     public function getGuardianId($name)
     {
-        if (!self::$enabled->profile) {
-            return false;
-        }
-
         return $this->commonGetNameFromId('guardians', $name);
     }
 
+    /**
+     * Get ID for a minion
+     *
+     * @param $name
+     * @return array
+     */
     public function getMinionId($name)
     {
-        if (!self::$enabled->collectables) {
-            return false;
-        }
-
         return $this->commonGetNameFromId('minions', $name);
     }
 
+    /**
+     * Get ID for a mount
+     *
+     * @param $name
+     * @return array
+     */
     public function getMountId($name)
     {
-        if (!self::$enabled->collectables) {
-            return false;
-        }
-
         return $this->commonGetNameFromId('mounts', $name);
     }
 

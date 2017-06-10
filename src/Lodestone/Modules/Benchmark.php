@@ -137,6 +137,14 @@ class Benchmark
     }
 
     /**
+     * @return float
+     */
+    public static function milliseconds()
+    {
+        return round(microtime(true) * 1000);
+    }
+
+    /**
      * Run a report
      * @return array
      */

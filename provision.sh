@@ -25,7 +25,9 @@ echo "Installing: PHP 7 + Modules ..."
 sudo add-apt-repository ppa:ondrej/php -y &> /dev/null
 sudo apt-get update -y &> /dev/null
 sudo apt-get install -y -qq php7.0-fpm &> /dev/null
-sudo apt-get install -y -qq php-apcu php7.0-dev php7.0-cli php7.0-json php7.0-fpm php7.0-intl php7.0-mysql php7.0-sqlite php7.0-curl php7.0-mcrypt php7.0-gd php7.0-mbstring php7.0-dom php7.0-xml php7.0-zip &> /dev/null
+sudo apt-get install -y -qq php-apcu php7.0-dev php7.0-cli php7.0-json php7.0-fpm php7.0-intl php7.0-mysql &> /dev/null
+sudo apt-get install -y -qq php7.0-sqlite php7.0-curl php7.0-mcrypt php7.0-gd php7.0-mbstring php7.0-dom &> /dev/null
+sudo apt-get install -y -qq php7.0-xml php7.0-zip php7.0-bcmath &> /dev/null
 
 # change some settings
 echo "Adjusting PHP settings to: enable errors, increase upload size,"

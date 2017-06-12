@@ -64,7 +64,6 @@ class Parser extends ParserHelper
         $finished = Benchmark::milliseconds();
         $duration = $finished - $started;
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
-        Logger::save($duration);
 
         return $this->profile;
     }

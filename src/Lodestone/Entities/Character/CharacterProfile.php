@@ -2,15 +2,17 @@
 
 namespace Lodestone\Entities\Character;
 
-use Lodestone\Entities\AbstractEntity;
-use Lodestone\Validator\CharacterValidator;
+use Lodestone\{
+    Entities\AbstractEntity,
+    Validator\CharacterValidator
+};
 
 /**
  * Class Profile
  *
  * @package Lodestone\Entities\Character
  */
-class Profile extends AbstractEntity
+class CharacterProfile extends AbstractEntity
 {
     /**
      * @var string
@@ -124,7 +126,6 @@ class Profile extends AbstractEntity
      */
     public function __construct($id)
     {
-
         CharacterValidator::getInstance()
             ->check($id, 'ID')
             ->isInitialized()

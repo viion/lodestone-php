@@ -22,7 +22,7 @@ trait TraitProfile
      */
     protected function parseProfile()
     {
-        $started = Benchmark::milliseconds();
+        Benchmark::start(__METHOD__,__LINE__);
 
         // parse basic info
         $this->parseProfileBasic();
@@ -37,12 +37,7 @@ trait TraitProfile
         $this->parseProfileGrandCompany();
         $this->parseProfileFreeCompany();
 
-
-        $finished = Benchmark::milliseconds();
-        $duration = $finished - $started;
-        print_r("\n$duration ms\n\n");
-        Logger::save($duration);
-        die;
+        Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace Lodestone\Parser\Character;
 
 use Lodestone\{
-    Entities\Character\Profile,
+    Entities\Character\CharacterProfile,
     Parser\Html\ParserHelper,
 
     Modules\XIVDB,
@@ -29,7 +29,7 @@ class Parser extends ParserHelper
     /** @var XIVDB $xivdb */
     protected $xivdb;
 
-    /** @var Profile */
+    /** @var CharacterProfile */
     protected $profile;
 
     /**
@@ -40,7 +40,7 @@ class Parser extends ParserHelper
     function __construct(int $id)
     {
         $this->xivdb = new XIVDB();
-        $this->profile = new Profile($id);
+        $this->profile = new CharacterProfile($id);
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace Lodestone\Entities\Character;
 
-use Lodestone\Entities\AbstractEntity;
-use Lodestone\Validator\BaseValidator;
+use Lodestone\{
+    Entities\AbstractEntity,
+    Validator\BaseValidator
+};
 
 /**
  * Class ClassJob

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Parser;
+namespace Lodestone\Parser\Html;
 
 use Lodestone\Dom\Document;
 

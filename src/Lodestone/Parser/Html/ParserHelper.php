@@ -56,6 +56,8 @@ class ParserHelper
     }
 
     /**
+     * Ensures the HTML exists and is not empty.
+     *
      * @throws \Exception
      */
     protected function ensureHtml()
@@ -68,24 +70,24 @@ class ParserHelper
 
     /**
      * Get a new document
+     * 
      * @param $html
      * @return Document
      */
     protected function getDocumentFromHtml($html)
     {
-        $dom = new Document($html);
-        unset($html);
-
-        return $dom;
+        $html = new Document($html);
+        return $html;
     }
 
     /**
-     * Splits up html per div tag for later parsing
+     * Provides an array of html, each line is bit
+     * of html code.
      *
      * @param $html
      * @return array|mixed
      */
-    protected function getPlaintextHtmlArray($html)
+    protected function getArrayFromHtml($html)
     {
         $html = str_ireplace(">", ">\n", $html);
         $html = explode("\n", $html);

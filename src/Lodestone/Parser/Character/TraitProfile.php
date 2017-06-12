@@ -158,7 +158,9 @@ trait TraitProfile
 
         $name = $this->getArrayFromRange('City-state', 2);
         $name = trim(strip_tags($name[1]));
+
         $id = $this->xivdb->getTownId($name);
+        // todo - get icon from XIVDB and attach it
 
         $city = new City();
         $city
@@ -188,6 +190,7 @@ trait TraitProfile
             $rank = trim($rank);
 
             $id = $this->xivdb->getGcId($name);
+            // todo - get icon from XIVDB and attach it (including rank)
 
             $grandcompany = new GrandCompany();
             $grandcompany

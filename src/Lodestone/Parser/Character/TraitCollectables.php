@@ -56,6 +56,8 @@ trait TraitCollectables
 
         $id = $this->xivdb->{'get'. $type .'Id'}($name);
 
+        // todo - get icon from XIVDB and attach it
+
         $collectable = new Collectable();
         $collectable
             ->setId($id)

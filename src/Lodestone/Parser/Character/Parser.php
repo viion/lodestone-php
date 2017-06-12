@@ -18,7 +18,6 @@ use Lodestone\{
  */
 class Parser extends ParserHelper
 {
-    use Hash;
     use TraitProfile;
     use TraitClassJob;
     use TraitAttributes;
@@ -44,7 +43,7 @@ class Parser extends ParserHelper
     }
 
     /**
-     * @return array
+     * @return CharacterProfile
      */
     public function parse()
     {
@@ -67,12 +66,6 @@ class Parser extends ParserHelper
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
         Logger::save($duration);
 
-        // generate hash
-        //$this->hash();
-
-        //print_r($this->profile);
-        die;
-
-        return $this->profile->toArray();
+        return $this->profile;
     }
 }

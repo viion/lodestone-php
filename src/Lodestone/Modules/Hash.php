@@ -1,20 +1,32 @@
 <?php
 
-namespace Lodestone\Parser\Character;
+namespace Lodestone\Modules;
+
+use Lodestone\Entities\Character\CharacterProfile;
 
 /**
- * Class HashTrait
+ * Class Hash
  *
- * @package Lodestone\Entities\Character
+ * Generates SHA1 for different types of objects
+ *
+ * @package Lodestone\Modules
  */
-trait Hash
+class Hash
 {
     /**
-     * Generate a sha1 hash of this character
+     * Get the sha1 for a character
+     *
+     * This will remove some data which can change without
+     * the character being logged in or doing anything. This
+     * means the hash will stay consistent throughout the
+     * games lifetime.
+     *
+     * @param CharacterProfile $profile
+     * @return string
      */
-    public function hash()
+    public function hashCharacter(CharacterProfile $profile)
     {
-        $data = $this->profile->toArray();
+        $data = $profile->toArray();
 
         // remove hash, obvs (its blank anyway)
         unset($data['hash']);
@@ -37,8 +49,6 @@ trait Hash
         // remove stats, SE can change the formula
         unset($data['stats']);
 
-        //print_r($data); die;
-
-        $this->hash = sha1(serialize($data));
+        return sha1(serialize($data));
     }
 }

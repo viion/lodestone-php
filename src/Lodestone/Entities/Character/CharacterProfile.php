@@ -17,11 +17,6 @@ class CharacterProfile extends AbstractEntity
     /**
      * @var string
      */
-    public $hash;
-
-    /**
-     * @var string
-     */
     public $id;
 
     /**
@@ -137,24 +132,6 @@ class CharacterProfile extends AbstractEntity
 
         // profile classes
         $this->collectables = new Collectables();
-    }
-
-    /**
-     * @return string
-     */
-    public function getHash(): string
-    {
-        return $this->hash;
-    }
-
-    /**
-     * @param string $hash
-     * @return $this
-     */
-    public function setHash(string $hash)
-    {
-        $this->hash = $hash;
-        return $this;
     }
 
     /**

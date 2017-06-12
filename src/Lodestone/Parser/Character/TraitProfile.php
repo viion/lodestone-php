@@ -2,14 +2,17 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Entities\Character\City;
-use Lodestone\Entities\Character\GrandCompany;
-use Lodestone\Entities\Character\Guardian;
 use Lodestone\Modules\Benchmark;
+use Lodestone\Entities\Character\{
+    City,
+    GrandCompany,
+    Guardian
+};
 use Lodestone\Dom\{
     Document,
     Element
 };
+use Lodestone\Modules\Logger;
 
 /**
  * Class CharacterProfileTrait
@@ -23,16 +26,14 @@ trait TraitProfile
      */
     protected function parseProfile()
     {
-        $box = $this->getDocumentFromRange('class="frame__chara__link"', 'class="parts__connect--state js__toggle_trigger"');
+        $started = Benchmark::milliseconds();
 
-        $this->parseProfileName($box);
-        $this->parseProfileServer($box);
-        $this->parseProfileTitle($box);
-        $this->parseProfilePicture($box);
+        // parse basic info
+        $this->parseProfileBasic();
         $this->parseProfileBiography();
 
         // move to character profile detail
-        $box = $this->getDocumentFromRange('class="character__profile__data__detail"', 'class="btn__comment"');
+        $box = $this->getDocumentFromRange('character__profile__data__detail', 'character__view');
         $this->parseProfileRaceClanGender($box);
 
         // move onto profile
@@ -42,9 +43,9 @@ trait TraitProfile
         $this->parseProfileCity();
 
         // handle grand company and free company
-        if ($box = $this->getDocumentFromRangeCustom(48,64)) {
+        if ($box = $this->getDocumentFromRangeCustom(40,100)) {
             // Grand Company
-            $this->parseProfileGrandcompany($box);
+            $this->parseProfileGrandCompany($box);
 
             // Free Company
             $this->parseProfileFreeCompany($box);
@@ -52,58 +53,42 @@ trait TraitProfile
 
         unset($box);
         unset($node);
+
+        $finished = Benchmark::milliseconds();
+        $duration = $finished - $started;
+        print_r("\n$duration ms\n\n");
+        Logger::save($duration);
+        die;
     }
 
     /**
-     * Extract name of character from html
-     *
-     * @param $box
+     * Parse: Name, Server, Title, Picture
      */
-    protected function parseProfileName(Document $box)
+    protected function parseProfileBasic()
     {
         Benchmark::start(__METHOD__,__LINE__);
-        $this->profile->setName($box->find('.frame__chara__name', 0)->plaintext);
-        Benchmark::finish(__METHOD__,__LINE__);
-    }
 
-    /**
-     * Extract server name of character from html
-     *
-     * @param $box
-     */
-    protected function parseProfileServer(Document $box)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-        $this->profile->setServer($box->find('.frame__chara__world', 0)->plaintext);
-        Benchmark::finish(__METHOD__,__LINE__);
-    }
+        $html = $this->getArrayFromRange('frame__chara', 'parts__connect--state');
 
-    /**
-     * Extract title of Character from html
-     *
-     * @param $box
-     */
-    protected function parseProfileTitle(Document $box)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-        if ($title = $box->find('.frame__chara__title', 0)) {
-            $this->profile->setTitle(trim($title->plaintext));
-        }
-        Benchmark::finish(__METHOD__,__LINE__);
-    }
-
-    /**
-     * Extracts Character image urls from html
-     *
-     * @param $box
-     */
-    protected function parseProfilePicture(Document $box)
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-        $data = trim(explode('?', $box->find('.frame__chara__face', 0)->find('img', 0)->src)[0]);
+        // name + servers
+        list($name, $server) = $this->getArrayFromRange('frame__chara__name', 1, $html);
         $this->profile
-            ->setAvatar($data)
-            ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $data));
+            ->setName(trim(strip_tags($name)))
+            ->setServer(trim(strip_tags($server)));
+
+        // title
+        $title = $this->getArrayFromRange('frame__chara__title', 0, $html);
+        if ($title) {
+            $this->profile->setTitle(trim(strip_tags($title[0])));
+        }
+
+        // picture
+        $avatar = $this->getArrayFromRange('frame__chara__face', 2, $html);
+        $avatar = $this->getImageSource($avatar[1]);
+        $this->profile
+            ->setAvatar($avatar)
+            ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $avatar));
+
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -113,11 +98,14 @@ trait TraitProfile
     protected function parseProfileBiography()
     {
         Benchmark::start(__METHOD__,__LINE__);
-        $this->profile->setBiography(trim(
-            $this
-                ->getDocumentFromRange('class="character__selfintroduction"', 'class="btn__comment"')
-                ->plaintext)
-        );
+
+        $bio = $this->getArrayFromRange('character__selfintroduction', 'btn__comment');
+        $bio = trim($bio[1]);
+
+        if (strip_tags($bio)) {
+            $this->profile->setBiography($bio);
+        }
+
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -189,20 +177,20 @@ trait TraitProfile
     protected function parseProfileCity()
     {
         Benchmark::start(__METHOD__,__LINE__);
-        $box = $this->getDocumentFromRangeCustom(42,47);
 
-        $name = $box->find('.character-block__name', 0)->plaintext;
-        $id = $this->xivdb->getTownId($name);
+        $name = $this->getArrayFromRange('City-state', 2);
+        if ($name) {
+            $name = trim(strip_tags($name[1]));
+            $id = $this->xivdb->getTownId($name);
 
-        $city = new City();
-        $city
-            ->setName($name)
-            ->setId($id)
-            ->setIcon(explode('?', $box->find('img', 0)->src)[0]);
+            $city = new City();
+            $city
+                ->setName($name)
+                ->setId($id);
 
-        $this->profile->city = $city;
+            $this->profile->setCity($city);
+        }
 
-        unset($box);
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -211,11 +199,11 @@ trait TraitProfile
      *
      * @param Document &$box
      */
-    protected function parseProfileGrandcompany(Document $box)
+    protected function parseProfileGrandCompany(Document $box)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        if ($node = $box->find('.character-block__name', 0)) {
+        if ($node = $box->find('.character-block__name', 2)) {
             list($name, $rank) = explode('/', $node->plaintext);
             $id = $this->xivdb->getGcId(trim($name));
 

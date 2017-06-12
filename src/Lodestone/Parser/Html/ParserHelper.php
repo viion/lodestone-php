@@ -1,9 +1,12 @@
 <?php
 
-namespace Lodestone\Parser;
+namespace Lodestone\Parser\Html;
 
-use Lodestone\Dom\Document;
-use Lodestone\Validator\BaseValidator;
+use Lodestone\{
+    Dom\Document,
+    Validator\BaseValidator,
+    Modules\HttpRequest
+};
 
 /**
  * Class ParserHelper
@@ -12,16 +15,16 @@ use Lodestone\Validator\BaseValidator;
  */
 class ParserHelper
 {
-    use ParserHelperSpecial;
+    use ParserSpecial;
+    use ParserDocument;
+    use ParserHtml;
 
     /** @var Document */
     public $dom;
 
-    /** @var array */
-    public $data = [];
-
     /** @var string */
     public $html;
+    public $htmlOriginal;
 
     /**
      * @param $data
@@ -34,13 +37,16 @@ class ParserHelper
     }
 
     /**
+     * Get the html from a url
+     *
      * @param $url
      * @return $this
      */
     public function url($url)
     {
-        $http = new \Lodestone\Modules\HttpRequest();
+        $http = new HttpRequest();
         $this->html = $http->get($url);
+        $this->htmlOriginal = $this->html;
         return $this;
     }
 
@@ -52,7 +58,8 @@ class ParserHelper
         // setup html
         $this->ensureHtml();
         $this->html = $this->trim($this->html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($this->html);
+        $this->htmlOriginal = $this->html;
+        $this->setDocument($this->html);
     }
 
     /**
@@ -69,76 +76,18 @@ class ParserHelper
     }
 
     /**
-     * Get a new document
-     * 
-     * @param $html
-     * @return Document
-     */
-    protected function getDocumentFromHtml($html)
-    {
-        $html = new Document($html);
-        return $html;
-    }
-
-    /**
-     * Provides an array of html, each line is bit
-     * of html code.
+     * Set html document
      *
      * @param $html
-     * @return array|mixed
      */
-    protected function getArrayFromHtml($html)
-    {
-        $html = str_ireplace(">", ">\n", $html);
-        $html = explode("\n", $html);
-        return $html;
-    }
-
-    /**
-     * Get a series of html lines based on finding
-     * some text and then a length of lines after
-     * the found text.
-     *
-     * @param $html
-     * @param $find
-     * @param $length
-     * @return array
-     */
-    protected function findEntryFromHtmlRange($html, $find, $length)
-    {
-        $arr = [];
-        $found = false;
-        $count = 0;
-
-        foreach($html as $line) {
-            if (stripos($line, $find) !== false) {
-                $found = true;
-            }
-
-            if ($found) {
-                $arr[] = $line;
-                $count++;
-            }
-
-            if ($count > $length) {
-                break;
-            }
-        }
-
-        return $arr;
-    }
-
-    /**
-     * Set initial document
-     * @param $html
-     */
-    protected function setInitialDocument($html)
+    protected function setDocument($html)
     {
         $this->dom = $this->getDocumentFromHtml($html);
     }
 
     /**
-     * Get the current document
+     * Get the current html document
+     *
      * @return mixed
      */
     protected function getDocument()
@@ -147,141 +96,33 @@ class ParserHelper
     }
 
     /**
-     * Get document from class name
-     * @param $classname
-     * @param int $i
-     * @return bool|Document
-     */
-    protected function getDocumentFromClassname($classname, $i = 0)
-    {
-        $html = $this->dom->find($classname, $i);
-        if (!$html) {
-            return false;
-        }
-
-        $html = $html->outertext;
-        $dom = $this->getDocumentFromHtml($html);
-        unset($html);
-        return $dom;
-    }
-
-    /**
-     * Gets a section of html from a start/finish point, this is considerably faster
-     * than using $this->getDocumentFromClassname()
-     * @param $start
-     * @param $finish
-     * @return Document
-     */
-    protected function getDocumentFromRange($start, $finish)
-    {
-        $started = false;
-        $html = [];
-        foreach(explode("\n", $this->dom->innerHtml()) as $i => &$line) {
-            if (stripos($line, $start) > -1) {
-                $started = true;
-            }
-
-            if (stripos($line, $finish) > -1) {
-                break;
-            }
-
-            if ($started) {
-                $html[] = $line;
-            }
-        }
-
-        $html = implode("\n", $html);
-        $dom = $this->getDocumentFromHtml($html);
-        unset($html);
-        return $dom;
-    }
-
-    /**
-     * Get a section of html for a specific range
-     * @param $start
-     * @param $finish
-     * @return Document
-     */
-    protected function getDocumentFromRangeCustom($start, $finish, $debug = false)
-    {
-        $html = explode("\n", $this->dom->innerHtml());
-        if ($debug) {
-            $html = explode("\n", $this->dom->innerHtml());
-            print_r($html);
-            die;
-        }
-
-        $html = array_splice($html, $start, ($finish - $start));
-        $html = implode("\n", $html);
-        $dom = $this->getDocumentFromHtml($html);
-        unset($html);
-        return $dom;
-    }
-
-    /**
-     * Returns an array struct at the specified dom
+     * Provides a timestamp based on the html
+     * that Lodestone uses for time display.
      *
-     * @param $classname
-     * @return array
+     * @param $html
+     * @return false|null|string
      */
-    protected function getDomArray($classname)
+    protected function getTimestamp($html)
     {
-        $box = $this->getDocumentFromClassname($classname, 0);
-        if (!$box) {
-            die('Class name does not exist: '. $classname);
-        }
-
-        $html = html_entity_decode($box->outertext());
-        $html = str_ireplace(['<', '>'], null, $html);
-        $array = explode("\n", $html);
-
-        // trim all values
-        array_walk($array, function(&$val) {
-            $val = trim($val);
-        });
-
-        return $array;
+        $timestamp = $html->plaintext;
+        $timestamp = trim(explode('(', $timestamp)[2]);
+        $timestamp = trim(explode(',', $timestamp)[0]);
+        return $timestamp ? date('Y-m-d H:i:s', $timestamp) : null;
     }
 
-    /**
-     * Find a line
-     * @param $domArray
-     * @param $find
-     * @return bool
-     */
-    protected function findDomLine($domArray, $find)
+    // Get
+    protected function getImageSource($html)
     {
-        foreach($domArray as $i => &$line) {
-            if (stripos($line, $find) > -1) {
-                return $line;
-            }
-        }
-
-        return false;
+        // split on img incase html is prior to the img tag
+        $html = explode('<img', $html)[1];
+        $html = explode('"', $html)[1];
+        $html = explode('?', $html)[0];
+        return $html;
     }
 
-    /**
-     * Add some data to the array
-     * @param $name
-     * @param $value
-     */
-    protected function add($name, $value)
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Get data from the array
-     * @param $name
-     * @return mixed
-     */
-    protected function get($name)
-    {
-        return $this->data[$name];
-    }
-
-    /**
-     * Trim a bunch of html
+     /**
+     * Trim a bunch of html between two points
+     *
      * @param $html
      * @param $startHtml
      * @param $finishHtml
@@ -295,7 +136,7 @@ class ParserHelper
         $finishIndex = 0;
 
         // truncate down to just the character
-        foreach($html as $i => &$line) {
+        foreach($html as $i => $line) {
             // start of code
             if (stripos($line, $startHtml) !== false) {
                 $startIndex = $i;
@@ -320,17 +161,5 @@ class ParserHelper
         $html = implode("\n", $html);
 
         return $html;
-    }
-
-    /**
-     * @param $html
-     * @return false|null|string
-     */
-    protected function getTimestamp($html)
-    {
-        $timestamp = $html->plaintext;
-        $timestamp = trim(explode('(', $timestamp)[2]);
-        $timestamp = trim(explode(',', $timestamp)[0]);
-        return $timestamp ? date('Y-m-d H:i:s', $timestamp) : null;
     }
 }

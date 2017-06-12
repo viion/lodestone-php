@@ -2,9 +2,9 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Dom\NodeList;
-use Lodestone\Entities\Character\Item;
-use Lodestone\Modules\Benchmark;
+use Lodestone\Dom\NodeList,
+    Lodestone\Entities\Character\Item,
+    Lodestone\Modules\Benchmark;
 
 /**
  * Class TraitAttributes
@@ -27,10 +27,10 @@ trait TraitGear
             $item = new Item();
 
             /** @var NodeList $node */
-            $html = $this->getPlaintextHtmlArray($node->innerHtml());
+            $html = $this->getArrayFromHtml($node->innerHtml());
 
             // get name
-            $name = $this->findEntryFromHtmlRange($html, 'db-tooltip__item__name', 1);
+            $name = $this->getArrayFromHtmlRange($html, 'db-tooltip__item__name', 1);
 
             // If this slot has no item name html
             // it's safe to assume empty slot
@@ -46,12 +46,12 @@ trait TraitGear
             $item->setId($id);
 
             // get lodestone id
-            $lodestoneId = $this->findEntryFromHtmlRange($html, 'db-tooltip__bt_item_detail', 1);
+            $lodestoneId = $this->getArrayFromHtmlRange($html, 'db-tooltip__bt_item_detail', 1);
             $lodestoneId = trim(explode('/', $lodestoneId[1])[5]);
             $item->setLodestoneId($lodestoneId);
 
             // get category
-            $category = $this->findEntryFromHtmlRange($html, 'db-tooltip__item__category', 1);
+            $category = $this->getArrayFromHtmlRange($html, 'db-tooltip__item__category', 1);
             $category = trim(strip_tags($category[1]));
             $item->setCategory($category);
 
@@ -72,7 +72,7 @@ trait TraitGear
             $item->setSlot($slot);
 
             // add mirage
-            $mirage = $this->findEntryFromHtmlRange($html, 'db-tooltip__item__mirage', 8);
+            $mirage = $this->getArrayFromHtmlRange($html, 'db-tooltip__item__mirage', 8);
             if ($mirage) {
                 $mirage = explode("/", $mirage[6]);
                 $mirage = trim($mirage[5]);
@@ -81,7 +81,7 @@ trait TraitGear
 
 
             // add creator
-            $creator = $this->findEntryFromHtmlRange($html, 'db-tooltip__signature-character', 4);
+            $creator = $this->getArrayFromHtmlRange($html, 'db-tooltip__signature-character', 4);
             if ($creator) {
                 $creator = explode("/", $creator[1]);
                 $creator = trim($creator[3]);
@@ -89,7 +89,7 @@ trait TraitGear
             }
 
             // add dye
-            $dye = $this->findEntryFromHtmlRange($html, 'class="stain"', 4);
+            $dye = $this->getArrayFromHtmlRange($html, 'class="stain"', 4);
             if ($dye) {
                 $dye = explode("/", $dye[1]);
                 $dye = trim($dye[3]);

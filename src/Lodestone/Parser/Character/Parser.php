@@ -4,7 +4,7 @@ namespace Lodestone\Parser\Character;
 
 use Lodestone\{
     Entities\Character\Profile,
-    Parser\ParserHelper,
+    Parser\Html\ParserHelper,
 
     Modules\XIVDB,
     Modules\Benchmark,

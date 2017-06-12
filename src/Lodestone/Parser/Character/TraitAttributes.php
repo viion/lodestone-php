@@ -2,8 +2,8 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Entities\Character\Attribute;
-use Lodestone\Modules\Benchmark;
+use Lodestone\Entities\Character\Attribute,
+    Lodestone\Modules\Benchmark;
 use Lodestone\Dom\{
     Document,
     Element

@@ -1,6 +1,9 @@
 <?php
 
 namespace Lodestone\Parser;
+
+use Lodestone\Parser\Html\ParserHelper;
+
 /**
  * Parse character data
  * Class Search
@@ -17,7 +20,7 @@ class Search extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 
@@ -52,7 +55,7 @@ class Search extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 
@@ -92,7 +95,7 @@ class Search extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 

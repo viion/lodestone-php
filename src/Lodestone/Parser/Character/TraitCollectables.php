@@ -2,8 +2,8 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Modules\Benchmark;
-use Lodestone\Entities\Character\Collectable;
+use Lodestone\Modules\Benchmark,
+    Lodestone\Entities\Character\Collectable;
 
 /**
  * Class TraitAttributes

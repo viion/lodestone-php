@@ -2,8 +2,8 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Entities\Character\ClassJob;
-use Lodestone\Modules\Benchmark;
+use Lodestone\Entities\Character\ClassJob,
+    Lodestone\Modules\Benchmark;
 
 /**
  * Class TraitClassJob

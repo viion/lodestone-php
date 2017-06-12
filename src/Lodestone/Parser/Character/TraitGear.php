@@ -7,7 +7,9 @@ use Lodestone\Dom\NodeList,
     Lodestone\Modules\Benchmark;
 
 /**
- * Class TraitAttributes
+ * Class TraitGear
+ *
+ * Handles parsing currently equipped character gear.
  *
  * @package Lodestone\Parser\Character
  */
@@ -92,7 +94,7 @@ trait TraitGear
             $dye = $this->getArrayFromRange('class="stain"', 4, $html);
             if ($dye) {
                 $dye = explode("/", $dye[1]);
-                $dye = trim($dye[3]);
+                $dye = trim($dye[5]);
                 $item->setDyeId($dye);
             }
 

@@ -12,6 +12,8 @@ use Lodestone\Dom\{
 /**
  * Class TraitAttributes
  *
+ * Handles parsing characters attributes
+ *
  * @package Lodestone\Parser\Character
  */
 trait TraitAttributes

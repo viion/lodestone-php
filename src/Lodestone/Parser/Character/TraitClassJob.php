@@ -8,6 +8,9 @@ use Lodestone\Entities\Character\ClassJob,
 /**
  * Class TraitClassJob
  *
+ * Handles parsing current class/job
+ * + Sets EXP Stats
+ *
  * @package Lodestone\Parser\Character
  */
 trait TraitClassJob

@@ -6,7 +6,9 @@ use Lodestone\Modules\Benchmark,
     Lodestone\Entities\Character\Collectable;
 
 /**
- * Class TraitAttributes
+ * Class TraitCollectables
+ *
+ * Handles parsing collectables; Minions and Mounts
  *
  * @package Lodestone\Parser\Character
  */

@@ -8,10 +8,11 @@ use Lodestone\Entities\Character\{
     GrandCompany,
     Guardian
 };
-use Lodestone\Modules\Logger;
 
 /**
- * Class CharacterProfileTrait
+ * Class TraitProfile
+ *
+ * Handles parsing character profile information
  *
  * @package Lodestone\Parser
  */
@@ -24,16 +25,15 @@ trait TraitProfile
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        // parse basic info
+        // parse main profile info
         $this->parseProfileBasic();
         $this->parseProfileBiography();
         $this->parseProfileRaceClanGender();
-
         $this->parseProfileNameDay();
         $this->parseProfileGuardian();
         $this->parseProfileCity();
 
-        // grand company
+        // grand company + free company
         $this->parseProfileGrandCompany();
         $this->parseProfileFreeCompany();
 

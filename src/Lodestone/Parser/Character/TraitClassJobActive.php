@@ -10,7 +10,10 @@ use Lodestone\Entities\Character\{
 
 
 /**
- * Class TraitAttributes
+ * Class TraitClassJobActive
+ *
+ * Handles parsing current active class/job,
+ * this requires that "TraitGear" has been run.
  *
  * @package Lodestone\Parser\Character
  */

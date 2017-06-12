@@ -8,10 +8,6 @@ use Lodestone\Entities\Character\{
     GrandCompany,
     Guardian
 };
-use Lodestone\Dom\{
-    Document,
-    Element
-};
 use Lodestone\Modules\Logger;
 
 /**
@@ -81,7 +77,7 @@ trait TraitProfile
     }
 
     /**
-     * Extracts Biography from html
+     * Parse: Biography
      */
     protected function parseProfileBiography()
     {
@@ -98,9 +94,7 @@ trait TraitProfile
     }
 
     /**
-     * Extract race, clan and gender from html
-     *
-     * @param Document &$box
+     * Parse: Race, Clan and Gender
      */
     protected function parseProfileRaceClanGender()
     {
@@ -125,9 +119,7 @@ trait TraitProfile
     }
 
     /**
-     * Extract Nameday from html
-     *
-     * @param Element $box
+     * Parse: Nameday
      */
     protected function parseProfileNameDay()
     {
@@ -142,9 +134,7 @@ trait TraitProfile
     }
 
     /**
-     * Extract Guardian details from html
-     *
-     * @param Element $box
+     * Parse: Guardian
      */
     protected function parseProfileGuardian()
     {
@@ -165,7 +155,7 @@ trait TraitProfile
     }
 
     /**
-     * Extract city from html
+     * Parse: City
      */
     protected function parseProfileCity()
     {
@@ -186,9 +176,7 @@ trait TraitProfile
     }
 
     /**
-     * Extract grand company details from html
-     *
-     * @param Document &$box
+     * Parse: Grand Company
      */
     protected function parseProfileGrandCompany()
     {
@@ -217,9 +205,7 @@ trait TraitProfile
     }
 
     /**
-     * Extract free company details from html
-     *
-     * @param Document &$box
+     * Parse: Free Company
      */
     protected function parseProfileFreeCompany()
     {

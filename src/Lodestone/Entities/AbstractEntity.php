@@ -38,6 +38,10 @@ class AbstractEntity
 
             // only add those with a var type
             if (isset($result['var'])) {
+                if (!$this->{$property->name}) {
+                    continue;
+                }
+
                 // get base type
                 switch(explode('|', $result['var'])[0]) {
                     // basic

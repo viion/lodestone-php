@@ -26,36 +26,20 @@ trait TraitAttributes
         Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__AttributesPart1();
 
-        // attributes
-        foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
-            $this->profile->attributes[] = $this->parseAttributeCommon($node);
-        }
-
-        // offensive properties
-        foreach($box->find('.character__param__list', 1)->find('tr') as $node) {
-            $this->profile->attributes[] = $this->parseAttributeCommon($node);
-        }
-
-        // defensive properties
-        foreach($box->find('.character__param__list', 2)->find('tr') as $node) {
-            $this->profile->attributes[] = $this->parseAttributeCommon($node);
-        }
-
-        // physical properties
-        foreach($box->find('.character__param__list', 3)->find('tr') as $node) {
-            $this->profile->attributes[] = $this->parseAttributeCommon($node);
-        }
-
-        // mental properties
-        foreach($box->find('.character__param__list', 4)->find('tr') as $node) {
-            $this->profile->attributes[] = $this->parseAttributeCommon($node);
+        // fetches:
+        // * attributes
+        // * offensive, defensive, physical and mental properties
+        for ($i = 0; $i < 5; $i++) {
+            foreach($box->find('.character__param__list', $i)->find('tr') as $node) {
+                $this->profile->addAttribute($this->parseAttributeCommon($node));
+            }
         }
 
         $box = $this->getSpecial__AttributesPart2();
 
         // status resistances
         foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
-            $this->profile->attributes[] = $this->parseAttributeCommon($node);
+            $this->profile->addAttribute($this->parseAttributeCommon($node));
         }
 
         $box = $this->getSpecial__AttributesPart3();
@@ -65,10 +49,10 @@ trait TraitAttributes
             $attribute = new Attribute();
             $attribute
                 ->setName($node->find('.character__param__text')->plaintext)
-                ->setId($this->xivdb->getBaseParamId($attribute->name))
+                ->setId($this->xivdb->getBaseParamId($attribute->getName()))
                 ->setValue(intval($node->find('span')->plaintext));
 
-            $this->profile->attributes[] = $attribute;
+            $this->profile->addAttribute($attribute);
         }
 
         $box = $this->getSpecial__AttributesPart4();
@@ -82,10 +66,10 @@ trait TraitAttributes
             $attribute = new Attribute();
             $attribute
                 ->setName($name)
-                ->setId($this->xivdb->getBaseParamId($attribute->name))
+                ->setId($this->xivdb->getBaseParamId($attribute->getName()))
                 ->setValue(intval($node->plaintext));
 
-            $this->profile->attributes[] = $attribute;
+            $this->profile->addAttribute($attribute);
         }
 
         unset($box);
@@ -103,7 +87,7 @@ trait TraitAttributes
         $attribute = new Attribute();
         $attribute
             ->setName($node->find('th')->plaintext)
-            ->setId($this->xivdb->getBaseParamId($attribute->name))
+            ->setId($this->xivdb->getBaseParamId($attribute->getName()))
             ->setValue(intval($node->find('td')->plaintext));
 
         return $attribute;

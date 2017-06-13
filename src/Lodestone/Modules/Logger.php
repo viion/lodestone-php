@@ -50,7 +50,7 @@ class Logger
 
         $finish = microtime(true);
         $difference = $finish - self::$lastTime;
-        $difference = str_pad(round($difference < 0.0001 ? 0 : $difference, 6), 10, '0');
+        $difference = Logger::padTime($difference);
         self::$lastTime = $finish;
 
         // unlikely something took 1000 seconds...
@@ -61,20 +61,42 @@ class Logger
 
         // duration
         $duration = $finish - self::$startTime;
-        $duration = str_pad(round($duration < 0.0001 ? 0 : $duration, 6), 10, '0');
+        $duration = Logger::padTime($duration);
         self::$duration = $duration;
 
         // memory
         $memory = memory_get_usage();
-        $memoryString = str_pad(number_format($memory), 15, ' ');
+        $memoryString = Logger::padString($memory, 15);
 
         // spacing
-        $line = str_pad($line, 5, ' ');
+        $line = Logger::padString($line, 5);
         $flag = $difference > self::MAX_TIME_INCREMENT ? '!' : ' ';
         $flag = $memory > (1024 * 1024 * self::MAX_MEMORY_USAGE) ? '!' : $flag; // over 5 mb?
 
         $string = "Duration: %s   + %s  %s    Mem: %s  Line %s in  %s\n";
         echo sprintf($string, $duration, $difference, $flag, $memoryString, $line, $function);
+    }
+
+    /**
+     * Pads a string for a given length by a given fill string
+     *
+     * @param string $string
+     * @param int $length
+     * @param string $padString
+     * @return string $paddedString
+     */
+    private static function padString($string, $length, $padString = ' ')
+    {
+        return str_pad($string, $length, $padString);
+    }
+
+    /**
+     * @param int $time
+     * @return string
+     */
+    private static function padTime($time)
+    {
+        return Logger::padString(round($time < 0.0001 ? 0 : $time, 6), 10, '0');
     }
 
     /**

@@ -104,8 +104,7 @@ trait TraitProfile
 
         list($race, $clan, $gender) = explode('/', strip_tags($html));
 
-        $this
-            ->profile
+        $this->profile
             ->setRace(strip_tags(trim($race)))
             ->setClan(strip_tags(trim($clan)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
@@ -158,6 +157,11 @@ trait TraitProfile
 
         $name = $this->getArrayFromRange('City-state', 2);
         $name = trim(strip_tags($name[1]));
+
+        // needed to convert Ul&#39;dah -> Ul'dah
+        if ($name == 'Ul&#39;dah') {
+            $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
+        }
 
         $id = $this->xivdb->getTownId($name);
         // todo - get icon from XIVDB and attach it

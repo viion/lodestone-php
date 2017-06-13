@@ -120,7 +120,7 @@ trait TraitGear
                }
             }
 
-            $this->profile->gear[$slot] = $item;
+            $this->profile->addGear($slot, $item);
         }
 
         unset($box);

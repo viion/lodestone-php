@@ -17,17 +17,17 @@ class Attribute extends AbstractEntity
     /**
      * @var int
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var int
      */
-    public $value;
+    protected $value;
 
     /**
      * @return int

@@ -71,7 +71,7 @@ To generate a consistent sha1:
 ```php
 $api = new \Lodestone\Api;
 $character = $api->getCharacter('<id>');
-$hash = $api->hash->hashCharcter($character);
+$hash = $character->getHash();
 ```
 
 To ensure an accurate sha1, data that is out of control of the player is removed from the hash calculation, for characters this includes:

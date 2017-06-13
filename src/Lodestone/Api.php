@@ -4,7 +4,7 @@ namespace Lodestone;
 
 // use all the things
 use Lodestone\Modules\{
-    Hash, XIVDB, Logger, Routes
+    XIVDB, Logger, Routes
 };
 use Lodestone\Parser\{
     Achievements,
@@ -29,16 +29,13 @@ class Api
     /** @var XIVDB $xivdb */
     public $xivdb;
 
-    /** @var Hasher $hasher */
-    public $hash;
-
     /**
      * Api constructor.
      */
     public function __construct()
     {
         $this->xivdb = new XIVDB();
-        $this->hash = new Hash();
+
     }
 
     /**

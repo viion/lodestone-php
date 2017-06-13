@@ -1,4 +1,5 @@
 <?php
+//error_reporting(-1);
 /**
  * ----------------------------------------------------
  * CLI tool to quickly test/debug specific API methods.
@@ -9,7 +10,7 @@
 require __DIR__.'/../vendor/autoload.php';
 
 define('BENCHMARK_ENABLED', true);
-define('LOGGER_ENABLED', false);
+define('LOGGER_ENABLED', true);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // parse characters

@@ -2,12 +2,9 @@
 
 namespace Lodestone\Entities\Character;
 
-use Lodestone\Entities\AbstractEntity;
-use Lodestone\Validator\CharacterValidator;
-use Lodestone\Entities\Character\Profile\{
-    City,
-    GrandCompany,
-    Guardian
+use Lodestone\{
+    Entities\AbstractEntity,
+    Validator\CharacterValidator
 };
 
 /**
@@ -15,113 +12,155 @@ use Lodestone\Entities\Character\Profile\{
  *
  * @package Lodestone\Entities\Character
  */
-class Profile extends AbstractEntity
+class CharacterProfile extends AbstractEntity
 {
     /**
      * @var string
      */
-    public $hash;
+    protected $id;
 
     /**
      * @var string
      */
-    public $id;
+    protected $name;
 
     /**
      * @var string
      */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $server;
+    protected $server;
 
     /**
      * @var string|null
      */
-    public $title = null;
+    protected $title = null;
 
     /**
      * @var string
      */
-    public $avatar;
+    protected $avatar;
 
     /**
      * @var string
      */
-    public $portrait;
+    protected $portrait;
 
     /**
      * @var string
      */
-    public $biography = '';
+    protected $biography = '';
 
     /**
      * @var string
      */
-    public $race;
+    protected $race;
 
     /**
      * @var string
      */
-    public $clan;
+    protected $clan;
 
     /**
      * @var string
      */
-    public $gender;
+    protected $gender;
 
     /**
      * @var string
      */
-    public $nameday;
+    protected $nameday;
 
     /**
      * @var Guardian
      */
-    public $guardian;
+    protected $guardian;
 
     /**
      * @var City
      */
-    public $city;
+    protected $city;
 
     /**
      * @var GrandCompany|null
      */
-    public $grandcompany = null;
+    protected $grandcompany = null;
 
     /**
      * @var string|null
      */
-    public $freecompany = null;
+    protected $freecompany = null;
+
+    /**
+     * @var array
+     */
+    protected $classjobs = [];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [];
+
+    /**
+     * @var Collectables
+     */
+    protected $collectables = null;
+
+    /**
+     * @var array
+     */
+    protected $gear = [];
+
+    /**
+     * @var ClassJob
+     */
+    protected $activeClassJob = null;
 
     /**
      * Profile constructor.
+     *
+     * @param $id
      */
-    public function __construct()
+    public function __construct($id)
     {
-        parent::__construct();
+        CharacterValidator::getInstance()
+            ->check($id, 'ID')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isNumeric()
+            ->validate();
 
-        /** @var CharacterValidator $this->validator */
-        $this->validator = new CharacterValidator();
+        $this->id = $id;
 
         // profile classes
-        $this->grandcompany = new GrandCompany();
-        $this->city = new City();
-        $this->guardian = new Guardian();
+        $this->collectables = new Collectables();
     }
 
-    /**
-     * Generate a sha1 hash of this character
-     */
-    public function generateHash()
+    public function getHash()
     {
-        $this->hash = sha1(serialize($this->toArray()));
-    }
+        $data = $this->toArray();
 
-    // ----
+        // remove hash, obvs (its blank anyway)
+        unset($data['hash']);
+
+        // remove images, urls can change
+        unset($data['avatar']);
+        unset($data['portrait']);
+        unset($data['guardian']['icon']);
+        unset($data['city']['icon']);
+        unset($data['grandcompany']['icon']);
+
+        // remove free company id, being kicked
+        // should not generate a new hash
+        unset($data['freecompany']);
+
+        // remove biography as this is too "open"
+        // and could become malformed easily.
+        unset($data['biography']);
+
+        // remove stats, SE can change the formula
+        unset($data['stats']);
+
+        return sha1(serialize($data));
+    }
 
     /**
      * @return string
@@ -129,24 +168,6 @@ class Profile extends AbstractEntity
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $id
-     * @return $this
-     */
-    public function setId(string $id)
-    {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isNotEmpty()
-            ->isString()
-            ->validate();
-
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -163,7 +184,7 @@ class Profile extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($name, 'Name')
             ->isInitialized()
             ->isNotEmpty()
@@ -190,7 +211,7 @@ class Profile extends AbstractEntity
      */
     public function setServer(string $server)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($server, 'Server')
             ->isInitialized()
             ->isNotEmpty()
@@ -215,7 +236,7 @@ class Profile extends AbstractEntity
      */
     public function setTitle($title)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($title, 'Title')
             ->isInitialized()
             ->isNotEmpty()
@@ -241,7 +262,7 @@ class Profile extends AbstractEntity
      */
     public function setAvatar(string $avatar)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($avatar, 'Avatar URL')
             ->isInitialized()
             ->isNotEmpty()
@@ -267,7 +288,7 @@ class Profile extends AbstractEntity
      */
     public function setPortrait(string $portrait)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($portrait, 'Portrait URL')
             ->isInitialized()
             ->isNotEmpty()
@@ -293,7 +314,7 @@ class Profile extends AbstractEntity
      */
     public function setBiography(string $biography)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($biography, 'Biography')
             ->isInitialized()
             ->isStringOrEmpty()
@@ -318,7 +339,7 @@ class Profile extends AbstractEntity
      */
     public function setRace(string $race)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($race, 'Race')
             ->isInitialized()
             ->isNotEmpty()
@@ -344,7 +365,7 @@ class Profile extends AbstractEntity
      */
     public function setClan(string $clan)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($clan, 'Clan')
             ->isInitialized()
             ->isNotEmpty()
@@ -370,7 +391,7 @@ class Profile extends AbstractEntity
      */
     public function setGender(string $gender)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($gender, 'Gender')
             ->isInitialized()
             ->isNotEmpty()
@@ -396,7 +417,7 @@ class Profile extends AbstractEntity
      */
     public function setNameday(string $nameday)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($nameday, 'Nameday')
             ->isInitialized()
             ->isNotEmpty()
@@ -422,7 +443,7 @@ class Profile extends AbstractEntity
      */
     public function setGuardian(Guardian $guardian)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($guardian, 'Guardian')
             ->isInitialized()
             ->validate();
@@ -446,7 +467,7 @@ class Profile extends AbstractEntity
      */
     public function setCity(City $city)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($city, 'City')
             ->isInitialized()
             ->validate();
@@ -470,7 +491,7 @@ class Profile extends AbstractEntity
      */
     public function setGrandcompany($grandcompany)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($grandcompany, 'Grand Company')
             ->isInitialized()
             ->validate();
@@ -494,7 +515,7 @@ class Profile extends AbstractEntity
      */
     public function setFreecompany($freecompany)
     {
-        $this->validator
+        CharacterValidator::getInstance()
             ->check($freecompany, 'Free Company')
             ->isInitialized()
             ->isNotEmpty()
@@ -505,4 +526,81 @@ class Profile extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @return ClassJob
+     */
+    public function getActiveClassJob(): ClassJob
+    {
+        return $this->activeClassJob;
+    }
+
+    /**
+     * @param ClassJob $activeClassJob
+     * @return CharacterProfile
+     */
+    public function setActiveClassJob( ClassJob $activeClassJob ): CharacterProfile
+    {
+        $this->activeClassJob = $activeClassJob;
+        return $this;
+    }
+
+    /**
+     * @return Collectables
+     */
+    public function getCollectables(): Collectables
+    {
+        return $this->collectables;
+    }
+
+    /**
+     * @param string $slot
+     * @param Item $item
+     * @return CharacterProfile $this
+     */
+    public function addGear(string $slot, Item $item)
+    {
+        $this->gear[$slot] = $item;
+        return $this;
+    }
+
+    /**
+     * @param string $slot
+     * @return Item $item
+     */
+    public function getGear(string $slot)
+    {
+        return $this->gear[$slot];
+    }
+    /**
+     * @param string $id
+     * @param ClassJob $role
+     * @return CharacterProfile $this
+     */
+    public function addClassjob(string $id, ClassJob $role)
+    {
+        $this->classjobs[$id] = $role;
+        return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return ClassJob $job
+     */
+    public function getClassjob(string $id)
+    {
+        return $this->classjobs[$id];
+    }
+
+    /**
+     * @param Attribute $attribute
+     * @return CharacterProfile $this
+     */
+    public function addAttribute(Attribute $attribute)
+    {
+        $this->attributes[] = $attribute;
+        return $this;
+    }
+
+
 }

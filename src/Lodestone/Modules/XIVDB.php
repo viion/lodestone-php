@@ -4,340 +4,104 @@ namespace Lodestone\Modules;
 
 /**
  * Class XIVDB
- * @package src\Modules
+ *
+ * @package Lodestone\Modules
  */
 class XIVDB
 {
+    use XIVDBApiTrait;
+    use XIVDBDataTrait;
+
+    const MAX_LEVEL = 60;
     const HOST = 'https://api.xivdb.com';
     const HOST_SECURE = 'https://secure.xivdb.com';
-    const CACHE = __DIR__.'/xivdb.json';
+    const CACHE = __DIR__.'/data.php';
 
     /** @var HttpRequest */
-    private $Http;
+    private $http;
 
-    /** @var array */
-    private $data;
+    protected static $data = [];
 
     /**
      * XIVDB constructor.
      */
     function __construct()
     {
-        $this->Http = new HttpRequest;
-        $this->init();
-    }
+        // initialize http request
+        $this->http = new HttpRequest();
 
-    /**
-     * initialize
-     */
-    public function init()
-    {
-        // if no cache file, get the data
-        if (!file_exists(self::CACHE)) {
-            $list = [
-                ['exp_table', '/data/exp_table'],
-                ['classjobs', '/data/classjobs'],
-                ['gc', '/data/gc'],
-                //['gc_ranks', '/data/gc_ranks'],
-                ['baseparams', '/data/baseparams'],
-                ['towns', '/data/towns'],
-                ['guardians', '/data/guardians'],
-                ['minions', '/minion?columns=id,name_en,icon'],
-                ['mounts', '/mount?columns=id,name_en,icon'],
-                ['items', '/item?columns=id,name_en,lodestone_id'],
-            ];
+        if (!$this->isApiReady()) {
+            $this->apiItems();
+            $this->apiExpTable();
+            $this->apiClassJobs();
+            $this->apiGc();
+            $this->apiBaseParams();
+            $this->apiTowns();
+            $this->apiGuardians();
+            $this->apiMinions();
+            $this->apiMounts();
 
-            foreach($list as $dataset) {
-                list($index, $query) = $dataset;
-                $this->query($index, $query);
-            }
-
-            // array some data
-            $this->arrange();
-
-            // simplify contents
-            $data = json_encode($this->data);
-            file_put_contents(self::CACHE, $data);
+            $this->save();
         }
-
-        // decode data
-        $this->data = file_get_contents(self::CACHE);
-        $this->data = json_decode($this->data, true);
-        Logger::write(__CLASS__, __LINE__, 'XIVDB Ready');
     }
 
     /**
-     * Get some XIVDB data (this would of already been pre-populated)
-     * @param $type
-     * @return mixed
+     * Set data
+     *
+     * @param $data
      */
-    public function get($type)
+    public static function setData($data)
     {
-        return $this->data[$type];
+        self::$data = $data;
     }
 
     /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param $name
-     * @param $route
-     */
-    private function query($name, $route)
-    {
-        $data = $this->Http->get(self::HOST . $route);
-        $this->data[$name] = json_decode($data, true);
-    }
-
-    /**
-     * Clear cache file
+     * Delete cache status file, this
+     * will cause api to redownload
+     * all data and overwrite.
      */
     public function clearCache()
     {
-        unlink(self::CACHE);
-        Logger::write(__CLASS__, __LINE__, 'XIVDB Cache Cleared');
+        if ($this->isApiReady()) {
+            unlink(self::CACHE);
+        }
     }
 
     /**
-     * Clear cache file
-     * todo : do it!
+     * Generate hash
+     *
+     * @param $value
+     * @param int $length
+     * @return bool|string
      */
-    public function checkCache()
+    private function getStorageHash($value, $length = 8)
     {
-        // get latest patch
+        // assuming no collisions for 8 characters,
+        // we don't have much data
+        return substr(md5(strtolower($value)), 0, $length);
     }
 
     /**
-     * @param $name
-     * @return bool
+     * Save XIVDB data to a PHP file
      */
-    public function getRoleId($name)
+    private function save()
     {
-        foreach($this->data['classjobs'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
+        self::$data['_CACHED_'] = time();
 
-        return false;
+        $string = [];
+        $string[] = "<?php";
+        $string[] = "//";
+        $string[] = "// THIS FILE IS AUTO GENERATED";
+        $string[] = "// DO NOT EDIT, DELETE FILE TO UPDATE";
+        $string[] = "//";
+        $string[] = "return " . var_export(self::$data, true) . ";";
+        $string = implode("\n", $string);
+
+        file_put_contents(self::CACHE, $string);
     }
+}
 
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function searchForItem($name)
-    {
-        foreach($this->data['items'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getMinionId($name)
-    {
-        foreach($this->data['minions'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getMountId($name)
-    {
-        foreach($this->data['mounts'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getBaseParamId($name)
-    {
-        // special, Lodestone only returns "Fire" "Water" etc
-        // however the attribute is named "Fire Resistance", to
-        // reduce multi-language, I will manually convert these
-        $manual = [
-            'fire' => 37,
-            'ice' => 38,
-            'wind' => 39,
-            'earth' => 40,
-            'thunder' => 41,
-            'water' => 42.
-        ];
-
-        if (isset($manual[strtolower($name)])) {
-            return $manual[strtolower($name)];
-        }
-
-        foreach($this->data['baseparams'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getGrandCompanyId($name)
-    {
-        foreach($this->data['gc'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getGrandCompanyRankId($name)
-    {
-        foreach($this->data['gc_ranks'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getGuardianId($name)
-    {
-        foreach($this->data['guardians'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    public function getTownId($name)
-    {
-        foreach($this->data['towns'] as $obj) {
-            if (strtolower($obj['name_en']) == strtolower($name)) {
-                return $obj['id'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $id
-     * @return mixed|string
-     */
-    public function getMountIcon($id)
-    {
-        if (!isset($this->data['mounts'][$id])) {
-            return false;
-        }
-
-        $icon = $this->data['mounts'][$id]['icon'];
-        $icon = $this->iconize($icon);
-        $icon = str_ireplace('004', '068', $icon) .'.png';
-        return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
-    }
-
-    /**
-     * @param $id
-     * @return mixed|string
-     */
-    public function getMinionIcon($id)
-    {
-        if (!isset($this->data['minions'][$id])) {
-            return false;
-        }
-
-        $icon = $this->data['minions'][$id]['icon'];
-        $icon = $this->iconize($icon);
-        $icon = str_ireplace('004', '068', $icon) .'.png';
-        return sprintf('%s/img/game/%s', self::HOST_SECURE, $icon);
-    }
-
-    /**
-     * @param $number
-     * @return string
-     */
-    public function iconize($number)
-    {
-        $number = intval($number);
-
-        $path = [];
-
-        if (strlen($number) >= 6) {
-            $icon = str_pad($number, 5, "0", STR_PAD_LEFT);
-            $path[] = $icon[0] . $icon[1] . $icon[2] .'000';
-        } else {
-            $icon = '0' . str_pad($number, 5, "0", STR_PAD_LEFT);
-            $path[] = '0'. $icon[1] . $icon[2] .'000';
-        }
-
-        $path[] = $icon;
-        $icon = implode('/', $path);
-        return $icon;
-    }
-
-    /**
-     * Arrange some data from the api
-     */
-    private function arrange()
-    {
-        $data = [];
-
-        // build array of items against their lodestone id
-        foreach($this->data['items'] as $i => $obj) {
-            $id = $obj['lodestone_id'] ? $obj['lodestone_id'] : 'game_'. $obj['id'];
-            $dataa['items'][$id] = $obj;
-        }
-
-        // build array of other content against their ids
-        foreach(['classjobs', 'minions', 'mounts', 'gc', 'baseparams', 'towns', 'guardians'] as $index) {
-            foreach($this->data[$index] as $i => $obj) {
-                $data[$index][$obj['id']] = $obj;
-            }
-        }
-
-        $this->data = $data;
-    }
+// php cached datas
+if (file_exists(XIVDB::CACHE)) {
+    XIVDB::setData(require_once XIVDB::CACHE);
 }

@@ -1,30 +1,33 @@
 <?php
 
-namespace Lodestone\Entities\Character\Profile;
+namespace Lodestone\Entities\Character;
 
-use Lodestone\Entities\AbstractEntity;
+use Lodestone\{
+    Entities\AbstractEntity,
+    Validator\BaseValidator
+};
 
 /**
- * Class City
+ * Class Attribute
  *
- * @package Lodestone\Entities\Character\Profile
+ * @package Lodestone\Entities\Character
  */
-class City extends AbstractEntity
+class Attribute extends AbstractEntity
 {
     /**
      * @var int
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
-     * @var string
+     * @var int
      */
-    public $icon;
+    protected $value;
 
     /**
      * @return int
@@ -38,16 +41,9 @@ class City extends AbstractEntity
      * @param int $id
      * @return $this
      */
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isInteger()
-            ->validate();
-
         $this->id = $id;
-
         return $this;
     }
 
@@ -65,41 +61,37 @@ class City extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->validator
-            ->check($name, 'Name')
+        BaseValidator::getInstance()
+            ->check($name, 'Attribute Name')
             ->isInitialized()
-            ->isNotEmpty()
             ->isString()
             ->validate();
 
         $this->name = $name;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getIcon(): string
+    public function getValue(): int
     {
-        return $this->icon;
+        return $this->value;
     }
 
     /**
-     * @param string $icon
+     * @param int $value
      * @return $this
      */
-    public function setIcon(string $icon)
+    public function setValue(int $value)
     {
-        $this->validator
-            ->check($icon, 'Icon URL')
+        BaseValidator::getInstance()
+            ->check($value, 'Attribute Value')
             ->isInitialized()
-            ->isNotEmpty()
-            ->isString()
+            ->isNumeric()
             ->validate();
 
-        $this->icon = $icon;
-
+        $this->value = $value;
         return $this;
     }
 }

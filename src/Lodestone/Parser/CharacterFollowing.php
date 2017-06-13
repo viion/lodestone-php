@@ -3,6 +3,7 @@
 namespace Lodestone\Parser;
 
 use Lodestone\Modules\Logger;
+use Lodestone\Parser\Html\ParserHelper;
 
 /**
  * Class CharacterFollowing
@@ -23,7 +24,7 @@ class CharacterFollowing extends ParserHelper
             return false;
         }
 
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         // no friends
         if ($this->getDocument()->find('.parts__zero', 0)) {

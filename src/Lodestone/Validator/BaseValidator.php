@@ -15,19 +15,32 @@ class BaseValidator
     public $name;
     public $errors;
 
+    private static $instance = null;
+
+    public static function getInstance() {
+        if (null === self::$instance) {
+            self::$instance = new BaseValidator();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * BaseValidator constructor.
      *
-     * @param $object
-     * @param $name
      */
-    public function __construct($object = null, $name = null)
+    protected function __construct()
     {
-        $this->check($object, $name);
         $this->errors = [];
     }
 
-  /**
+
+    /**
+     * Is not allowed for a singleton
+     */
+    protected function __clone() {}
+
+    /**
    * @param $object
    * @param $name
    * @return $this
@@ -148,10 +161,13 @@ class BaseValidator
      */
     public function validate()
     {
-        if (count($this->errors) > 0) {
+        $errors = $this->errors;
+        $this->errors = [];
+
+        if (count($errors) > 0) {
             // only throw one exception at a time.
             // Maybe this can be improved to stack exceptions
-            throw $this->errors[0];
+            throw $errors[0];
         }
 
         return true;

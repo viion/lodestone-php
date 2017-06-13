@@ -1,7 +1,11 @@
 <?php
+
 namespace Lodestone\Entities\Character;
 
-use Lodestone\Entities\AbstractEntity;
+use Lodestone\{
+    Entities\AbstractEntity,
+    Validator\BaseValidator
+};
 
 /**
  * Class Collectable
@@ -11,34 +15,22 @@ use Lodestone\Entities\AbstractEntity;
 class Collectable extends AbstractEntity
 {
     /**
-     * @var int id
+     * @var int
      */
-    public $id;
+    protected $id;
 
     /**
-     * @var string name
+     * @var string
      */
-    public $name;
-
-    /**
-     * @var string icon
-     */
-    public $icon;
+    protected $name;
 
     /**
      * @param int
      * @return $this
      */
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isInteger()
-            ->validate();
-
         $this->id = $id;
-
         return $this;
     }
 
@@ -48,7 +40,7 @@ class Collectable extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($name, 'Name')
             ->isInitialized()
             ->isNotEmpty()
@@ -56,17 +48,6 @@ class Collectable extends AbstractEntity
             ->validate();
 
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @param string
-     * @return $this
-     */
-    public function setIcon(string $icon)
-    {
-        $this->icon = $icon;
 
         return $this;
     }
@@ -85,13 +66,5 @@ class Collectable extends AbstractEntity
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return $this->icon;
     }
 }

@@ -1,34 +1,33 @@
 <?php
 
-namespace Lodestone\Entities\Character\Profile;
+namespace Lodestone\Entities\Character;
 
-use Lodestone\Entities\AbstractEntity;
+use Lodestone\{
+    Entities\AbstractEntity,
+    Validator\BaseValidator
+};
 
 /**
- * Class GrandCompany
+ * Class City
+ *
  * @package Lodestone\Entities\Character\Profile
  */
-class GrandCompany extends AbstractEntity
+class City extends AbstractEntity
 {
     /**
      * @var int
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var string
      */
-    public $icon;
-
-    /**
-     * @var string
-     */
-    public $rank;
+    protected $icon;
 
     /**
      * @return int
@@ -44,13 +43,7 @@ class GrandCompany extends AbstractEntity
      */
     public function setId(int $id)
     {
-        $this->validator
-            ->check($id, 'ID')
-            ->isInitialized()
-            ->isInteger();
-
         $this->id = $id;
-
         return $this;
     }
 
@@ -68,11 +61,12 @@ class GrandCompany extends AbstractEntity
      */
     public function setName(string $name)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($name, 'Name')
             ->isInitialized()
             ->isNotEmpty()
-            ->isString();
+            ->isString()
+            ->validate();
 
         $this->name = $name;
 
@@ -93,7 +87,7 @@ class GrandCompany extends AbstractEntity
      */
     public function setIcon(string $icon)
     {
-        $this->validator
+        BaseValidator::getInstance()
             ->check($icon, 'Icon URL')
             ->isInitialized()
             ->isNotEmpty()
@@ -101,32 +95,6 @@ class GrandCompany extends AbstractEntity
             ->validate();
 
         $this->icon = $icon;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRank(): string
-    {
-        return $this->rank;
-    }
-
-    /**
-     * @param string $rank
-     * @return $this
-     */
-    public function setRank(string $rank)
-    {
-        $this->validator
-            ->check($rank, 'Rank')
-            ->isInitialized()
-            ->isNotEmpty()
-            ->isString()
-            ->validate();
-
-        $this->rank = $rank;
 
         return $this;
     }

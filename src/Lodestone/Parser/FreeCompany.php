@@ -2,6 +2,7 @@
 namespace Lodestone\Parser;
 
 use Lodestone\Modules\Logger;
+use Lodestone\Parser\Html\ParserHelper;
 
 /**
  * Class FreeCompany
@@ -19,7 +20,7 @@ class FreeCompany extends ParserHelper
 
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
 
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $started = microtime(true);
         $this->parseHeader();

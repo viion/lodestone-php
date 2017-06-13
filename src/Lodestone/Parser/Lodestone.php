@@ -4,6 +4,7 @@ namespace Lodestone\Parser;
 
 use Lodestone\Modules\Routes;
 use Lodestone\Modules\XIVDB;
+use Lodestone\Parser\Html\ParserHelper;
 
 /**
  * Parse character data
@@ -30,7 +31,7 @@ class Lodestone extends ParserHelper
         $this->ensureHtml();
 
         $html = $this->html;
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocument()->find('#slider_bnr_area li');
         $results = [];
@@ -55,7 +56,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list--topics');
         $results = [];
@@ -83,7 +84,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -109,7 +110,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -140,7 +141,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -166,7 +167,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -197,7 +198,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocumentFromClassname('.parts__space--pb16')->find('div.item-list__worldstatus');
         $results = [];
@@ -221,7 +222,7 @@ class Lodestone extends ParserHelper
         $this->ensureHtml();
 
         $html = $this->html;
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocument()->find('.wolvesden__ranking__table tr');
         $results = [];
@@ -258,7 +259,7 @@ class Lodestone extends ParserHelper
         $this->ensureHtml();
 
         $html = $this->html;
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $entries = $this->getDocument()->find('.deepdungeon__ranking__wrapper__inner li');
         $results = [];
@@ -322,7 +323,7 @@ class Lodestone extends ParserHelper
                              'de' => 3,
                          ][$lang];
 
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $link = $this->getDocument()->find('.devtrack_btn', $trackerNumber)->href;
         return $link;
@@ -337,7 +338,7 @@ class Lodestone extends ParserHelper
 
         $html = $this->html;
 
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
         $posts = $this->getDocument()->find('.blockbody li');
 
         $links = [];
@@ -357,7 +358,7 @@ class Lodestone extends ParserHelper
         $this->ensureHtml();
 
         $html = $this->html;
-        $this->setInitialDocument($html);
+        $this->setDocument($html);
 
         $post = $this->getDocument();
 

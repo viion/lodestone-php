@@ -11,14 +11,22 @@ class HttpRequestValidator extends BaseValidator
     const HTTP_OK = 200;
     const HTTP_PERM_REDIRECT = 308;
 
+    private static $instance = null;
+
+    public static function getInstance() {
+        if (null === self::$instance) {
+            self::$instance = new HttpRequestValidator();
+        }
+
+        return self::$instance;
+    }
+
     /**
     * HttpRequestValidator constructor.
-    * @param $object
-    * @param $name
     */
-    public function __construct($object, $name)
+    protected function __construct()
     {
-        parent::__construct($object, $name);
+        parent::__construct();
     }
 
     /**

@@ -13,28 +13,6 @@ use Lodestone\Validator\BaseValidator;
 class AbstractEntity
 {
     /**
-     * @var BaseValidator
-     */
-    protected $validator;
-
-    /**
-     * AbstractEntity constructor.
-     */
-    public function __construct()
-    {
-        $this->initializeValidator();
-    }
-
-    /**
-     * @return $this
-     */
-    protected function initializeValidator()
-    {
-        $this->validator = new BaseValidator();
-        return $this;
-    }
-
-    /**
      * Map all class attributes
      *
      * @return array
@@ -45,12 +23,15 @@ class AbstractEntity
         $reflector = new \ReflectionClass(get_class($this));
 
         // get properties
-        $properties = $reflector->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $properties = $reflector->getProperties(\ReflectionProperty::IS_PROTECTED);
 
         // loop through properties
         $arr = [];
         foreach($properties as $property) {
-            $doc = $reflector->getProperty($property->name)->getDocComment();
+            $propertyName = $property->name;
+            $doc = $reflector
+                ->getProperty($propertyName)
+                ->getDocComment();
 
             // parse fields
             $result = [];
@@ -60,26 +41,37 @@ class AbstractEntity
 
             // only add those with a var type
             if (isset($result['var'])) {
+                if (!$this->{$propertyName}) {
+                    continue;
+                }
+
                 // get base type
                 switch(explode('|', $result['var'])[0]) {
                     // basic
                     case 'string':
-                    case 'array':
                     case 'int':
+                    case 'integer':
                     case 'bool':
                     case 'float':
-                        $arr[$property->name] = $this->{$property->name};
+                        $arr[$propertyName] = $this->{$propertyName};
+                        break;
+
+                    // if array, need to loop through it
+                    case 'array':
+                        foreach($this->{$propertyName} as $i => $value) {
+                            $arr[$propertyName] = ($value instanceof AbstractEntity) ? $value->toArray() : $value;
+                        }
                         break;
 
                     // assume a class, get its data
                     default:
-                        $arr[$property->name] = $this->{$property->name}->toArray();
+                        $arr[$propertyName] = $this->{$propertyName}->toArray();
                         break;
                 }
             }
         }
-        Benchmark::finish(__METHOD__,__LINE__);
 
+        Benchmark::finish(__METHOD__,__LINE__);
         return $arr;
     }
 }

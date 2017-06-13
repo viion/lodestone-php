@@ -17,12 +17,12 @@ class Collectables extends AbstractEntity
     /**
      * @var array
      */
-    public $minions = [];
+    protected $minions = [];
 
     /**
      * @var array
      */
-    public $mounts = [];
+    protected $mounts = [];
 
     /**
      * @return array

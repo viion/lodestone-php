@@ -17,47 +17,47 @@ class Item extends AbstractEntity
     /**
      * @var int
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $lodestoneId;
+    protected $lodestoneId;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var string
      */
-    public $slot;
+    protected $slot;
 
     /**
      * @var string
      */
-    public $category;
+    protected $category;
 
     /**
      * @var string
      */
-    public $mirageId;
+    protected $mirageId;
 
     /**
      * @var int
      */
-    public $creatorId;
+    protected $creatorId;
 
     /**
      * @var string
      */
-    public $dyeId;
+    protected $dyeId;
 
     /**
      * @var array
      */
-    public $materia = [];
+    protected $materia = [];
 
     /**
      * @return int

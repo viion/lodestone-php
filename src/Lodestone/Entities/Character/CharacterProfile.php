@@ -17,102 +17,102 @@ class CharacterProfile extends AbstractEntity
     /**
      * @var string
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var string
      */
-    public $server;
+    protected $server;
 
     /**
      * @var string|null
      */
-    public $title = null;
+    protected $title = null;
 
     /**
      * @var string
      */
-    public $avatar;
+    protected $avatar;
 
     /**
      * @var string
      */
-    public $portrait;
+    protected $portrait;
 
     /**
      * @var string
      */
-    public $biography = '';
+    protected $biography = '';
 
     /**
      * @var string
      */
-    public $race;
+    protected $race;
 
     /**
      * @var string
      */
-    public $clan;
+    protected $clan;
 
     /**
      * @var string
      */
-    public $gender;
+    protected $gender;
 
     /**
      * @var string
      */
-    public $nameday;
+    protected $nameday;
 
     /**
      * @var Guardian
      */
-    public $guardian;
+    protected $guardian;
 
     /**
      * @var City
      */
-    public $city;
+    protected $city;
 
     /**
      * @var GrandCompany|null
      */
-    public $grandcompany = null;
+    protected $grandcompany = null;
 
     /**
      * @var string|null
      */
-    public $freecompany = null;
+    protected $freecompany = null;
 
     /**
      * @var array
      */
-    public $classjobs = [];
+    protected $classjobs = [];
 
     /**
      * @var array
      */
-    public $attributes = [];
+    protected $attributes = [];
 
     /**
      * @var Collectables
      */
-    public $collectables = null;
+    protected $collectables = null;
 
     /**
      * @var array
      */
-    public $gear = [];
+    protected $gear = [];
 
     /**
      * @var ClassJob
      */
-    public $activeClassJob = null;
+    protected $activeClassJob = null;
 
     /**
      * Profile constructor.
@@ -537,6 +537,14 @@ class CharacterProfile extends AbstractEntity
     }
 
     /**
+     * @param string $slot
+     * @return Item $item
+     */
+    public function getGear(string $slot)
+    {
+        return $this->gear[$slot];
+    }
+    /**
      * @param string $id
      * @param ClassJob $role
      * @return CharacterProfile $this
@@ -545,6 +553,15 @@ class CharacterProfile extends AbstractEntity
     {
         $this->classjobs[$id] = $role;
         return $this;
+    }
+
+    /**
+     * @param string $id
+     * @return ClassJob $job
+     */
+    public function getClassjob(string $id)
+    {
+        return $this->classjobs[$id];
     }
 
     /**

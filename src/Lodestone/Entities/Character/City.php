@@ -17,17 +17,17 @@ class City extends AbstractEntity
     /**
      * @var int
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var string
      */
-    public $icon;
+    protected $icon;
 
     /**
      * @return int

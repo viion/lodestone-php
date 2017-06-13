@@ -23,7 +23,7 @@ class AbstractEntity
         $reflector = new \ReflectionClass(get_class($this));
 
         // get properties
-        $properties = $reflector->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $properties = $reflector->getProperties(\ReflectionProperty::IS_PROTECTED);
 
         // loop through properties
         $arr = [];

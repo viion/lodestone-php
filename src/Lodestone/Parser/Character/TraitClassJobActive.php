@@ -31,16 +31,16 @@ trait TraitClassJobActive
 
         // get main hand previously parsed
         /** @var Item $mainhand */
-        $mainhand = $this->profile->gear['mainhand'];
-        $role = explode("'", $mainhand->category)[0];
+        $mainhand = $this->profile->getGear('mainhand');
+        $role = explode("'", $mainhand->getCategory())[0];
 
         // get class job id from mainhand category name
         $id = $this->xivdb->getClassJobId($role);
 
         if (!$id) {
             $role = new ClassJob();
-            $role->setName($mainhand->category);
-            $this->profile->activeClassJob = $role;
+            $role->setName($mainhand->getCategory());
+            $this->profile->setActiveClassJob($role);
 
             Benchmark::finish(__METHOD__,__LINE__);
             return;
@@ -48,8 +48,8 @@ trait TraitClassJobActive
 
         // get classjob from the recorded class jobs and clone it
         /** @var ClassJob $role */
-        $role = clone $this->profile->classjobs[$id];
-        $name = $role->name;
+        $role = clone $this->profile->getClassjob($id);
+        $name = $role->getName();
 
         // Handle jobs
         $soulcrystal = isset($this->profile->gear['soulcrystal'])

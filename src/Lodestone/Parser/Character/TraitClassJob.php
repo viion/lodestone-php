@@ -57,7 +57,7 @@ trait TraitClassJob
                     ->setExpLevelTogo($max - $current)
                     ->setExpTotal($this->xivdb->getExpGained($level, $current))
                     ->setExpTotalMax($this->xivdb->getTotalExp())
-                    ->setExpTotalTogo($role->expTotalMax - $role->expTotal);
+                    ->setExpTotalTogo($role->getExpTotalMax() - $role->getExpTotal());
 
                 // save
                 $this->profile->addClassjob($id, $role);

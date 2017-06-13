@@ -17,47 +17,47 @@ class ClassJob extends AbstractEntity
     /**
      * @var int
      */
-    public $id;
+    protected $id;
 
     /**
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * @var int
      */
-    public $level;
+    protected $level;
 
     /**
      * @var int
      */
-    public $expLevel;
+    protected $expLevel;
 
     /**
      * @var int
      */
-    public $expLevelTogo;
+    protected $expLevelTogo;
 
     /**
      * @var int
      */
-    public $expLevelMax;
+    protected $expLevelMax;
 
     /**
      * @var int
      */
-    public $expTotal;
+    protected $expTotal;
 
     /**
      * @var int
      */
-    public $expTotalMax;
+    protected $expTotalMax;
 
     /**
      * @var int
      */
-    public $expTotalTogo;
+    protected $expTotalTogo;
 
     /**
      * @return int
@@ -118,7 +118,6 @@ class ClassJob extends AbstractEntity
         BaseValidator::getInstance()
             ->check($level, 'Level')
             ->isInitialized()
-            ->isNotEmpty()
             ->isNumeric()
             ->validate();
 

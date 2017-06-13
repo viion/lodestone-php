@@ -60,7 +60,7 @@ trait TraitClassJob
                     ->setExpTotalTogo($role->expTotalMax - $role->expTotal);
 
                 // save
-                $this->profile->classjobs[$id] = $role;
+                $this->profile->addClassjob($id, $role);
             }
         }
 

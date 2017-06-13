@@ -94,7 +94,7 @@ trait TraitClassJobActive
             ->setName($name);
 
         // save
-        $this->profile->activeClassJob = $role;
+        $this->profile->setActiveClassJob($role);
         Benchmark::finish(__METHOD__,__LINE__);
     }
 }

@@ -104,8 +104,7 @@ trait TraitProfile
 
         list($race, $clan, $gender) = explode('/', strip_tags($html));
 
-        $this
-            ->profile
+        $this->profile
             ->setRace(strip_tags(trim($race)))
             ->setClan(strip_tags(trim($clan)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');

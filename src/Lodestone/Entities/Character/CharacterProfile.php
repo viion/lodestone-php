@@ -498,4 +498,64 @@ class CharacterProfile extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @return ClassJob
+     */
+    public function getActiveClassJob(): ClassJob
+    {
+        return $this->activeClassJob;
+    }
+
+    /**
+     * @param ClassJob $activeClassJob
+     * @return CharacterProfile
+     */
+    public function setActiveClassJob( ClassJob $activeClassJob ): CharacterProfile
+    {
+        $this->activeClassJob = $activeClassJob;
+        return $this;
+    }
+
+    /**
+     * @return Collectables
+     */
+    public function &getCollectables(): Collectables
+    {
+        return $this->collectables;
+    }
+
+    /**
+     * @param string $slot
+     * @param Item $item
+     * @return CharacterProfile $this
+     */
+    public function addGear(string $slot, Item $item)
+    {
+        $this->gear[$slot] = $item;
+        return $this;
+    }
+
+    /**
+     * @param string $id
+     * @param ClassJob $role
+     * @return CharacterProfile $this
+     */
+    public function addClassjob(string $id, ClassJob $role)
+    {
+        $this->classjobs[$id] = $role;
+        return $this;
+    }
+
+    /**
+     * @param Attribute $attribute
+     * @return CharacterProfile $this
+     */
+    public function addAttribute(Attribute $attribute)
+    {
+        $this->attributes[] = $attribute;
+        return $this;
+    }
+
+
 }

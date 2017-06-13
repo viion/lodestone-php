@@ -29,12 +29,16 @@ trait TraitCollectables
 
         // get mounts
         foreach($box->find('.character__mounts ul li') as &$node) {
-            $this->profile->collectables->mounts[] = $this->parseCollectableCommon($node, 'Mount');
+            $this->profile
+                ->getCollectables()
+                ->addMount($this->parseCollectableCommon($node, 'Mount'));
         }
 
         // get minions
         foreach($box->find('.character__minion ul li') as &$node) {
-            $this->profile->collectables->minions[] = $this->parseCollectableCommon($node, 'Minion');
+            $this->profile
+                ->getCollectables()
+                ->addMinion($this->parseCollectableCommon($node, 'Minion'));
         }
 
         // fin

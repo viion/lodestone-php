@@ -3,7 +3,7 @@
 namespace Lodestone\Parser;
 
 use Lodestone\Modules\Routes;
-use Lodestone\Modules\XIVDB
+use Lodestone\Modules\XIVDB;
 use Lodestone\Parser\Html\ParserHelper;
 
 /**

@@ -520,7 +520,7 @@ class CharacterProfile extends AbstractEntity
     /**
      * @return Collectables
      */
-    public function &getCollectables(): Collectables
+    public function getCollectables(): Collectables
     {
         return $this->collectables;
     }

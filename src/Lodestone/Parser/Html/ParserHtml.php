@@ -32,9 +32,9 @@ trait ParserHtml
      *
      * Returns an array of html
      *
-     * @param $start
-     * @param $finish
-     * @param $html
+     * @param string $start
+     * @param number|string $finish
+     * @param null|array $html
      * @return array
      */
     protected function getArrayFromRange($start, $finish, $html = null)

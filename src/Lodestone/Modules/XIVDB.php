@@ -71,6 +71,7 @@ class XIVDB
      * Generate hash
      *
      * @param $value
+     * @param int $length
      * @return bool|string
      */
     private function getStorageHash($value, $length = 8)

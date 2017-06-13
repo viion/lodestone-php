@@ -28,7 +28,10 @@ class AbstractEntity
         // loop through properties
         $arr = [];
         foreach($properties as $property) {
-            $doc = $reflector->getProperty($property->name)->getDocComment();
+            $propertyName = $property->name;
+            $doc = $reflector
+                ->getProperty($propertyName)
+                ->getDocComment();
 
             // parse fields
             $result = [];
@@ -38,7 +41,7 @@ class AbstractEntity
 
             // only add those with a var type
             if (isset($result['var'])) {
-                if (!$this->{$property->name}) {
+                if (!$this->{$propertyName}) {
                     continue;
                 }
 
@@ -50,23 +53,19 @@ class AbstractEntity
                     case 'integer':
                     case 'bool':
                     case 'float':
-                        $arr[$property->name] = $this->{$property->name};
+                        $arr[$propertyName] = $this->{$propertyName};
                         break;
 
                     // if array, need to loop through it
                     case 'array':
-                        foreach($this->{$property->name} as $i => $value) {
-                            if (method_exists($value, 'toArray')) {
-                                $arr[$property->name][] = $value->toArray();
-                            } else {
-                                $arr[$property->name] = $value;
-                            }
+                        foreach($this->{$propertyName} as $i => $value) {
+                            $arr[$propertyName] = ($value instanceof AbstractEntity) ? $value->toArray() : $value;
                         }
                         break;
 
                     // assume a class, get its data
                     default:
-                        $arr[$property->name] = $this->{$property->name}->toArray();
+                        $arr[$propertyName] = $this->{$propertyName}->toArray();
                         break;
                 }
             }

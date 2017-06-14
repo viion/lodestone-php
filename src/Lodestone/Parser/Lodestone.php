@@ -293,6 +293,8 @@ class Lodestone extends ParserHelper
             'de' => 3,
         ][$lang];
 
+        $this->setDocument($html);
+
         return $this->getDocument()->find('.devtrack_btn', $trackerNumber)->href;
     }
 
@@ -349,7 +351,7 @@ class Lodestone extends ParserHelper
         // fix time from Tokyo to Europe
         $date = new \DateTime($timestamp, new \DateTimeZone('Asia/Tokyo'));
         $date->setTimezone(new \DateTimeZone('UTC'));
-        $timestamp = $date->format('Y-m-d H:i:s');
+        $timestamp = $date->format('U');
 
         // get colour
         $color = str_ireplace(['color: ', ';'], null, $post->find('.username span', 0)->getAttribute('style'));
@@ -377,6 +379,7 @@ class Lodestone extends ParserHelper
             "\t" => null,
             "\n" => null,
             '&#13;' => null,
+            'â€™' => "'",
             'images/' => Routes::LODESTONE_FORUMS .'images/',
             'members/' => Routes::LODESTONE_FORUMS .'members/',
             'showthread.php' => Routes::LODESTONE_FORUMS .'showthread.php',

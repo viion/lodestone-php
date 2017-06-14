@@ -2,6 +2,7 @@
 
 namespace Lodestone\Parser;
 
+use Lodestone\Modules\Benchmark;
 use Lodestone\Modules\Logger;
 use Lodestone\Parser\Html\ParserHelper;
 
@@ -16,12 +17,10 @@ class Linkshell extends ParserHelper
      */
     public function parse()
     {
-        $this->ensureHtml();
-        $html = $this->html;
+        $this->initialize();
 
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-
-        $this->setDocument($html);
+        $started = Benchmark::milliseconds();
+        Benchmark::start(__METHOD__,__LINE__);
 
         // no members
         if ($this->getDocument()->find('.parts__zero', 0)) {
@@ -31,11 +30,15 @@ class Linkshell extends ParserHelper
         $box = $this->getDocumentFromClassname('.ldst__window .heading__linkshell', 0);
         $data = trim($box->find('.heading__linkshell__name')->plaintext);
         $this->add('name', $data);
-        $started = microtime(true);
+
+        // parse
         $this->pageCount();
         $this->parseList();
-        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
 
+        Benchmark::finish(__METHOD__,__LINE__);
+        $finished = Benchmark::milliseconds();
+        $duration = $finished - $started;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
         return $this->data;
     }
 

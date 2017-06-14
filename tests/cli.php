@@ -32,6 +32,10 @@ switch($option) {
         $data = $api->getCharacter($id ? $id : 730968);
         break;
 
+    case 'character_friends':
+        $data = $api->getCharacterFriends($id ? $id : 730968);
+        break;
+
     case 'fc':
         $data = $api->getFreeCompany($id ? $id : '9231253336202687179');
         break;
@@ -43,6 +47,12 @@ switch($option) {
     case 'devposts':
         $data = $api->getDevPosts();
         break;
+}
+
+if (!$data) {
+    print_r("\nNo data, was the command correct? > ". $option);
+    print_r("\n");
+    die;
 }
 
 // Array of character data

@@ -1,6 +1,7 @@
 <?php
 namespace Lodestone\Parser;
 
+use Lodestone\Modules\Benchmark;
 use Lodestone\Modules\Logger;
 use Lodestone\Parser\Html\ParserHelper;
 
@@ -15,18 +16,20 @@ class FreeCompany extends ParserHelper
      */
     public function parse()
     {
-        $this->ensureHtml();
-        $html = $this->html;
+        $this->initialize();
 
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+        $started = Benchmark::milliseconds();
+        Benchmark::start(__METHOD__,__LINE__);
 
-        $this->setDocument($html);
-
-        $started = microtime(true);
         $this->parseHeader();
         $this->parseProfile();
         $this->parseFocus();
-        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
+
+        Benchmark::finish(__METHOD__,__LINE__);
+        $finished = Benchmark::milliseconds();
+        $duration = $finished - $started;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
+
 
         return $this->data;
     }

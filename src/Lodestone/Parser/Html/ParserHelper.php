@@ -26,6 +26,9 @@ class ParserHelper
     public $html;
     public $htmlOriginal;
 
+    /** @var array (depreciated) */
+    public $data = [];
+
     /**
      * @param $data
      * @return $this
@@ -48,6 +51,26 @@ class ParserHelper
         $this->html = $http->get($url);
         $this->htmlOriginal = $this->html;
         return $this;
+    }
+
+    /**
+     * Add some data to the array
+     * @param $name
+     * @param $value
+     */
+    protected function add($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
+
+    /**
+     * Get data from the array
+     * @param $name
+     * @return mixed
+     */
+    protected function get($name)
+    {
+        return $this->data[$name];
     }
 
     /**

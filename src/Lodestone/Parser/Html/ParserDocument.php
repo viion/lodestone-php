@@ -39,7 +39,7 @@ trait ParserDocument
             return false;
         }
 
-        $html = $html->outerText;
+        $html = $html->outertext;
         $dom = $this->getDocumentFromHtml($html);
         unset($html);
         return $dom;

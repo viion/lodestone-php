@@ -358,6 +358,10 @@ class Lodestone extends ParserHelper
         $this->ensureHtml();
 
         $html = $this->html;
+        if (!$html) {
+            return false;
+        }
+
         $this->setDocument($html);
 
         $post = $this->getDocument();
@@ -378,36 +382,15 @@ class Lodestone extends ParserHelper
 
         // todo : translate ...
         $timestamp = $post->find('.posthead .date', 0)->plaintext;
-        $timestamp = trim(str_ireplace('&nbsp;', ' ', htmlentities($timestamp)));
-        if (stripos($timestamp, 'Yesterday') !== false || stripos($timestamp, 'Today') !== false) {
-            list($date, $time, $ampm) = explode(' ', $timestamp);
-            list($hour, $minute) = explode(':', $time);
-            $now = new \DateTime("now", new \DateTimeZone('Japan'));
 
-            // add 12 hours if it's pm
-            $hour = ($ampm == 'PM') ? $hour + 12 : $hour;
+        // remove invisible characters
+        $timestamp = preg_replace('/[[:^print:]]/', ' ', $timestamp);
+        $timestamp = str_ireplace('-', '/', $timestamp);
 
-            // minus a day if it was posted yesterday
-            if (stripos($timestamp, 'Today') !== false) {
-                $now->modify('-1 day');
-            }
-
-            $now->setTime($hour, $minute);
-        } else {
-            list($date, $time, $ampm) = explode(' ', $timestamp);
-            list($month, $day, $year) = explode('-', $date);
-            list($hour, $minute) = explode(':', $time);
-
-            // add 12 hours if it's pm
-            $hour = ($ampm == 'PM') ? $hour + 12 : $hour;
-
-            $timestamp = mktime($hour, $minute, 0, $month, $day, $year);
-
-            // should be readable
-            $now = new \DateTime('@'. $timestamp, new \DateTimeZone('Japan'));
-        }
-
-        $now = $now->setTimezone(new \DateTimeZone('UTC'));
+        // fix time from Tokyo to Europe
+        $date = new \DateTime($timestamp, new \DateTimeZone('Asia/Tokyo'));
+        $date->setTimezone(new \DateTimeZone('UTC'));
+        $timestamp = $date->format('Y-m-d H:i:s');
 
         // get colour
         $color = str_ireplace(['color: ', ';'], null, $post->find('.username span', 0)->getAttribute('style'));
@@ -464,7 +447,7 @@ class Lodestone extends ParserHelper
         // https://github.com/viion/lodestone-php/issues/22
         $message = str_ireplace(['allowfullscreen=""/>'], ['allowfullscreen=""></iframe>'], $message);
 
-        $data['time'] = $now->format('Y-m-d H:i:s');
+        $data['time'] = $timestamp;
         $data['message'] = trim($message);
 
         return $data;

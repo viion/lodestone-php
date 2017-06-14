@@ -25,6 +25,7 @@ class Achievements extends ParserHelper
         }
 
         $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
+        $this->ensureHtml();
 
         $this->setDocument($html);
 

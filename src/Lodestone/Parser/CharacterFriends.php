@@ -16,15 +16,7 @@ class CharacterFriends extends ParserHelper
      */
     public function parse()
     {
-        $this->ensureHtml();
-        $html = $this->html;
-
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        if (!$html) {
-            return false;
-        }
-
-        $this->setDocument($html);
+        $this->initialize();
 
         // no friends
         if ($this->getDocument()->find('.parts__zero', 0)) {

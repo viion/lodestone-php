@@ -14,8 +14,11 @@ class FreeCompany extends ParserHelper
     /**
      * @return array|bool
      */
-    public function parse()
+    public function parse($id)
     {
+        // todo this is temp until we make an "FreeCompanyProfile" class
+        $this->add('id', $id);
+
         $this->initialize();
 
         $started = Benchmark::milliseconds();
@@ -62,11 +65,6 @@ class FreeCompany extends ParserHelper
         // server
         $data = trim($box->find('.entry__freecompany__gc', 1)->plaintext);
         $this->add('server', $data);
-
-        // id
-        $data = $box->find('a', 0)->getAttribute('href');
-        $data = trim(explode('/', $data)[3]);
-        $this->add('id', $data);
     }
 
     /**

@@ -15,9 +15,12 @@ class Linkshell extends ParserHelper
     /**
      * @return array|bool
      */
-    public function parse()
+    public function parse(int $id)
     {
         $this->initialize();
+
+        // todo this is temp until we make an "LinkshellProfile" class
+        $this->add('id', $id);
 
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);

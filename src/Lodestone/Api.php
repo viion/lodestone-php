@@ -165,7 +165,7 @@ class Api
     public function getFreeCompany($id)
     {
         $url = sprintf(Routes::LODESTONE_FREECOMPANY_URL, $id);
-        return (new FreeCompany())->url($url)->parse();
+        return (new FreeCompany())->url($url)->parse($id);
     }
 
     /**
@@ -195,7 +195,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
-        return (new Linkshell())->url($url)->parse();
+        return (new Linkshell())->url($url)->parse($id);
     }
 
     /**

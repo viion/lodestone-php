@@ -317,11 +317,11 @@ class Lodestone extends ParserHelper
         $html = $this->html;
 
         $trackerNumber = [
-                             'ja' => 0,
-                             'en' => 1,
-                             'fr' => 2,
-                             'de' => 3,
-                         ][$lang];
+            'ja' => 0,
+            'en' => 1,
+            'fr' => 2,
+            'de' => 3,
+        ][$lang];
 
         $this->setDocument($html);
 

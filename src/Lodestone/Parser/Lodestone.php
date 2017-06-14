@@ -390,7 +390,7 @@ class Lodestone extends ParserHelper
         // fix time from Tokyo to Europe
         $date = new \DateTime($timestamp, new \DateTimeZone('Asia/Tokyo'));
         $date->setTimezone(new \DateTimeZone('UTC'));
-        $timestamp = $date->format('Y-m-d H:i:s');
+        $timestamp = $date->format('U');
 
         // get colour
         $color = str_ireplace(['color: ', ';'], null, $post->find('.username span', 0)->getAttribute('style'));

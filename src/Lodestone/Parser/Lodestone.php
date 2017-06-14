@@ -418,6 +418,7 @@ class Lodestone extends ParserHelper
             "\t" => null,
             "\n" => null,
             '&#13;' => null,
+            'â€™' => "'",
             'images/' => Routes::LODESTONE_FORUMS .'images/',
             'members/' => Routes::LODESTONE_FORUMS .'members/',
             'showthread.php' => Routes::LODESTONE_FORUMS .'showthread.php',

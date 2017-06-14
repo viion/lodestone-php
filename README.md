@@ -66,6 +66,14 @@ $api->xivdb->clearCache();
 $api->xivdb->init();
 ```
 
+All objects can be converted to an array via: `toArray()`
+
+```php
+$api = new \Lodestone\Api;
+$character = $api->getCharacter('<id>');
+$array = $character->toArray();
+```
+
 To generate a consistent sha1:
 
 ```php

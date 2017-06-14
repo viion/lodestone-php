@@ -16,11 +16,7 @@ class Search extends ParserHelper
      */
     public function parseCharacterSearch()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 
@@ -51,11 +47,7 @@ class Search extends ParserHelper
      */
     public function parseFreeCompanySearch()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 
@@ -91,11 +83,7 @@ class Search extends ParserHelper
      */
     public function parseLinkshellSearch()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $box = $this->getDocumentFromClassname('.ldst__window');
 

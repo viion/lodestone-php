@@ -81,6 +81,9 @@ class ParserHelper
         // setup html
         $this->ensureHtml();
         $this->html = $this->trim($this->html, 'class="ldst__main"', 'class="ldst__side"');
+
+        // ensure that there is something left after trimming
+        $this->ensureHtml();
         $this->htmlOriginal = $this->html;
         $this->setDocument($this->html);
     }
@@ -95,6 +98,7 @@ class ParserHelper
         BaseValidator::getInstance()
             ->check($this->html, "HTML")
             ->isInitialized()
+            ->isNotEmpty()
             ->validate();
     }
 

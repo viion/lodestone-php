@@ -24,14 +24,11 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @return array|bool
+     * @return array
      */
     public function parseBanners()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocument()->find('#slider_bnr_area li');
         $results = [];
@@ -48,15 +45,11 @@ class Lodestone extends ParserHelper
     }
 
     /**
-     * @return array|bool
+     * @return array
      */
     public function parseTopics()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list--topics');
         $results = [];
@@ -80,11 +73,7 @@ class Lodestone extends ParserHelper
      */
     public function parseNotices()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -106,11 +95,7 @@ class Lodestone extends ParserHelper
      */
     public function parseMaintenance()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -137,11 +122,7 @@ class Lodestone extends ParserHelper
      */
     public function parseUpdates()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -163,11 +144,7 @@ class Lodestone extends ParserHelper
      */
     public function parseStatus()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
         $results = [];
@@ -194,11 +171,7 @@ class Lodestone extends ParserHelper
      */
     public function parseWorldStatus()
     {
-        $this->ensureHtml();
-
-        $html = $this->html;
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        $this->setDocument($html);
+        $this->initialize();
 
         $entries = $this->getDocumentFromClassname('.parts__space--pb16')->find('div.item-list__worldstatus');
         $results = [];
@@ -221,8 +194,7 @@ class Lodestone extends ParserHelper
     {
         $this->ensureHtml();
 
-        $html = $this->html;
-        $this->setDocument($html);
+        $this->setDocument($this->html);
 
         $entries = $this->getDocument()->find('.wolvesden__ranking__table tr');
         $results = [];
@@ -258,8 +230,7 @@ class Lodestone extends ParserHelper
     {
         $this->ensureHtml();
 
-        $html = $this->html;
-        $this->setDocument($html);
+        $this->setDocument($this->html);
 
         $entries = $this->getDocument()->find('.deepdungeon__ranking__wrapper__inner li');
         $results = [];
@@ -313,8 +284,7 @@ class Lodestone extends ParserHelper
     public function parseDevTrackingUrl($lang = 'en')
     {
         $this->ensureHtml();
-
-        $html = $this->html;
+        $this->setDocument($this->html);
 
         $trackerNumber = [
             'ja' => 0,
@@ -325,8 +295,7 @@ class Lodestone extends ParserHelper
 
         $this->setDocument($html);
 
-        $link = $this->getDocument()->find('.devtrack_btn', $trackerNumber)->href;
-        return $link;
+        return $this->getDocument()->find('.devtrack_btn', $trackerNumber)->href;
     }
 
     /**
@@ -336,9 +305,7 @@ class Lodestone extends ParserHelper
     {
         $this->ensureHtml();
 
-        $html = $this->html;
-
-        $this->setDocument($html);
+        $this->setDocument($this->html);
         $posts = $this->getDocument()->find('.blockbody li');
 
         $links = [];
@@ -356,13 +323,7 @@ class Lodestone extends ParserHelper
     public function parseDevPost($postId)
     {
         $this->ensureHtml();
-
-        $html = $this->html;
-        if (!$html) {
-            return false;
-        }
-
-        $this->setDocument($html);
+        $this->setDocument($this->html);
 
         $post = $this->getDocument();
 

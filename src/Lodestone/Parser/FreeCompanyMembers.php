@@ -16,12 +16,7 @@ class FreeCompanyMembers extends ParserHelper
      */
     public function parse()
     {
-        $this->ensureHtml();
-        $html = $this->html;
-
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-
-        $this->setDocument($html);
+        $this->initialize();
 
         // no members
         if ($this->getDocument()->find('.parts__zero', 0)) {

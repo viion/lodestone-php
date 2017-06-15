@@ -145,6 +145,8 @@ trait TraitProfile
             ->setName($name)
             ->setId($id);
 
+        $this->profile->setGuardian($guardian);
+
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -201,6 +203,8 @@ trait TraitProfile
                 ->setId($id)
                 ->setName($name)
                 ->setRank($rank);
+
+            $this->profile->setGrandCompany($grandcompany);
         }
 
         Benchmark::finish(__METHOD__,__LINE__);

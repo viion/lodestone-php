@@ -62,7 +62,7 @@ class AbstractEntity
                     // if array, need to loop through it
                     case 'array':
                         foreach($this->{$propertyName} as $i => $value) {
-                            $arr[$propertyName] = ($value instanceof AbstractEntity) ? $value->toArray() : $value;
+                            $arr[$propertyName][] = ($value instanceof AbstractEntity) ? $value->toArray() : $value;
                         }
                         break;
 

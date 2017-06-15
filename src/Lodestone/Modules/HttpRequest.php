@@ -58,6 +58,7 @@ class HttpRequest
         // specific conditions to return code on
         HttpRequestValidator::getInstance()
             ->check($httpCode, 'HTTP Response Code')
+            ->isNotMaintenance()
             ->isNotHttpError()
             ->validate();
 

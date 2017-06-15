@@ -56,8 +56,8 @@ class HttpRequest
         Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
 
         // specific conditions to return code on
-        $validator = new HttpRequestValidator($httpCode, 'HTTP Response Code');
-        $validator
+        HttpRequestValidator::getInstance()
+            ->check($httpCode, 'HTTP Response Code')
             ->isNotHttpError()
             ->validate();
 

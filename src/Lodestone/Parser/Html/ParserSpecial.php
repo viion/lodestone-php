@@ -1,6 +1,8 @@
 <?php
 
-namespace Lodestone\Parser;
+namespace Lodestone\Parser\Html;
+
+use Lodestone\Dom\Document;
 
 /**
  * Bunch of custom helpers
@@ -13,10 +15,12 @@ namespace Lodestone\Parser;
  * Class ParserHelperSpecial
  * @package src\Parser
  */
-trait ParserHelperSpecial
+trait ParserSpecial
 {
     /**
-     * @return mixed
+     * Special HTML action for Attributes (Part 1)
+     *
+     * @return Document
      */
     protected function getSpecial__AttributesPart1()
     {
@@ -37,7 +41,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * Special HTML action for Attributes (Part 2)
+     *
+     * @return Document
      */
     protected function getSpecial__AttributesPart2()
     {
@@ -57,7 +63,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * Special HTML action for Attributes (Part 3)
+     *
+     * @return Document
      */
     protected function getSpecial__AttributesPart3()
     {
@@ -78,7 +86,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * Special HTML action for Attributes (Part 4)
+     *
+     * @return Document
      */
     protected function getSpecial__AttributesPart4()
     {
@@ -100,7 +110,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * Special HTML action for Class/Jobs
+     *
+     * @return Document
      */
     protected function getSpecial__ClassJobs()
     {
@@ -122,7 +134,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return bool
+     * Special HTML action for Collectables
+     *
+     * @return bool|Document
      */
     protected function getSpecial__Collectables()
     {
@@ -148,7 +162,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * Special HTML action for Equipment
+     *
+     * @return Document
      */
     protected function getSpecial__EquipGear()
     {
@@ -170,7 +186,9 @@ trait ParserHelperSpecial
     }
 
     /**
-     * @return mixed
+     * Special HTML action for Achievements
+     *
+     * @return Document
      */
     protected function getSpecial__Achievements()
     {

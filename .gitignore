@@ -1,3 +1,6 @@
 vendor
 .idea
 .vagrant
+tests/bench.json
+src/Lodestone/Modules/xivdb-api-cache/
+src/Lodestone/Modules/log\.txt

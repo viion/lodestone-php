@@ -3,10 +3,12 @@
 namespace Lodestone;
 
 // use all the things
-use Lodestone\Modules\{XIVDB, Logger,Routes};
+use Lodestone\Modules\{
+    XIVDB, Logger, Routes
+};
 use Lodestone\Parser\{
     Achievements,
-    Character,
+    Character\Parser as CharacterParser,
     CharacterFollowing,
     CharacterFriends,
     FreeCompany,
@@ -24,6 +26,7 @@ use Lodestone\Parser\{
  */
 class Api
 {
+    /** @var XIVDB $xivdb */
     public $xivdb;
 
     /**
@@ -32,6 +35,7 @@ class Api
     public function __construct()
     {
         $this->xivdb = new XIVDB();
+
     }
 
     /**
@@ -46,7 +50,9 @@ class Api
 
     /**
      * @test Premium Virtue,Phoenix
-     * @param $id
+     * @param $name
+     * @param bool $server
+     * @param bool $page
      * @return array|bool
      */
     public function searchCharacter($name, $server = false, $page = false)
@@ -62,7 +68,9 @@ class Api
 
     /**
      * @test Equilibrium,Pheonix
-     * @param $id
+     * @param $name
+     * @param bool $server
+     * @param bool $page
      * @return array|bool
      */
     public function searchFreeCompany($name, $server = false, $page = false)
@@ -97,26 +105,12 @@ class Api
     /**
      * @test 730968
      * @param $id
-     * @param bool $hash
-     * @return array|bool
+     * @return Entities\Character\CharacterProfile
      */
-    public function getCharacter($id, $hash = false)
+    public function getCharacter($id)
     {
         $url = sprintf(Routes::LODESTONE_CHARACTERS_URL, $id);
-        return $hash
-            ? (new Character())->url($url)->parse(true)
-            : (new Character())->url($url)->parse();
-    }
-
-    /**
-     * Get character has from pre-existing data
-     *
-     * @param $data
-     * @return mixed
-     */
-    public function getCharacterHash($data)
-    {
-        return (new Character())->setData((array)$data)->hash();
+        return (new CharacterParser($id))->url($url)->parse();
     }
 
     /**
@@ -171,7 +165,7 @@ class Api
     public function getFreeCompany($id)
     {
         $url = sprintf(Routes::LODESTONE_FREECOMPANY_URL, $id);
-        return (new FreeCompany())->url($url)->parse();
+        return (new FreeCompany())->url($url)->parse($id);
     }
 
     /**
@@ -201,7 +195,16 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
-        return (new Linkshell())->url($url)->parse();
+        return (new Linkshell())->url($url)->parse($id);
+    }
+
+    /**
+     * @test .
+     * @return Lodestone/Lodestone
+     */
+    private function getLodeStoneInstance()
+    {
+        return new Lodestone();
     }
 
     /**
@@ -210,7 +213,7 @@ class Api
      */
     public function getLodestoneBanners()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_BANNERS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_BANNERS)->parseBanners();
     }
 
     /**
@@ -219,7 +222,7 @@ class Api
      */
     public function getLodestoneNews()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_NEWS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NEWS)->parseBanners();
     }
 
     /**
@@ -228,7 +231,7 @@ class Api
      */
     public function getLodestoneTopics()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_TOPICS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_TOPICS)->parseBanners();
     }
 
     /**
@@ -237,7 +240,7 @@ class Api
      */
     public function getLodestoneNotices()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_NOTICES)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NOTICES)->parseBanners();
     }
 
     /**
@@ -246,7 +249,7 @@ class Api
      */
     public function getLodestoneMaintenance()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_MAINTENANCE)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_MAINTENANCE)->parseBanners();
     }
 
     /**
@@ -255,7 +258,7 @@ class Api
      */
     public function getLodestoneUpdates()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_UPDATES)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_UPDATES)->parseBanners();
     }
 
     /**
@@ -264,7 +267,7 @@ class Api
      */
     public function getLodestoneStatus()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_STATUS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_STATUS)->parseBanners();
     }
 
     /**
@@ -273,7 +276,7 @@ class Api
      */
     public function getWorldStatus()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_WORLD_STATUS)->parseWorldStatus();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_WORLD_STATUS)->parseWorldStatus();
     }
 
     /**
@@ -282,7 +285,7 @@ class Api
      */
     public function getDevBlog()
     {
-        return (new Lodestone())->url(Routes::LODESTONE_DEV_BLOG)->parseDevBlog();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_DEV_BLOG)->parseDevBlog();
     }
 
     /**

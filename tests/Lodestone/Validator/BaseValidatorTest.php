@@ -20,11 +20,9 @@ class BaseValidatorTest extends TestCase
      */
     public function testIsInitialized()
     {
-        // given
-        $validator = new BaseValidator('', $this->name);
-
         // when
-        $result = $validator
+        $result = BaseValidator::getInstance()
+            ->check('', $this->name)
             ->isInitialized()
             ->validate();
 
@@ -36,12 +34,10 @@ class BaseValidatorTest extends TestCase
      */
     public function testIsInitializedWithNullValue()
     {
-        // given
-        $validator = new BaseValidator(null, $this->name);
-
         try {
             // when
-            $validator
+            BaseValidator::getInstance()
+                ->check(null, $this->name)
                 ->isInitialized()
                 ->validate();
 
@@ -58,10 +54,10 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $string = 'le test';
-        $validator = new BaseValidator($string, $this->name);
 
         // when
-        $result = $validator
+        $result = BaseValidator::getInstance()
+            ->check($string, $this->name)
             ->isNotEmpty()
             ->validate();
 
@@ -76,11 +72,11 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $string = '';
-        $validator = new BaseValidator($string, $this->name);
 
         // when
         try {
-            $validator
+            BaseValidator::getInstance()
+                ->check($string, $this->name)
                 ->isNotEmpty()
                 ->validate();
 
@@ -98,10 +94,10 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $string = '';
-        $validator = new BaseValidator($string, $this->name);
 
         // when
-        $result = $validator
+        $result = BaseValidator::getInstance()
+            ->check($string, $this->name)
             ->isString()
             ->validate();
 
@@ -115,11 +111,11 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = 1;
-        $validator = new BaseValidator($value, $this->name);
 
         try {
             // when
-            $validator
+            BaseValidator::getInstance()
+                ->check($value, $this->name)
                 ->isString()
                 ->validate();
 
@@ -138,10 +134,12 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = '';
-        $validator = new BaseValidator($value, 'Empty String');
 
         // when
-        $result = $validator->isString()->validate();
+        $result = BaseValidator::getInstance()
+            ->check($value, 'Empty String')
+            ->isString()
+            ->validate();
 
         // then
         self::assertTrue($result);
@@ -154,11 +152,11 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = null;
-        $validator = new BaseValidator($value, 'Empty String');
 
         try {
             // when
-            $validator
+            BaseValidator::getInstance()
+                ->check($value, 'Empty String')
                 ->isString()
                 ->validate();
 
@@ -177,10 +175,12 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = null;
-        $validator = new BaseValidator($value, 'Empty String');
 
         // when
-        $result = $validator->isStringOrEmpty()->validate();
+        $result = BaseValidator::getInstance()
+            ->check($value, 'Empty String')
+            ->isStringOrEmpty()
+            ->validate();
 
         self::assertTrue($result);
     }
@@ -192,10 +192,10 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $arr = [];
-        $validator = new BaseValidator($arr, $this->name);
 
         // when
-        $result = $validator
+        $result = BaseValidator::getInstance()
+            ->check($arr, $this->name)
             ->isArray()
             ->validate();
 
@@ -209,11 +209,11 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = 1;
-        $validator = new BaseValidator($value, $this->name);
 
         try {
             // when
-            $validator
+            BaseValidator::getInstance()
+                ->check($value, $this->name)
                 ->isArray()
                 ->validate();
 
@@ -232,10 +232,10 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = 1;
-        $validator = new BaseValidator($value, $this->name);
 
         // when
-        $result = $validator
+        $result = BaseValidator::getInstance()
+            ->check($value, $this->name)
             ->isInteger()
             ->validate();
 
@@ -249,11 +249,11 @@ class BaseValidatorTest extends TestCase
     {
         // given
         $value = '';
-        $validator = new BaseValidator($value, $this->name);
 
         try {
             // when
-            $validator
+            BaseValidator::getInstance()
+                ->check($value, $this->name)
                 ->isInteger()
                 ->validate();
 
@@ -274,10 +274,9 @@ class BaseValidatorTest extends TestCase
         $stringValue = 'A String';
         $intValue = 42;
         $arrayValues = ['foo', 'bar'];
-        $validator = new BaseValidator();
 
         // when
-        $result = $validator
+        $result = BaseValidator::getInstance()
             ->check($stringValue, 'String')->isString()
             ->check($intValue, 'Integer')->isInteger()
             ->check($arrayValues, 'Array')->isArray()
@@ -295,11 +294,10 @@ class BaseValidatorTest extends TestCase
         // given
         $stringValue = 'A String';
         $arrayValues = ['foo', 'bar'];
-        $validator = new BaseValidator();
 
         try {
             // when
-            $validator
+            BaseValidator::getInstance()
                 ->check($stringValue, 'String')->isString()
                 ->check($arrayValues, 'Wrong')->isInteger()
                 ->check($arrayValues, 'Array')->isArray()
@@ -309,6 +307,46 @@ class BaseValidatorTest extends TestCase
         } catch (ValidationException $vex) {
             // then
             $message = sprintf("%s (%s) is not of type: Integer.\n", 'Wrong', json_encode($arrayValues));
+            self::assertEquals($message, $vex->getMessage());
+        }
+    }
+
+    /**
+     * Test if a relative url is passing the validator
+     */
+    public function testRelativeUrl()
+    {
+        // given
+        $url = '/a/relative/url';
+
+        // when
+        $result = BaseValidator::getInstance()
+            ->check($url, 'relative url')
+            ->isRelativeUrl()
+            ->validate();
+
+        // then
+        self::assertTrue($result);
+    }
+
+    /**
+     * Test if an absolute url will fail passing the validator
+     */
+    public function testRelativeUrlWithAbsoluteUrl()
+    {
+        // given
+        $url = 'https://na.finalfantasxiv.com/a/simple/test';
+
+        try {
+            // when
+            BaseValidator::getInstance()
+                ->check($url, 'Absolute Url')
+                ->isRelativeUrl()
+                ->validate();
+
+            self::fail('Expected ValidationException');
+        } catch(ValidationException $vex) {
+            $message = "Absolute Url (https://na.finalfantasxiv.com/a/simple/test) is not a relative url.\n";
             self::assertEquals($message, $vex->getMessage());
         }
     }

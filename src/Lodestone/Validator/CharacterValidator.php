@@ -10,12 +10,20 @@ class CharacterValidator extends BaseValidator
 {
     const VALID_CHARACTER_REGEX = '/^[a-zA-Z\' \-]+\s?$/';
 
+    private static $instance = null;
+
+    public static function getInstance() {
+        if (null === self::$instance) {
+            self::$instance = new CharacterValidator();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * CharacterValidator constructor.
-     * @param $object
-     * @param $name
      */
-    public function __construct()
+    protected function __construct()
     {
         parent::__construct();
     }
@@ -23,7 +31,7 @@ class CharacterValidator extends BaseValidator
     /**
      * @return $this
      */
-    public function isValidCharacerName()
+    public function isValidCharacterName()
     {
         if (!preg_match(self::VALID_CHARACTER_REGEX, $this->object)) {
             $this->errors[] = new ValidationException($this->object . ' is not a valid character name.');

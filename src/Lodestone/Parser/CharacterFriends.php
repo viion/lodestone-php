@@ -3,6 +3,7 @@
 namespace Lodestone\Parser;
 
 use Lodestone\Modules\Logger;
+use Lodestone\Parser\Html\ParserHelper;
 
 /**
  * Class CharacterFriends
@@ -15,15 +16,7 @@ class CharacterFriends extends ParserHelper
      */
     public function parse()
     {
-        $this->ensureHtml();
-        $html = $this->html;
-
-        $html = $this->trim($html, 'class="ldst__main"', 'class="ldst__side"');
-        if (!$html) {
-            return false;
-        }
-
-        $this->setInitialDocument($html);
+        $this->initialize();
 
         // no friends
         if ($this->getDocument()->find('.parts__zero', 0)) {

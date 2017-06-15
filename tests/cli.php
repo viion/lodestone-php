@@ -47,6 +47,10 @@ switch($option) {
     case 'devposts':
         $data = $api->getDevPosts();
         break;
+
+    case 'lodestone_topics':
+        $data = $api->getLodestoneTopics();
+        break;
 }
 
 if (!$data) {

@@ -293,8 +293,6 @@ class Lodestone extends ParserHelper
             'de' => 3,
         ][$lang];
 
-        $this->setDocument($html);
-
         return $this->getDocument()->find('.devtrack_btn', $trackerNumber)->href;
     }
 

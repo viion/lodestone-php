@@ -31,17 +31,27 @@ class HttpRequestValidator extends BaseValidator
     }
 
     /**
-    * @return $this
-    */
-    public function isNotHttpError()
+     * When the lodestone is on maintenance, it returns 503 for all pages
+     *
+     * @return $this
+     */
+    public function isNotMaintenance()
     {
-        // When the lodestone is on maintenance, it returns 503 for all pages
         if ($this->object == self::HTTP_NOT_AVAILABLE) {
             $this->errors[] = new ValidationException('Lodestone is not available.');
         }
 
-        // see https://de.wikipedia.org/wiki/HTTP-Statuscode for information about the used status codes
-        // TLDR: 2XX and 3XX Status codes are for successful connections or redirects (so no error)
+        return $this;
+    }
+
+    /**
+     * 2XX and 3XX Status codes are for successful connections or redirects (so no error)
+     *
+     * @see https://de.wikipedia.org/wiki/HTTP-Statuscode
+     * @return $this
+     */
+    public function isNotHttpError()
+    {
         if ($this->object < self::HTTP_OK || $this->object > self::HTTP_PERM_REDIRECT) {
             $this->errors[] = new ValidationException('Requested page is not available');
         }

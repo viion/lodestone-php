@@ -10,6 +10,7 @@ class HttpRequestValidator extends BaseValidator
 {
     const HTTP_OK = 200;
     const HTTP_PERM_REDIRECT = 308;
+    const HTTP_NOT_AVAILABLE = 503;
 
     private static $instance = null;
 
@@ -34,6 +35,11 @@ class HttpRequestValidator extends BaseValidator
     */
     public function isNotHttpError()
     {
+        // When the lodestone is on maintenance, it returns 503 for all pages
+        if ($this->object == self::HTTP_NOT_AVAILABLE) {
+            $this->errors[] = new ValidationException('Lodestone is not available.');
+        }
+
         // see https://de.wikipedia.org/wiki/HTTP-Statuscode for information about the used status codes
         // TLDR: 2XX and 3XX Status codes are for successful connections or redirects (so no error)
         if ($this->object < self::HTTP_OK || $this->object > self::HTTP_PERM_REDIRECT) {

@@ -1,6 +1,8 @@
 <?php
 
-namespace Lodestone\Validator;
+namespace Lodestone\Validator\Exceptions;
+
+use Lodestone\Validator\HttpRequestValidator;
 
 /**
  * Class HttpNotFoundValidationException
@@ -8,6 +10,13 @@ namespace Lodestone\Validator;
  */
 class HttpNotFoundValidationException extends ValidationException
 {
+    /**
+     * HttpNotFoundValidationException constructor.
+     *
+     * @param HttpRequestValidator $validator
+     * @param int $code
+     * @param null $previous
+     */
     public function __construct(HttpRequestValidator $validator, $code = 0, $previous = null)
     {
         $message = sprintf(

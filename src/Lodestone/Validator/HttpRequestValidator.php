@@ -2,6 +2,12 @@
 
 namespace Lodestone\Validator;
 
+use Lodestone\Validator\Exceptions\{
+    HttpMaintenanceValidationException,
+    HttpNotFoundValidationException,
+    ValidationException
+};
+
 /**
  * Class HttpRequestValidator
  * @package Lodestone\Validator

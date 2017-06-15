@@ -68,7 +68,7 @@ foreach(get_class_methods($api) as $method) {
             case 3:
                 try {
                     $data = $api->$method($test[0], $test[1], $test[2]);
-                } catch (\Lodestone\Validator\ValidationException $vex) {
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
                     $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
                 }
                 break;
@@ -76,7 +76,7 @@ foreach(get_class_methods($api) as $method) {
             case 2:
                 try {
                     $data = $api->$method($test[0], $test[1]);
-                } catch (\Lodestone\Validator\ValidationException $vex) {
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
                     $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
                 }
                 break;
@@ -84,7 +84,7 @@ foreach(get_class_methods($api) as $method) {
             case 1:
                 try {
                     $data = $api->$method($test[0]);
-                } catch (\Lodestone\Validator\ValidationException $vex) {
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
                     $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
                 }
                 break;
@@ -92,7 +92,7 @@ foreach(get_class_methods($api) as $method) {
             case 0:
                 try {
                     $data = $api->$method();
-                } catch (\Lodestone\Validator\ValidationException $vex) {
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
                     $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
                 }
                 break;

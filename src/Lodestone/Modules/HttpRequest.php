@@ -2,9 +2,8 @@
 
 namespace Lodestone\Modules;
 
-use Lodestone\Validator\{
-    HttpRequestValidator, ValidationException
-};
+use Lodestone\Validator\Exceptions\ValidationException,
+    Lodestone\Validator\HttpRequestValidator;
 
 /**
  * Class HttpRequest

@@ -63,22 +63,44 @@ foreach(get_class_methods($api) as $method) {
         $test = explode(',', $test);
 
         // bit hacky, need to figure out a cleaner way
+        $data = false;
         switch(count($test)) {
             case 3:
-                $data = $api->$method($test[0], $test[1], $test[2]);
+                try {
+                    $data = $api->$method($test[0], $test[1], $test[2]);
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
+                    $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
+                }
                 break;
 
             case 2:
-                $data = $api->$method($test[0], $test[1]);
+                try {
+                    $data = $api->$method($test[0], $test[1]);
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
+                    $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
+                }
                 break;
 
             case 1:
-                $data = $api->$method($test[0]);
+                try {
+                    $data = $api->$method($test[0]);
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
+                    $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
+                }
                 break;
 
             case 0:
-                $data = $api->$method();
+                try {
+                    $data = $api->$method();
+                } catch (\Lodestone\Validator\Exceptions\ValidationException $vex) {
+                    $logger->write('TESTS',__LINE__,sprintf('Exception: %s', $vex->getMessage()));
+                }
                 break;
+        }
+
+        if (!$data) {
+            $testResult['accept']++;
+            continue;
         }
 
         // get pass status

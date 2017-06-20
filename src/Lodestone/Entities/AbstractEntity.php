@@ -45,8 +45,11 @@ class AbstractEntity
                     continue;
                 }
 
+                $var = explode('|', $result['var'])[0];
+                $var = strtolower(trim($var));
+
                 // get base type
-                switch(explode('|', $result['var'])[0]) {
+                switch($var) {
                     // basic
                     case 'string':
                     case 'int':

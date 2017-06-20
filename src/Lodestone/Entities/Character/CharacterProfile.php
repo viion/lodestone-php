@@ -15,7 +15,7 @@ use Lodestone\{
 class CharacterProfile extends AbstractEntity
 {
     /**
-     * @var string
+     * @var int
      */
     protected $id;
 

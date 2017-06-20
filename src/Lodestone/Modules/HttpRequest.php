@@ -2,9 +2,8 @@
 
 namespace Lodestone\Modules;
 
-use Lodestone\Validator\{
-    HttpRequestValidator, ValidationException
-};
+use Lodestone\Validator\Exceptions\ValidationException,
+    Lodestone\Validator\HttpRequestValidator;
 
 /**
  * Class HttpRequest
@@ -58,6 +57,8 @@ class HttpRequest
         // specific conditions to return code on
         HttpRequestValidator::getInstance()
             ->check($httpCode, 'HTTP Response Code')
+            ->isFound()
+            ->isNotMaintenance()
             ->isNotHttpError()
             ->validate();
 

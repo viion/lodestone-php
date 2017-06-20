@@ -2,6 +2,8 @@
 
 namespace Lodestone\Validator;
 
+use Lodestone\Validator\Exceptions\ValidationException;
+
 /**
  * Class CharacterValidator
  * @package Lodestone\Validator

@@ -1,9 +1,10 @@
 <?php
 
-namespace Lodestone\Validator;
+namespace Lodestone\Validator\Exceptions;
 
 use Exception,
     Throwable;
+use Lodestone\Validator\BaseValidator;
 
 /**
  * Class ValidationException

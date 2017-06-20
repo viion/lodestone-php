@@ -78,7 +78,7 @@ class XIVDB
     {
         // assuming no collisions for 8 characters,
         // we don't have much data
-        return substr(md5(strtolower($value)), 0, $length);
+        return substr(md5(strtolower(htmlentities(html_entity_decode($value, ENT_QUOTES | ENT_HTML401), ENT_QUOTES | ENT_HTML401))), 0, $length);
     }
 
     /**

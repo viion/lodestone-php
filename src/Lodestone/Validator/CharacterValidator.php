@@ -10,7 +10,7 @@ use Lodestone\Validator\Exceptions\ValidationException;
  */
 class CharacterValidator extends BaseValidator
 {
-    const VALID_CHARACTER_REGEX = '/^[a-zA-Z\' \-]+\s?$/';
+    const VALID_CHARACTER_REGEX = '/^([a-zA-Z\' \-]|\&[^\s]*\;)+\s?$/';
 
     private static $instance = null;
 

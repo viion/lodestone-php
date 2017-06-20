@@ -189,7 +189,7 @@ trait TraitProfile
         $html = $this->getArrayFromRange('Grand Company', 1, $html);
 
         // not all characters have a grand company
-        if ($html[1]) {
+        if (isset($html[1])) {
             list($name, $rank) = explode('/', strip_tags($html[1]));
 
             $name = trim($name);

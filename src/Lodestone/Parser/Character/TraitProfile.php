@@ -221,7 +221,7 @@ trait TraitProfile
         $html = $this->getArrayFromRange('Free Company', 1, $html);
 
         // not all characters have a free company
-        if ($html[1]) {
+        if (isset($html[1])) {
             $url = trim(explode('/', $html[1])[3]);
             $this->profile->setFreecompany($url);
         }

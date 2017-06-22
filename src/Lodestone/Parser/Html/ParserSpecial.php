@@ -96,13 +96,11 @@ trait ParserSpecial
 
         // strip start
         $start = strpos($html, 'character__param__element');
-        $start = $start - 30;
-        $html = substr($html, $start);
+        $html = substr($html, $start - 5);
 
         // strip finish
         $finish = strpos($html, 'icon-c__water');
-        $finish = $finish + 30;
-        $html = substr($html, 0, $finish);
+        $html = substr($html, 0, $finish + 200);
 
         $dom = $this->getDocumentFromHtml($html);
         unset($html);

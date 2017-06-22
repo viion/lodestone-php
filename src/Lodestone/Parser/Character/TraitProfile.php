@@ -49,11 +49,13 @@ trait TraitProfile
 
         $html = $this->getArrayFromRange('frame__chara', 'parts__connect--state');
 
-        // name + servers
-        list($name, $server) = $this->getArrayFromRange('frame__chara__name', 1, $html);
-        $this->profile
-            ->setName(trim(strip_tags($name)))
-            ->setServer(trim(strip_tags($server)));
+        //name
+        $name = $this->getArrayFromRange('frame__chara__name', 0, $html);
+        $this->profile->setName(trim(strip_tags($name[0])));
+        
+        //server
+        $server = $this->getArrayFromRange('frame__chara__world', 0, $html);
+        $this->profile->setServer(trim(strip_tags($server[0])));
 
         // title
         $title = $this->getArrayFromRange('frame__chara__title', 0, $html);
@@ -221,7 +223,7 @@ trait TraitProfile
         $html = $this->getArrayFromRange('Free Company', 1, $html);
 
         // not all characters have a free company
-        if ($html[1]) {
+        if (isset($html[1])) {
             $url = trim(explode('/', $html[1])[3]);
             $this->profile->setFreecompany($url);
         }

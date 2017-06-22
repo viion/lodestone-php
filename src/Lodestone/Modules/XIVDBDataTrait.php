@@ -94,7 +94,7 @@ trait XIVDBDataTrait
 
         Benchmark::finish($method,__LINE__);
 
-        return $json[$hash];
+        return (isset($json[$hash]) ? $json[$hash] : 0);
     }
 
     /**
@@ -117,7 +117,7 @@ trait XIVDBDataTrait
     public function getClassJobName($id)
     {
         $json = $this->getData('classjobs2');
-        return $json[$id];
+        return (isset($json[$id]) ? $json[$id] : 0);
     }
 
     /**
@@ -190,6 +190,6 @@ trait XIVDBDataTrait
         $hash = $this->getStorageHash($name);
         $json = $this->getData($index);
 
-        return $json[$hash];
+        return (isset($json[$hash]) ? $json[$hash] : 0);
     }
 }

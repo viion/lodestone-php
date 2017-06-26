@@ -51,6 +51,14 @@ switch($option) {
     case 'lodestone_topics':
         $data = $api->getLodestoneTopics();
         break;
+
+    case 'issue_58':
+        $id = '9229001536389032942';
+        $freeCompany = $api->getFreeCompanyMembers($id, 1);
+        foreach($freeCompany['members'] as $member) {
+            print_r($member['id'] . "\n");
+        }
+        die;
 }
 
 if (!$data) {

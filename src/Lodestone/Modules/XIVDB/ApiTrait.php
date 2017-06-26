@@ -1,13 +1,13 @@
 <?php
 
-namespace Lodestone\Modules;
+namespace Lodestone\Modules\XIVDB;
 
 /**
- * Class XIVDBApiTrait
+ * Class ApiTrait
  *
  * @package Lodestone\Modules
  */
-trait XIVDBApiTrait
+trait ApiTrait
 {
     /**
      * @param $route

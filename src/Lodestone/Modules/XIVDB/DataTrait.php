@@ -1,13 +1,15 @@
 <?php
 
-namespace Lodestone\Modules;
+namespace Lodestone\Modules\XIVDB;
+
+use Lodestone\Modules\Benchmark;
 
 /**
- * Class XIVDBDataTrait
+ * Class DataTrait
  *
  * @package Lodestone\Modules
  */
-trait XIVDBDataTrait
+trait DataTrait
 {
     /**
      * @param $index
@@ -105,6 +107,7 @@ trait XIVDBDataTrait
      */
     public function getClassJobId($name)
     {
+        $name = $this->convertJobToClass($name);
         return $this->commonGetNameFromId('classjobs', $name);
     }
 

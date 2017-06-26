@@ -6,7 +6,7 @@ use Lodestone\{
     Entities\Character\CharacterProfile,
     Parser\Html\ParserHelper,
 
-    Modules\XIVDB,
+    Modules\XIVDB\XIVDB,
     Modules\Benchmark,
     Modules\Logger
 };

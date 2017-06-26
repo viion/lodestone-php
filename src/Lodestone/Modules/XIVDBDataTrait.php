@@ -67,7 +67,7 @@ trait XIVDBDataTrait
             'wind' => 39,
             'earth' => 40,
             'thunder' => 41,
-            'water' => 42.
+            'water' => 42,
         ];
 
         if (isset($manual[strtolower($name)])) {

@@ -44,4 +44,21 @@ trait ConvertTrait
 
         return str_ireplace(array_keys($list), $list, strtolower($name));
     }
+
+    /**
+     * Some base parameters are named differently on Lodestone than
+     * they are in the game files, causing attribute ID's to fail.
+     *
+     * This will rename ones we know if.
+     *
+     * @param $name
+     */
+    protected function convertBaseParam($name)
+    {
+        $list = [
+            'critical hit rate' => 'critical hit',
+        ];
+
+        return str_ireplace(array_keys($list), $list, strtolower($name));
+    }
 }

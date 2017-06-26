@@ -76,6 +76,9 @@ trait DataTrait
             return $manual[strtolower($name)];
         }
 
+        // fix any weird names
+        $name = $this->convertBaseParam($name);
+
         return $this->commonGetNameFromId('baseparams', $name);
     }
 

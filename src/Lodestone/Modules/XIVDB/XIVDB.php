@@ -15,7 +15,7 @@ class XIVDB
     use DataTrait;
     use ConvertTrait;
 
-    const HOST = 'https://api.xivdb.com';
+    const HOST = 'http://api.xivdb.com';
     const HOST_SECURE = 'https://secure.xivdb.com';
     const CACHE = __DIR__.'/data.php';
 

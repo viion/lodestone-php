@@ -188,6 +188,12 @@ trait XIVDBApiTrait
         return $arr;
     }
 
+    /**
+     * Build an array based on hashed name
+     * 
+     * @param $data
+     * @return array
+     */
     private function commonRefactorIdName($data)
     {
         $arr = [];

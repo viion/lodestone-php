@@ -73,15 +73,18 @@ trait ApiTrait
             $row = (Object)$row;
             $arr[$row->level] = $row->exp;
 
-            if ($row->level == self::MAX_LEVEL) {
-                // remove on expansion
-                $arr[60] = 0;
-
-                // you dont start at 0 so reset exp
-                $arr[0] = 0;
+            // if EXP is 0, it's max level
+            if ($row->exp == 0) {
                 break;
             }
         }
+
+        // You don't exp level 0
+        $arr[0] = 0;
+
+        // you dont exp last level
+        end($arr);
+        $arr[key($arr)] = 0;
 
         $this->apiStorage('exp', $arr);
     }

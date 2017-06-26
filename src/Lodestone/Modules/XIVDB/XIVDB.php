@@ -15,7 +15,6 @@ class XIVDB
     use DataTrait;
     use ConvertTrait;
 
-    const MAX_LEVEL = 60;
     const HOST = 'https://api.xivdb.com';
     const HOST_SECURE = 'https://secure.xivdb.com';
     const CACHE = __DIR__.'/data.php';

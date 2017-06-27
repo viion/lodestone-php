@@ -18,7 +18,7 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 ## Getting Started
 
 - [Guide](docs/GUIDE.md)
-- [Validation](docs/VALIDATION.md)
+- [Validation](docs/Validation.md)
 - [Entities](docs/GUIDE.md)
 - [DOM Library](docs/DOM.md) (Third-Party)
 

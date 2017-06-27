@@ -594,6 +594,14 @@ class CharacterProfile extends AbstractEntity
     }
 
     /**
+     * @return array
+     */
+    public function getClassjobs()
+    {
+        return $this->classjobs;
+    }
+
+    /**
      * @param Attribute $attribute
      * @return CharacterProfile $this
      */

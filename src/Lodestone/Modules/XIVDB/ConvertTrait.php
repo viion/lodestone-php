@@ -27,7 +27,7 @@ trait ConvertTrait
      *
      * @param $name
      */
-    protected function convertJobToClass($name)
+    public function convertJobToClass($name)
     {
         $list = [
             'paladin' => 'gladiator',
@@ -46,6 +46,31 @@ trait ConvertTrait
     }
 
     /**
+     * This allows converting a class name to a job name,
+     * scholar is skipped as SE now represent scholar as
+     * it's own "role" and weapons should show as "Scholar's Arm".
+     *
+     * @param $name
+     * @return mixed
+     */
+    public function convertClassToJob($name)
+    {
+        $list = [
+            'gladiator' => 'paladin',
+            'pugilist' => 'monk',
+            'marauder' => 'warrior',
+            'lancer' => 'dragoon',
+            'archer' => 'bard',
+            'conjurer' => 'white mage',
+            'thaumaturge' => 'black mage',
+            'arcanist' => 'summoner',
+            'rogue' => 'ninja',
+        ];
+
+        return str_ireplace(array_keys($list), $list, strtolower($name));
+    }
+
+    /**
      * Some base parameters are named differently on Lodestone than
      * they are in the game files, causing attribute ID's to fail.
      *
@@ -53,7 +78,7 @@ trait ConvertTrait
      *
      * @param $name
      */
-    protected function convertBaseParam($name)
+    public function convertBaseParam($name)
     {
         $list = [
             'critical hit rate' => 'critical hit',

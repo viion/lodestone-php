@@ -108,9 +108,12 @@ trait DataTrait
      * @param $name
      * @return array
      */
-    public function getClassJobId($name)
+    public function getClassJobId($name, $convert = true)
     {
-        $name = $this->convertJobToClass($name);
+        if ($convert) {
+            $name = $this->convertJobToClass($name);
+        }
+
         return $this->commonGetNameFromId('classjobs', $name);
     }
 

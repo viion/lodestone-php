@@ -566,30 +566,31 @@ class CharacterProfile extends AbstractEntity
 
     /**
      * @param string $slot
-     * @return Item $item
+     * @return bool|Item $item
      */
     public function getGear(string $slot)
     {
-        return $this->gear[$slot];
+        return $this->gear[$slot] ?? false;
     }
+
     /**
-     * @param string $id
+     * @param int $classId
      * @param ClassJob $role
      * @return CharacterProfile $this
      */
-    public function addClassjob(string $id, ClassJob $role)
+    public function addClassjob(int $jobId, ClassJob $role)
     {
-        $this->classjobs[$id] = $role;
+        $this->classjobs[$jobId] = $role;
         return $this;
     }
 
     /**
      * @param string $id
-     * @return ClassJob $job
+     * @return bool|ClassJob $job
      */
     public function getClassjob(string $id)
     {
-        return $this->classjobs[$id];
+        return $this->classjobs[$id] ?? false;
     }
 
     /**

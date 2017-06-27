@@ -17,7 +17,12 @@ class ClassJob extends AbstractEntity
     /**
      * @var int
      */
-    protected $id;
+    protected $jobId;
+
+    /**
+     * @var int
+     */
+    protected $classId;
 
     /**
      * @var string
@@ -62,18 +67,36 @@ class ClassJob extends AbstractEntity
     /**
      * @return int
      */
-    public function getId(): int
+    public function getJobId(): int
     {
-        return $this->id;
+        return $this->jobId;
     }
 
     /**
-     * @param int $id
+     * @param int $jobId
      * @return $this
      */
-    public function setId($id)
+    public function setJobId($jobId)
     {
-        $this->id = $id;
+        $this->jobId = $jobId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClassId(): int
+    {
+        return $this->classId;
+    }
+
+    /**
+     * @param int $classId
+     * @return $this
+     */
+    public function setClassId($classId)
+    {
+        $this->classId = $classId;
         return $this;
     }
 

@@ -59,6 +59,16 @@ switch($option) {
             print_r($member['id'] . "\n");
         }
         die;
+
+    case 'issue_63':
+        $fc_id = '9229001536389032942';
+        $freeCompany = $api->getFreeCompanyMembers($fc_id, 1);
+        foreach($freeCompany['members'] as $members) {
+            $id = $members['id'];
+            $character = $api->getCharacter($id);
+            print_r("Hello: ". $character->getName() . "\n");
+        }
+        die;
 }
 
 if (!$data) {

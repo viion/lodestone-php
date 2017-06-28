@@ -73,8 +73,7 @@ trait ParserSpecial
 
         // strip start
         $start = strpos($html, 'character__param__text__hp');
-        $start = $start - 100;
-        $html = substr($html, $start);
+        $html = substr($html, $start - 100);
 
         // strip finish
         $finish = strpos($html, 'character__param__element');
@@ -96,13 +95,11 @@ trait ParserSpecial
 
         // strip start
         $start = strpos($html, 'character__param__element');
-        $start = $start - 30;
-        $html = substr($html, $start);
+        $html = substr($html, $start - 5);
 
         // strip finish
         $finish = strpos($html, 'icon-c__water');
-        $finish = $finish + 30;
-        $html = substr($html, 0, $finish);
+        $html = substr($html, 0, $finish + 200);
 
         $dom = $this->getDocumentFromHtml($html);
         unset($html);
@@ -144,12 +141,10 @@ trait ParserSpecial
 
         // strip start
         $start = strpos($html, 'character__mounts');
-        $start = $start - 30;
-        $html = substr($html, $start);
+        $html = substr($html, $start - 30);
 
         // strip finish
         $finish = strpos($html, 'ldst__side');
-        $finish = $finish - 30;
         $html = substr($html, 0, $finish);
 
         if (!$html) {
@@ -172,12 +167,10 @@ trait ParserSpecial
 
         // strip start
         $start = strpos($html, 'character__profile__detail');
-        $start = $start - 30;
-        $html = substr($html, $start);
+        $html = substr($html, $start - 30);
 
         // strip finish
         $finish = strpos($html, 'heading__icon parts__space--reset');
-        $finish = $finish - 30;
         $html = substr($html, 0, $finish);
 
         $dom = $this->getDocumentFromHtml($html);
@@ -196,13 +189,11 @@ trait ParserSpecial
 
         // strip start
         $start = strpos($html, 'ldst__achievement');
-        $start = $start + 372;
-        $html = substr($html, $start);
+        $html = substr($html, $start + 372);
 
         // strip finish
         $finish = strpos($html, '/ul');
-        $finish = $finish + 30;
-        $html = substr($html, 0, $finish);
+        $html = substr($html, 0, $finish + 30);
 
         $dom = $this->getDocumentFromHtml($html);
         unset($html);

@@ -13,6 +13,14 @@ use Lodestone\Validator\BaseValidator;
 class AbstractEntity
 {
     /**
+     * @return mixed
+     */
+    public function isset()
+    {
+        return $this->id ?? false;
+    }
+
+    /**
      * Map all class attributes
      *
      * @return array

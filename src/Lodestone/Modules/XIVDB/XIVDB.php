@@ -1,6 +1,8 @@
 <?php
 
-namespace Lodestone\Modules;
+namespace Lodestone\Modules\XIVDB;
+
+use Lodestone\Modules\HttpRequest;
 
 /**
  * Class XIVDB
@@ -9,17 +11,18 @@ namespace Lodestone\Modules;
  */
 class XIVDB
 {
-    use XIVDBApiTrait;
-    use XIVDBDataTrait;
+    use ApiTrait;
+    use DataTrait;
+    use ConvertTrait;
 
-    const MAX_LEVEL = 60;
-    const HOST = 'https://api.xivdb.com';
+    const HOST = 'http://api.xivdb.com';
     const HOST_SECURE = 'https://secure.xivdb.com';
     const CACHE = __DIR__.'/data.php';
 
     /** @var HttpRequest */
     private $http;
 
+    /** @var array $data */
     protected static $data = [];
 
     /**

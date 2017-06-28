@@ -37,9 +37,13 @@ trait TraitClassJob
                 $name = trim($li->find('.character__job__name', 0)->plaintext);
                 $role->setName($name);
 
-                // get id
-                $id = $this->xivdb->getClassJobId($name);
-                $role->setId($id);
+                // get class id
+                $classId = $this->xivdb->getClassJobId($name);
+                $role->setClassId($classId);
+
+                // get job id
+                $jobId = $this->xivdb->getClassJobId($name, false);
+                $role->setJobId($jobId);
 
                 // level
                 $level = trim($li->find('.character__job__level', 0)->plaintext);
@@ -60,7 +64,7 @@ trait TraitClassJob
                     ->setExpTotalTogo($role->getExpTotalMax() - $role->getExpTotal());
 
                 // save
-                $this->profile->addClassjob($id, $role);
+                $this->profile->addClassjob($jobId, $role);
             }
         }
 

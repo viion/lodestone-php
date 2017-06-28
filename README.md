@@ -90,6 +90,20 @@ To ensure an accurate sha1, data that is out of control of the player is removed
 - biography: se may decide to adjust this or how the HTML is formatted
 - stats: stat formula's do change per class.
 
+There are special exceptions for handling page not found (eg: character deleted) or lodestone being down for maintenance:
+
+```php
+try {
+  ... api call ...
+} catch (HttpMaintenanceValidationException $hmvex) {
+  ... lodestone down for maintenance ...
+} catch (HttpNotFoundValidationException $hnfvex) {
+  ... page not found / deleted ...
+} catch (ValidationException $vex) {
+  ... do something with it ...
+}
+```
+
 ### Provides parsing
 
 - Charcters

@@ -82,7 +82,7 @@ trait TraitAttributes
      * @param $node
      * @return Attribute
      */
-    protected function parseAttributeCommon(&$node)
+    protected function parseAttributeCommon($node)
     {
         $attribute = new Attribute();
         $attribute
@@ -90,6 +90,7 @@ trait TraitAttributes
             ->setId($this->xivdb->getBaseParamId($attribute->getName()))
             ->setValue(intval($node->find('td')->plaintext));
 
+        unset($node);
         return $attribute;
     }
 }

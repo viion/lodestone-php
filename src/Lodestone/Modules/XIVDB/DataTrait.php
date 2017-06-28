@@ -1,13 +1,15 @@
 <?php
 
-namespace Lodestone\Modules;
+namespace Lodestone\Modules\XIVDB;
+
+use Lodestone\Modules\Benchmark;
 
 /**
- * Class XIVDBDataTrait
+ * Class DataTrait
  *
  * @package Lodestone\Modules
  */
-trait XIVDBDataTrait
+trait DataTrait
 {
     /**
      * @param $index
@@ -67,12 +69,15 @@ trait XIVDBDataTrait
             'wind' => 39,
             'earth' => 40,
             'thunder' => 41,
-            'water' => 42.
+            'water' => 42,
         ];
 
         if (isset($manual[strtolower($name)])) {
             return $manual[strtolower($name)];
         }
+
+        // fix any weird names
+        $name = $this->convertBaseParam($name);
 
         return $this->commonGetNameFromId('baseparams', $name);
     }
@@ -103,8 +108,12 @@ trait XIVDBDataTrait
      * @param $name
      * @return array
      */
-    public function getClassJobId($name)
+    public function getClassJobId($name, $convert = true)
     {
+        if ($convert) {
+            $name = $this->convertJobToClass($name);
+        }
+
         return $this->commonGetNameFromId('classjobs', $name);
     }
 

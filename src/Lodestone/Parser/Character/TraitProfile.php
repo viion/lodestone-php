@@ -49,11 +49,13 @@ trait TraitProfile
 
         $html = $this->getArrayFromRange('frame__chara', 'parts__connect--state');
 
-        //name
+        // name
         $name = $this->getArrayFromRange('frame__chara__name', 0, $html);
-        $this->profile->setName(trim(strip_tags($name[0])));
+        $name = trim(strip_tags($name[0]));
+        $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
+        $this->profile->setName($name);
         
-        //server
+        // server
         $server = $this->getArrayFromRange('frame__chara__world', 0, $html);
         $this->profile->setServer(trim(strip_tags($server[0])));
 
@@ -82,6 +84,7 @@ trait TraitProfile
 
         $bio = $this->getArrayFromRange('character__selfintroduction', 'btn__comment');
         $bio = trim($bio[1]);
+        $bio = html_entity_decode($bio, ENT_QUOTES, "UTF-8");
 
         if (strip_tags($bio)) {
             $this->profile->setBiography($bio);
@@ -140,6 +143,8 @@ trait TraitProfile
         $html = $this->getArrayFromRange('Guardian', 1, $html);
 
         $name = strip_tags($html[1]);
+        $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
+
         $id = $this->xivdb->getGuardianId($name);
 
         $guardian = new Guardian();
@@ -161,11 +166,7 @@ trait TraitProfile
 
         $name = $this->getArrayFromRange('City-state', 2);
         $name = trim(strip_tags($name[1]));
-
-        // needed to convert Ul&#39;dah -> Ul'dah
-        if ($name == 'Ul&#39;dah') {
-            $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
-        }
+        $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
 
         $id = $this->xivdb->getTownId($name);
         // todo - get icon from XIVDB and attach it

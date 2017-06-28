@@ -41,7 +41,7 @@ trait TraitClassJobActive
         $soulcrystal = $this->profile->getGear('soulcrystal');
 
         // if a soul crystal exists, get job id
-        if ($soulcrystal->isset()) {
+        if ($soulcrystal && $soulcrystal->isset()) {
             // if soul crystal exists, convert role name
             $rolename = $this->xivdb->convertClassToJob($rolename);
 

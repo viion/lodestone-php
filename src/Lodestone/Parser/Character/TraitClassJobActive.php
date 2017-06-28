@@ -32,7 +32,7 @@ trait TraitClassJobActive
         // get main hand previously parsed
         /** @var Item $mainhand */
         $mainhand = $this->profile->getGear('mainhand');
-        $rolename = explode("'", $mainhand->getCategory())[0];
+        $rolename = str_replace("Two-handed ", "", explode("'", $mainhand->getCategory())[0]);
 
         // get class job id from the main-hand category name
         $id = $this->xivdb->getClassJobId($rolename);

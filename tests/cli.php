@@ -23,7 +23,7 @@ if (!$option) {
 }
 
 // create api instance
-$api = new \Lodestone\Api;
+$api = new \Lodestone\Api();
 
 // switch on options
 $hash = false;

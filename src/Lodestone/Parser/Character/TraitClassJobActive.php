@@ -49,6 +49,9 @@ trait TraitClassJobActive
             $id = $this->xivdb->getClassJobId($rolename, false);
         }
 
+        //print_r($id);
+        //die;
+
         // set id and name
         $role = clone $this->profile->getClassjob($id);
 

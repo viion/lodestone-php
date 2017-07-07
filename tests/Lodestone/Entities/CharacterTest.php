@@ -26,6 +26,13 @@ class CharacterTest extends TestCase
         $this->commonValidCharacter(12252236, 'Jade Rain', 'Jenova');
     }
 
+    /**
+     * Common method for ValidCharacter
+     *
+     * @param $id
+     * @param $name
+     * @param $server
+     */
     private function commonValidCharacter($id, $name, $server)
     {
         $api = new Api();
@@ -51,6 +58,10 @@ class CharacterTest extends TestCase
         self::assertTrue(is_numeric($character->getActiveClassJob()->getLevel()));
     }
 
+    //
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+
     /**
      * Test has no free company
      *
@@ -60,20 +71,41 @@ class CharacterTest extends TestCase
      */
     public function testValidCharacterWithNoFreeCompany()
     {
+        $this->commonValidCharacterWithNoFreeCompany(8, 'Tamago Explosion', 'Aegis');
+        $this->commonValidCharacterWithNoFreeCompany(2997799, 'Azy Pranvency', 'Tiamat');
+        $this->commonValidCharacterWithNoFreeCompany(3783177, 'Damasco Burks', 'Tiamat');
+        $this->commonValidCharacterWithNoFreeCompany(4268543, 'Glacier Arrest', 'Masamune');
+        $this->commonValidCharacterWithNoFreeCompany(1044326, 'Iseal Empyrean', 'Masamune');
+        $this->commonValidCharacterWithNoFreeCompany(12367201, 'A\'gnayax Bhen', 'Carbuncle');
+        $this->commonValidCharacterWithNoFreeCompany(15725574, 'A\'hadi Okoye', 'Fenrir');
+    }
+
+    /**
+     * Common method for ValidCharacterWithNoFreeCompany
+     *
+     * @param $id
+     * @param $name
+     * @param $server
+     */
+    private function commonValidCharacterWithNoFreeCompany($id, $name, $server)
+    {
         $api = new Api();
-        $id = 8;
 
         /** @var CharacterProfile $character */
         $character = $api->getCharacter($id);
 
         // basic
         self::assertEquals($character->getId(), $id);
-        self::assertEquals($character->getName(), 'Tamago Explosion');
-        self::assertEquals($character->getServer(), 'Aegis');
+        self::assertEquals($character->getName(), $name);
+        self::assertEquals($character->getServer(), $server);
 
         // should have no free company
         self::assertTrue(!$character->getFreecompany());
     }
+
+    //
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
 
     /**
      * Test has no grand company
@@ -84,16 +116,27 @@ class CharacterTest extends TestCase
      */
     public function testValidCharacterWithNoGrandCompany()
     {
+        $this->commonValidCharacterWithNoGrandCompany(12933634, "A' A'", 'Anima');
+    }
+
+    /**
+     * Common method for ValidCharacterWithNoGrandCompany
+     *
+     * @param $id
+     * @param $name
+     * @param $server
+     */
+    private function commonValidCharacterWithNoGrandCompany($id, $name, $server)
+    {
         $api = new Api();
-        $id = 12933634;
 
         /** @var CharacterProfile $character */
         $character = $api->getCharacter($id);
 
         // basic
         self::assertEquals($character->getId(), $id);
-        self::assertEquals($character->getName(), "A' A'");
-        self::assertEquals($character->getServer(), 'Anima');
+        self::assertEquals($character->getName(), $name);
+        self::assertEquals($character->getServer(), $server);
 
         // should have no free company
         self::assertTrue(!$character->getFreecompany());
@@ -102,6 +145,10 @@ class CharacterTest extends TestCase
         self::assertTrue(!$character->getGrandcompany());
     }
 
+    //
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+
     /**
      * Test 404, this ID is likely to always 404
      * because it is very low and new characters alway
@@ -109,8 +156,12 @@ class CharacterTest extends TestCase
      */
     public function testCharacterNotFound()
     {
+        $this->commonCharacterNotFound(3);
+    }
+
+    private function commonCharacterNotFound($id)
+    {
         $api = new Api();
-        $id = 3;
 
         // expect HttpNotFound to be thrown
         self::expectException(HttpNotFoundValidationException::class);

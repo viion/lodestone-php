@@ -539,8 +539,14 @@ class CharacterProfile extends AbstractEntity
      * @param ClassJob $activeClassJob
      * @return CharacterProfile
      */
-    public function setActiveClassJob( ClassJob $activeClassJob ): CharacterProfile
+    public function setActiveClassJob($activeClassJob): CharacterProfile
     {
+        CharacterValidator::getInstance()
+            ->check($activeClassJob, 'Active ClassJob')
+            ->isNotEmpty()
+            ->isObject()
+            ->validate();
+        
         $this->activeClassJob = $activeClassJob;
         return $this;
     }
@@ -588,7 +594,7 @@ class CharacterProfile extends AbstractEntity
      * @param string $id
      * @return bool|ClassJob $job
      */
-    public function getClassjob(string $id)
+    public function getClassjob($id)
     {
         return $this->classjobs[$id] ?? false;
     }

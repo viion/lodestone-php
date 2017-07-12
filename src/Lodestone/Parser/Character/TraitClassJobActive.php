@@ -50,10 +50,12 @@ trait TraitClassJobActive
         }
 
         // set id and name
-        $role = clone $this->profile->getClassjob($id);
+        $role = $this->profile->getClassjob($id);
+        $role = $role ? clone $role : false;
+    
+        $this->profile->setActiveClassJob($role);
 
         // save
-        $this->profile->setActiveClassJob($role);
         Benchmark::finish(__METHOD__,__LINE__);
     }
 }

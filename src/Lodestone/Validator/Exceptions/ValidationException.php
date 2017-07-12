@@ -98,6 +98,15 @@ class ValidationException extends Exception
     {
         return ValidationException::typeValidation($validator, 'Array');
     }
+    
+    /**
+     * @param $validator
+     * @return ValidationException
+     */
+    public static function objectValidation($validator)
+    {
+        return ValidationException::typeValidation($validator, 'Object');
+    }
 
     /**
      * @param BaseValidator $validator

@@ -4,7 +4,7 @@ namespace Lodestone\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
 use Lodestone\{
-    Api, Entities\Character\CharacterProfile, Validator\Exceptions\HttpNotFoundValidationException
+    Api, Entities\Character\CharacterProfile, Validator\Exceptions\HttpNotFoundValidationException, Validator\Exceptions\ValidationException
 };
 
 /**
@@ -71,11 +71,8 @@ class CharacterTest extends TestCase
      */
     public function testValidCharacterWithNoFreeCompany()
     {
-        $this->commonValidCharacterWithNoFreeCompany(8, 'Tamago Explosion', 'Aegis');
-        $this->commonValidCharacterWithNoFreeCompany(2997799, 'Azy Pranvency', 'Tiamat');
         $this->commonValidCharacterWithNoFreeCompany(3783177, 'Damasco Burks', 'Tiamat');
         $this->commonValidCharacterWithNoFreeCompany(4268543, 'Glacier Arrest', 'Masamune');
-        $this->commonValidCharacterWithNoFreeCompany(1044326, 'Iseal Empyrean', 'Masamune');
         $this->commonValidCharacterWithNoFreeCompany(12367201, 'A\'gnayax Bhen', 'Carbuncle');
         $this->commonValidCharacterWithNoFreeCompany(15725574, 'A\'hadi Okoye', 'Fenrir');
     }
@@ -158,7 +155,13 @@ class CharacterTest extends TestCase
     {
         $this->commonCharacterNotFound(3);
     }
-
+    
+    /**
+     * Common method for NotFound
+     *
+     * @param $id
+     * @throws HttpNotFoundValidationException
+     */
     private function commonCharacterNotFound($id)
     {
         $api = new Api();
@@ -173,4 +176,32 @@ class CharacterTest extends TestCase
             throw $ex;
         }
     }
+    
+    //
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //
+    
+    public function testCharacterInvalidActiveClass()
+    {
+        $api = new Api();
+    
+        // expect HttpNotFound to be thrown
+        self::expectException(ValidationException::class);
+    
+        try {
+            /** @var CharacterProfile $character */
+            $character = $api->getCharacter(1044326);
+        } catch (ValidationException $ex) {
+            throw $ex;
+        }
+    
+        try {
+            /** @var CharacterProfile $character */
+            $character = $api->getCharacter(2997799);
+        } catch (ValidationException $ex) {
+            throw $ex;
+        }
+    }
+    
+    
 }

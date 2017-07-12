@@ -145,6 +145,18 @@ class BaseValidator
 
         return $this;
     }
+    
+    /**
+     * @return $this
+     */
+    public function isObject()
+    {
+        if (!is_object($this->object)) {
+            $this->errors[] = ValidationException::objectValidation($this);
+        }
+        
+        return $this;
+    }
 
     /**
      * @return $this

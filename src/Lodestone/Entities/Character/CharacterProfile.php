@@ -122,7 +122,7 @@ class CharacterProfile extends AbstractEntity
     public function __construct($id)
     {
         CharacterValidator::getInstance()
-            ->check($id, 'ID')
+            ->check($id, 'ID', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isNumeric()
@@ -185,7 +185,7 @@ class CharacterProfile extends AbstractEntity
     public function setName(string $name)
     {
         CharacterValidator::getInstance()
-            ->check($name, 'Name')
+            ->check($name, 'Name', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -212,7 +212,7 @@ class CharacterProfile extends AbstractEntity
     public function setServer(string $server)
     {
         CharacterValidator::getInstance()
-            ->check($server, 'Server')
+            ->check($server, 'Server', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -237,7 +237,7 @@ class CharacterProfile extends AbstractEntity
     public function setTitle($title)
     {
         CharacterValidator::getInstance()
-            ->check($title, 'Title')
+            ->check($title, 'Title', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -263,7 +263,7 @@ class CharacterProfile extends AbstractEntity
     public function setAvatar(string $avatar)
     {
         CharacterValidator::getInstance()
-            ->check($avatar, 'Avatar URL')
+            ->check($avatar, 'Avatar URL', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -289,7 +289,7 @@ class CharacterProfile extends AbstractEntity
     public function setPortrait(string $portrait)
     {
         CharacterValidator::getInstance()
-            ->check($portrait, 'Portrait URL')
+            ->check($portrait, 'Portrait URL', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -315,7 +315,7 @@ class CharacterProfile extends AbstractEntity
     public function setBiography(string $biography)
     {
         CharacterValidator::getInstance()
-            ->check($biography, 'Biography')
+            ->check($biography, 'Biography', $this->id)
             ->isInitialized()
             ->isStringOrEmpty()
             ->validate();
@@ -340,7 +340,7 @@ class CharacterProfile extends AbstractEntity
     public function setRace(string $race)
     {
         CharacterValidator::getInstance()
-            ->check($race, 'Race')
+            ->check($race, 'Race', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -366,7 +366,7 @@ class CharacterProfile extends AbstractEntity
     public function setClan(string $clan)
     {
         CharacterValidator::getInstance()
-            ->check($clan, 'Clan')
+            ->check($clan, 'Clan', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -392,7 +392,7 @@ class CharacterProfile extends AbstractEntity
     public function setGender(string $gender)
     {
         CharacterValidator::getInstance()
-            ->check($gender, 'Gender')
+            ->check($gender, 'Gender', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -418,7 +418,7 @@ class CharacterProfile extends AbstractEntity
     public function setNameday(string $nameday)
     {
         CharacterValidator::getInstance()
-            ->check($nameday, 'Nameday')
+            ->check($nameday, 'Nameday', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -444,7 +444,7 @@ class CharacterProfile extends AbstractEntity
     public function setGuardian(Guardian $guardian)
     {
         CharacterValidator::getInstance()
-            ->check($guardian, 'Guardian')
+            ->check($guardian, 'Guardian', $this->id)
             ->isInitialized()
             ->validate();
 
@@ -468,7 +468,7 @@ class CharacterProfile extends AbstractEntity
     public function setCity(City $city)
     {
         CharacterValidator::getInstance()
-            ->check($city, 'City')
+            ->check($city, 'City', $this->id)
             ->isInitialized()
             ->validate();
 
@@ -492,7 +492,7 @@ class CharacterProfile extends AbstractEntity
     public function setGrandcompany($grandcompany)
     {
         CharacterValidator::getInstance()
-            ->check($grandcompany, 'Grand Company')
+            ->check($grandcompany, 'Grand Company', $this->id)
             ->isInitialized()
             ->validate();
 
@@ -516,7 +516,7 @@ class CharacterProfile extends AbstractEntity
     public function setFreecompany($freecompany)
     {
         CharacterValidator::getInstance()
-            ->check($freecompany, 'Free Company')
+            ->check($freecompany, 'Free Company', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
@@ -539,8 +539,14 @@ class CharacterProfile extends AbstractEntity
      * @param ClassJob $activeClassJob
      * @return CharacterProfile
      */
-    public function setActiveClassJob( ClassJob $activeClassJob ): CharacterProfile
+    public function setActiveClassJob($activeClassJob): CharacterProfile
     {
+        CharacterValidator::getInstance()
+            ->check($activeClassJob, 'Active ClassJob', $this->id)
+            ->isNotEmpty()
+            ->isObject()
+            ->validate();
+        
         $this->activeClassJob = $activeClassJob;
         return $this;
     }
@@ -588,7 +594,7 @@ class CharacterProfile extends AbstractEntity
      * @param string $id
      * @return bool|ClassJob $job
      */
-    public function getClassjob(string $id)
+    public function getClassjob($id)
     {
         return $this->classjobs[$id] ?? false;
     }

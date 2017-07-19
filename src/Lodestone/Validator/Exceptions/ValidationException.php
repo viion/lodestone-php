@@ -5,6 +5,7 @@ namespace Lodestone\Validator\Exceptions;
 use Exception,
     Throwable;
 use Lodestone\Validator\BaseValidator;
+use Lodestone\Validator\CharacterValidator;
 
 /**
  * Class ValidationException
@@ -35,14 +36,21 @@ class ValidationException extends Exception
     }
 
     /**
-     * @param $name
+     * @param $validator BaseValidator|CharacterValidator
      * @return ValidationException
      */
     public static function emptyValidation($validator)
     {
-        $message = sprintf("%s cannot be empty.",
-            $validator->name
-        );
+        if ($validator->id != null) {
+            $message = sprintf("%s cannot be empty for id: %d.",
+                $validator->name,
+                $validator->id
+            );
+        } else {
+            $message = sprintf("%s cannot be empty.",
+                $validator->name
+            );
+        }
 
         return new ValidationException($message);
     }

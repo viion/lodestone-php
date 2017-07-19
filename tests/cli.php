@@ -23,7 +23,7 @@ if (!$option) {
 }
 
 // create api instance
-$api = new \Lodestone\Api;
+$api = new \Lodestone\Api();
 
 // switch on options
 $hash = false;
@@ -57,6 +57,16 @@ switch($option) {
         $freeCompany = $api->getFreeCompanyMembers($id, 1);
         foreach($freeCompany['members'] as $member) {
             print_r($member['id'] . "\n");
+        }
+        die;
+
+    case 'issue_63':
+        $fc_id = '9229001536389032942';
+        $freeCompany = $api->getFreeCompanyMembers($fc_id, 1);
+        foreach($freeCompany['members'] as $members) {
+            $id = $members['id'];
+            $character = $api->getCharacter($id);
+            print_r("Hello: ". $character->getName() . "\n");
         }
         die;
 }

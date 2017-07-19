@@ -4,7 +4,8 @@ namespace Lodestone\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
 use Lodestone\Validator\{
-    HttpRequestValidator, ValidationException
+    HttpRequestValidator,
+    Exceptions\ValidationException
 };
 
 /**

@@ -31,7 +31,7 @@ Duration: 0.00252500   + 0.00010600       Mem: 2530424          Line 83    in  L
 Duration: 0.00462400   + 0.00209900  !    Mem: 2531320          Line 93    in  Lodestone\Parser\Character\TraitProfile::parseProfileBiography
 ```
 
-Most of thi sshould be obvious;
+Most of this should be obvious;
 
 - All timestamps are in milliseconds
 - The first timestamp is the total duration over the course of the entire script

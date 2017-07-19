@@ -13,23 +13,28 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 ## Notes
 
 - This library parses the live Lodestone website. This website is based in Tokyo.
-- This library is built in PHP 7.0 minimum (7.1 features may appear), please use the latest.
+- This library is built in PHP 7.1 minimum, please use the latest as this can increase 
 
 ## Getting Started
 
-- [Guide](docs/GUIDE.md)
+- [Getting Started](docs/GettingStarted.md)
+    - [API: Characters](docs/ApiCharacters.md)
+    - [API: Database](docs/ApiDatabase.md)
+    - [API: Forums](docs/ApiForums.md)
+    - [API: FreeCompany](docs/ApiFreeCompany.md)
+    - [API: Internals](docs/ApiInternals.md)
+    - [API: Linkshell](docs/ApiLinkshell.md)
+    - [API: Lodestone](docs/ApiLodestone.md)
+- [Entities](docs/Entities.md)
 - [Validation](docs/Validation.md)
-- [Entities](docs/GUIDE.md)
-- [DOM Library](docs/DOM.md) (Third-Party)
+- [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)
 
 ## Contributing
 
 - [Read the contributing guide first!](CONTRIBUTING.md)
+- Switch to `dev` when working on the repo please!
 
-
-## Contributors
-
-> If you contribute to this library, please add your github user here :)
+**If you contribute to this library, please add your github user here :)**
 
 - [@shentschel](https://github.com/shentschel)
 - [@Simbiat](https://github.com/Simbiat)

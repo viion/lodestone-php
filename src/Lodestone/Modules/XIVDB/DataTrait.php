@@ -2,7 +2,7 @@
 
 namespace Lodestone\Modules\XIVDB;
 
-use Lodestone\Modules\Benchmark;
+use Lodestone\Modules\Logging\Benchmark;
 
 /**
  * Class DataTrait

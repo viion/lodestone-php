@@ -4,7 +4,7 @@ namespace Lodestone\Parser\Character;
 
 use Lodestone\Dom\NodeList,
     Lodestone\Entities\Character\Item,
-    Lodestone\Modules\Benchmark;
+    Lodestone\Modules\Logging\Benchmark;
 
 /**
  * Class TraitGear

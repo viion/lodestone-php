@@ -14,7 +14,7 @@ define('LOGGER_ENABLED', true);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // parse characters
-// view Lodestone/Modules/Routes for more urls.
+// view Lodestone/Modules/Http/Routes for more urls.
 
 $option = isset($argv[1]) ? trim($argv[1]) : false;
 $id = isset($argv[2]) ? trim($argv[2]) : false;
@@ -79,5 +79,5 @@ if (!$data) {
 
 // Array of character data
 print_r($data);
-print_r(sprintf("Duration: %s - End\n\n", \Lodestone\Modules\Logger::$duration));;
+print_r(sprintf("Duration: %s - End\n\n", \Lodestone\Modules\Logging\Logger::$duration));;
 print_r("\n");

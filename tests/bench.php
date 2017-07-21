@@ -29,4 +29,4 @@ for ($i = 1; $i <= $max; $i++) {
 }
 
 print_r("\n -----------------\n BENCHMARK RESULTS\n -----------------\n\n");
-\Lodestone\Modules\Benchmark::report($report);
+\Lodestone\Modules\Logging\Benchmark::report($report);

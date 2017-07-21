@@ -4,7 +4,7 @@ namespace Lodestone;
 
 // use all the things
 use Lodestone\Modules\{
-    XIVDB\XIVDB, Logger, Routes
+    XIVDB\XIVDB, Logging\Logger, Http\Routes
 };
 use Lodestone\Parser\{
     Achievements,

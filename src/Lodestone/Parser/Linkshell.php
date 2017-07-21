@@ -2,8 +2,8 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Benchmark;
-use Lodestone\Modules\Logger;
+use Lodestone\Modules\Logging\Benchmark;
+use Lodestone\Modules\Logging\Logger;
 use Lodestone\Parser\Html\ParserHelper;
 
 /**

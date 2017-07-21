@@ -3,7 +3,7 @@
 namespace Lodestone\Parser\Character;
 
 use Lodestone\Entities\Character\Attribute,
-    Lodestone\Modules\Benchmark;
+    Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Dom\{
     Document,
     Element

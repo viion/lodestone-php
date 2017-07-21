@@ -5,7 +5,7 @@ namespace Lodestone\Parser\Html;
 use Lodestone\{
     Dom\Document,
     Validator\BaseValidator,
-    Modules\HttpRequest
+    Modules\Http\HttpRequest
 };
 
 /**

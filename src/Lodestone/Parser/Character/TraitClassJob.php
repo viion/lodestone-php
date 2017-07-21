@@ -3,7 +3,7 @@
 namespace Lodestone\Parser\Character;
 
 use Lodestone\Entities\Character\ClassJob,
-    Lodestone\Modules\Benchmark;
+    Lodestone\Modules\Logging\Benchmark;
 
 /**
  * Class TraitClassJob

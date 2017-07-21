@@ -56,14 +56,14 @@ This can be useful for timing multiple bits of code in a single method
 
 ##### Timing foreach loops
 
-You might have realised that timing multiple times in a method is annoying, so how about foreach? There is a third param for `Benchmark::start/finish` for this specific case.
+If you have a loop you want to time, you could modify the method name during each loop, fo rexample:
 
 ```php
-$method = sprintf('%s(%s)', __METHOD__, $name);
-Benchmark::start($method,__LINE__);
+foreach($array as $i => $obj) {
+    $method = sprintf('%s(%s)', __METHOD__, $i);
+    Benchmark::start($method,__LINE__);
+}
 ```
-
-By providing a third parameter you can represent the method to include the parameters passed. For example this could be a string or an increment value.
 
 
 

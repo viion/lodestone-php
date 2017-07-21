@@ -4,7 +4,7 @@ namespace Lodestone;
 
 // use all the things
 use Lodestone\Modules\{
-    XIVDB\XIVDB, Logger, Routes
+    XIVDB\XIVDB, Logging\Logger, Http\Routes
 };
 use Lodestone\Parser\{
     Achievements,
@@ -28,6 +28,15 @@ class Api
 {
     /** @var XIVDB $xivdb */
     public $xivdb;
+    
+    /**
+     * @test .
+     * @return Lodestone/Lodestone
+     */
+    private function getLodeStoneInstance()
+    {
+        return new Lodestone();
+    }
 
     /**
      * Api constructor.
@@ -196,15 +205,6 @@ class Api
 
         $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
         return (new Linkshell())->url($url)->parse($id);
-    }
-
-    /**
-     * @test .
-     * @return Lodestone/Lodestone
-     */
-    private function getLodeStoneInstance()
-    {
-        return new Lodestone();
     }
 
     /**

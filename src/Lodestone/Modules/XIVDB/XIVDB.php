@@ -2,7 +2,7 @@
 
 namespace Lodestone\Modules\XIVDB;
 
-use Lodestone\Modules\HttpRequest;
+use Lodestone\Modules\Http\HttpRequest;
 
 /**
  * Class XIVDB

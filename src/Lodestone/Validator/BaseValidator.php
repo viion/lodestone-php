@@ -17,6 +17,11 @@ class BaseValidator
     public $name;
     public $errors;
 
+    /**
+     * @var int
+     */
+    public $id;
+
     private static $instance = null;
 
     public static function getInstance() {
@@ -45,12 +50,14 @@ class BaseValidator
     /**
    * @param $object
    * @param $name
+   * @param $id integer (optional)
    * @return $this
    */
-    public function check($object, $name)
+    public function check($object, $name, $id = null)
     {
         $this->object = $object;
         $this->name = $name;
+        $this->id = $id;
         return $this;
     }
 

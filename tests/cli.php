@@ -14,7 +14,7 @@ define('LOGGER_ENABLED', true);
 define('LOGGER_ENABLE_PRINT_TIME', true);
 
 // parse characters
-// view Lodestone/Modules/Routes for more urls.
+// view Lodestone/Modules/Http/Routes for more urls.
 
 $option = isset($argv[1]) ? trim($argv[1]) : false;
 $id = isset($argv[2]) ? trim($argv[2]) : false;
@@ -23,7 +23,7 @@ if (!$option) {
 }
 
 // create api instance
-$api = new \Lodestone\Api;
+$api = new \Lodestone\Api();
 
 // switch on options
 $hash = false;
@@ -59,6 +59,16 @@ switch($option) {
             print_r($member['id'] . "\n");
         }
         die;
+
+    case 'issue_63':
+        $fc_id = '9229001536389032942';
+        $freeCompany = $api->getFreeCompanyMembers($fc_id, 1);
+        foreach($freeCompany['members'] as $members) {
+            $id = $members['id'];
+            $character = $api->getCharacter($id);
+            print_r("Hello: ". $character->getName() . "\n");
+        }
+        die;
 }
 
 if (!$data) {
@@ -69,5 +79,5 @@ if (!$data) {
 
 // Array of character data
 print_r($data);
-print_r(sprintf("Duration: %s - End\n\n", \Lodestone\Modules\Logger::$duration));;
+print_r(sprintf("Duration: %s - End\n\n", \Lodestone\Modules\Logging\Logger::$duration));;
 print_r("\n");

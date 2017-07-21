@@ -2,7 +2,7 @@
 
 namespace Lodestone\Entities;
 
-use Lodestone\Modules\Benchmark;
+use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Validator\BaseValidator;
 
 /**

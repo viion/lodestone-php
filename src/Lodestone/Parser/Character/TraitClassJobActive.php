@@ -2,7 +2,7 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Modules\Benchmark;
+use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Entities\Character\{
     ClassJob,
     Item
@@ -41,13 +41,16 @@ trait TraitClassJobActive
         $soulcrystal = $this->profile->getGear('soulcrystal');
 
         // if a soul crystal exists, get job id
-        if ($soulcrystal->isset()) {
+        if ($soulcrystal && $soulcrystal->isset()) {
             // if soul crystal exists, convert role name
             $rolename = $this->xivdb->convertClassToJob($rolename);
 
             // get the classjob id
             $id = $this->xivdb->getClassJobId($rolename, false);
         }
+
+        //print_r($id);
+        //die;
 
         // set id and name
         $role = $this->profile->getClassjob($id);

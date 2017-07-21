@@ -2,7 +2,7 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logger;
+use Lodestone\Modules\Logging\Logger;
 use Lodestone\Parser\Html\ParserHelper;
 
 /**

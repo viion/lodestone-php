@@ -7,8 +7,8 @@ use Lodestone\{
     Parser\Html\ParserHelper,
 
     Modules\XIVDB\XIVDB,
-    Modules\Benchmark,
-    Modules\Logger
+    Modules\Logging\Benchmark,
+    Modules\Logging\Logger
 };
 
 /**

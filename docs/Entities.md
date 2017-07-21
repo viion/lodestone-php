@@ -1,6 +1,6 @@
 # Entities
 
-The parser is broken up into multiple entities for different purposes, for example a character would contain a `Profile` which contains a `Grand Company` and an array of `Collectables`.
+The parser is broken up into multiple entities for different purposes, for example a character would contain a `CharacterProfile` which contains a `Grand Company` and an array of `Collectables`.
 
 This document explains how it is setup and how future implementations should work.
 

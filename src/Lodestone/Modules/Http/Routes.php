@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Modules;
+namespace Lodestone\Modules\Http;
 
 /**
  * URL's for Lodestone content

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Modules;
+namespace Lodestone\Modules\Logging;
 
 /**
  * This is very simple, doesn't follow PSR-3

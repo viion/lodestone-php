@@ -4,7 +4,7 @@ namespace Lodestone\Parser\Character;
 
 use Lodestone\Dom\NodeList,
     Lodestone\Entities\Character\Item,
-    Lodestone\Modules\Benchmark;
+    Lodestone\Modules\Logging\Benchmark;
 
 /**
  * Class TraitGear
@@ -55,6 +55,8 @@ trait TraitGear
             // get category
             $category = $this->getArrayFromRange('db-tooltip__item__category', 1, $html);
             $category = trim(strip_tags($category[1]));
+            $category = explode("'", $category)[0];
+            $category = trim(str_ireplace(['Two-handed', 'One-handed'], null, $category));
             $item->setCategory($category);
 
             // get slot from category

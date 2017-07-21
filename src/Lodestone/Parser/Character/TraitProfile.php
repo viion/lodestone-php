@@ -2,7 +2,7 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Modules\Benchmark;
+use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Entities\Character\{
     City,
     GrandCompany,

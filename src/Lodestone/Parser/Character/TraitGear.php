@@ -43,14 +43,10 @@ trait TraitGear
             $name = strip_tags($name[1]);
             $item->setName($name);
 
-            // get real id from xivdb
-            $id = $this->xivdb->getItemId($name);
-            $item->setId($id);
-
             // get lodestone id
             $lodestoneId = $this->getArrayFromRange('db-tooltip__bt_item_detail', 1, $html);
             $lodestoneId = trim(explode('/', $lodestoneId[1])[5]);
-            $item->setLodestoneId($lodestoneId);
+            $item->setId($lodestoneId);
 
             // get category
             $category = $this->getArrayFromRange('db-tooltip__item__category', 1, $html);

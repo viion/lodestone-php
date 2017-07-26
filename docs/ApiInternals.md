@@ -13,10 +13,3 @@
 Returns: `array`
 
 Get all the current log entries.
-
-### xivdb->clearCache()
-Returns: `array`
-
-> Depreciated
-
-Clear the XIVDB Cache

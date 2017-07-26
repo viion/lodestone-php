@@ -17,17 +17,22 @@ class ClassJob extends AbstractEntity
     /**
      * @var int
      */
-    protected $jobId;
-
+    protected $classId;
+    
     /**
      * @var int
      */
-    protected $classId;
-
+    protected $jobId;
+    
     /**
      * @var string
      */
-    protected $name;
+    protected $className;
+    
+    /**
+     * @var string
+     */
+    protected $jobName;
 
     /**
      * @var int
@@ -48,21 +53,24 @@ class ClassJob extends AbstractEntity
      * @var int
      */
     protected $expLevelMax;
-
+    
     /**
-     * @var int
+     * @return int
      */
-    protected $expTotal;
-
+    public function getClassId(): int
+    {
+        return $this->classId;
+    }
+    
     /**
-     * @var int
+     * @param int $classId
+     * @return $this
      */
-    protected $expTotalMax;
-
-    /**
-     * @var int
-     */
-    protected $expTotalTogo;
+    public function setClassId($classId)
+    {
+        $this->classId = $classId;
+        return $this;
+    }
 
     /**
      * @return int
@@ -83,44 +91,50 @@ class ClassJob extends AbstractEntity
     }
 
     /**
-     * @return int
-     */
-    public function getClassId(): int
-    {
-        return $this->classId;
-    }
-
-    /**
-     * @param int $classId
-     * @return $this
-     */
-    public function setClassId($classId)
-    {
-        $this->classId = $classId;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getName(): string
+    public function getClassName(): string
     {
-        return $this->name;
+        return $this->className;
     }
 
     /**
-     * @param string $name
+     * @param string $className
      * @return $this
      */
-    public function setName(string $name)
+    public function setClassName(string $className)
     {
         BaseValidator::getInstance()
-            ->check($name, 'Name')
+            ->check($className, 'ClassName')
             ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
-        $this->name = $name;
+        $this->className = $className;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getJobName(): string
+    {
+        return $this->jobName;
+    }
+    
+    /**
+     * @param string $jobName
+     * @return $this
+     */
+    public function setJobName(string $jobName)
+    {
+        BaseValidator::getInstance()
+            ->check($jobName, 'JobName')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString();
+        
+        $this->jobName = $jobName;
         return $this;
     }
 
@@ -199,60 +213,6 @@ class ClassJob extends AbstractEntity
     public function setExpLevelMax(int $expLevelMax)
     {
         $this->expLevelMax = $expLevelMax;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExpTotal(): int
-    {
-        return $this->expTotal;
-    }
-
-    /**
-     * @param int $expTotal
-     * @return $this
-     */
-    public function setExpTotal(int $expTotal)
-    {
-        $this->expTotal = $expTotal;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExpTotalMax(): int
-    {
-        return $this->expTotalMax;
-    }
-
-    /**
-     * @param int $expTotalMax
-     * @return $this
-     */
-    public function setExpTotalMax(int $expTotalMax)
-    {
-        $this->expTotalMax = $expTotalMax;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getExpTotalTogo(): int
-    {
-        return $this->expTotalTogo;
-    }
-
-    /**
-     * @param int $expTotalTogo
-     * @return $this
-     */
-    public function setExpTotalTogo(int $expTotalTogo)
-    {
-        $this->expTotalTogo = $expTotalTogo;
         return $this;
     }
 }

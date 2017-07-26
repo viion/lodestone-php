@@ -3,7 +3,8 @@
 namespace Lodestone\Parser\Character;
 
 use Lodestone\Entities\Character\ClassJob,
-    Lodestone\Modules\Logging\Benchmark;
+    Lodestone\Modules\Logging\Benchmark,
+    Lodestone\Modules\Game\ClassJobsData;
 
 /**
  * Class TraitClassJob
@@ -20,6 +21,7 @@ trait TraitClassJob
      */
     protected function parseClassJob()
     {
+        $classjobs = new ClassJobsData();
         Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
@@ -31,19 +33,19 @@ trait TraitClassJob
             // loop through roles
             foreach($node->find('li') as $li)
             {
-                $role = new ClassJob();
-
                 // class name
                 $name = trim($li->find('.character__job__name', 0)->plaintext);
-                $role->setName($name);
 
-                // get class id
-                $classId = $this->xivdb->getClassJobId($name);
-                $role->setClassId($classId);
-
-                // get job id
-                $jobId = $this->xivdb->getClassJobId($name, false);
-                $role->setJobId($jobId);
+                // get class ids
+                $ids = $classjobs->getClassJobIds($name);
+                
+                // build role
+                $role = new ClassJob();
+                $role
+                    ->setClassId($ids->class[0])
+                    ->setClassName($ids->class[2])
+                    ->setJobId($ids->job[1])
+                    ->setJobName($ids->job[2]);
 
                 // level
                 $level = trim($li->find('.character__job__level', 0)->plaintext);
@@ -58,15 +60,15 @@ trait TraitClassJob
                 $role
                     ->setExpLevel($current)
                     ->setExpLevelMax($max)
-                    ->setExpLevelTogo($max - $current)
-                    ->setExpTotal($this->xivdb->getExpGained($level, $current))
-                    ->setExpTotalMax($this->xivdb->getTotalExp())
-                    ->setExpTotalTogo($role->getExpTotalMax() - $role->getExpTotal());
+                    ->setExpLevelTogo($max - $current);
 
                 // save
-                $this->profile->addClassjob($jobId, $role);
+                $this->profile->addClassJob($ids->key, $role);
             }
         }
+        
+        print_r($this->profile->getClassJobs());
+        die;
 
         unset($box);
         unset($node);

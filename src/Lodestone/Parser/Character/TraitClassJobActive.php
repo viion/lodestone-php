@@ -2,6 +2,7 @@
 
 namespace Lodestone\Parser\Character;
 
+use Lodestone\Modules\Game\ClassJobsData;
 use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Entities\Character\{
     ClassJob,
@@ -32,28 +33,14 @@ trait TraitClassJobActive
         // get main hand previously parsed
         /** @var Item $mainhand */
         $mainhand = $this->profile->getGear('mainhand');
-        $rolename = explode("'", $mainhand->getCategory())[0];
+        $name = explode("'", $mainhand->getCategory())[0];
 
         // get class job id from the main-hand category name
-        $id = $this->xivdb->getClassJobId($rolename);
-
-        // Get soul crystal
-        $soulcrystal = $this->profile->getGear('soulcrystal');
-
-        // if a soul crystal exists, get job id
-        if ($soulcrystal && $soulcrystal->isset()) {
-            // if soul crystal exists, convert role name
-            $rolename = $this->xivdb->convertClassToJob($rolename);
-
-            // get the classjob id
-            $id = $this->xivdb->getClassJobId($rolename, false);
-        }
-
-        //print_r($id);
-        //die;
+        $classjobs = new ClassJobsData();
+        $ids = $classjobs->getClassJobIds($name);
 
         // set id and name
-        $role = $this->profile->getClassjob($id);
+        $role = $this->profile->getClassjob($ids->key);
         $role = $role ? clone $role : false;
     
         $this->profile->setActiveClassJob($role);

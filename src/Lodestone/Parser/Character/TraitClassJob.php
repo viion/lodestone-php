@@ -67,9 +67,6 @@ trait TraitClassJob
             }
         }
         
-        print_r($this->profile->getClassJobs());
-        die;
-
         unset($box);
         unset($node);
 

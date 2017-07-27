@@ -64,7 +64,10 @@ class ClassJobsData
     ];
     
     /**
+     * Get ids for a job/class
+     *
      * @param $name
+     * @return object
      */
     public function getClassJobIds($name)
     {

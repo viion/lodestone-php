@@ -49,7 +49,7 @@ class ClassJobsData
         24 => [ 6, 24, 'White Mage' ],
         25 => [ 7, 25, 'Black Mage' ],
         
-        26 => [ 26, 26, 'Arcanist' ],
+        26 => [ 26, 27, 'Arcanist' ],
         27 => [ 26, 27, 'Summoner' ],
         28 => [ 26, 28, 'Scholar' ],
         

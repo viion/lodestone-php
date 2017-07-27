@@ -137,7 +137,17 @@ class ClassJob extends AbstractEntity
         $this->jobName = $jobName;
         return $this;
     }
-
+    
+    /**
+     * Legacy name containing both class+job name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return sprintf('%s/%s', $this->getClassName(), $this->getJobName());
+    }
+    
     /**
      * @return int
      */

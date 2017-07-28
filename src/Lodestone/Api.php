@@ -7,10 +7,12 @@ use Lodestone\Modules\{
     Logging\Logger, Http\Routes
 };
 use Lodestone\Parser\{
-    Achievements,
     Character\Parser as CharacterParser,
     CharacterFriends\Parser as CharacterFriendsParser,
     CharacterFollowing\Parser as CharacterFollowingParser,
+    Achievements\Parser as AchievementsParser,
+    
+    
     FreeCompany,
     FreeCompanyMembers,
     Linkshell,
@@ -131,7 +133,7 @@ class Api
      * @softfail true
      * @param $id
      * @param $page
-     * @return array|bool
+     * @return Entities\Character\CharacterFollowing
      */
     public function getCharacterFollowing($id, $page = false)
     {
@@ -145,13 +147,13 @@ class Api
     /**
      * @test 730968
      * @param $id
-     * @param int $kind
+     * @param int $category
      * @return array|bool
      */
-    public function getCharacterAchievements($id, $kind = 1)
+    public function getCharacterAchievements($id, $category = 1)
     {
-        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $kind);
-        return (new Achievements())->url($url)->parse();
+        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $category);
+        return (new AchievementsParser($category))->url($url)->parse();
     }
 
     /**

@@ -13,14 +13,21 @@ use Lodestone\Parser\Html\ParserHelper;
 class Linkshell extends ParserHelper
 {
     /**
+     * Parser constructor.
+     *
+     * @param string $id
+     */
+    function __construct(string $id)
+    {
+        $this->add('id', $id);
+    }
+    
+    /**
      * @return array|bool
      */
-    public function parse(int $id)
+    public function parse()
     {
         $this->initialize();
-
-        // todo this is temp until we make an "LinkshellProfile" class
-        $this->add('id', $id);
 
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);

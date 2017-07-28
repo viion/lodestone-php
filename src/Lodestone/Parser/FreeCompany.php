@@ -12,13 +12,20 @@ use Lodestone\Parser\Html\ParserHelper;
 class FreeCompany extends ParserHelper
 {
     /**
+     * Parser constructor.
+     *
+     * @param string $id
+     */
+    function __construct(string $id)
+    {
+        $this->add('id', $id);
+    }
+    
+    /**
      * @return array|bool
      */
-    public function parse($id)
+    public function parse()
     {
-        // todo this is temp until we make an "FreeCompanyProfile" class
-        $this->add('id', $id);
-
         $this->initialize();
 
         $started = Benchmark::milliseconds();

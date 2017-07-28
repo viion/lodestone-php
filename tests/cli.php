@@ -35,6 +35,10 @@ switch($option) {
     case 'character_friends':
         $data = $api->getCharacterFriends($id ? $id : 730968);
         break;
+    
+    case 'character_following':
+        $data = $api->getCharacterFollowing($id ? $id : 15609878);
+        break;
 
     case 'fc':
         $data = $api->getFreeCompany($id ? $id : '9231253336202687179');

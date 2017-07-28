@@ -1,58 +1,58 @@
 <?php
 
-namespace Lodestone\Parser\CharacterFriends;
+namespace Lodestone\Parser\CharacterFollowing;
 
 use Lodestone\{
-    Entities\Character\CharacterFriends,
+    Entities\Character\CharacterFollowing,
     Entities\Character\CharacterSimple,
     Modules\Logging\Benchmark,
     Modules\Logging\Logger,
     Parser\Html\ParserHelper
 };
 
+
 /**
  * Class Parser
  *
- * @package Lodestone\Parser
+ * @package Lodestone\Parser\CharacterFollowing
  */
 class Parser extends ParserHelper
 {
-    /** @var CharacterFriends */
-    protected $friends;
+    /** @var CharacterFollowing */
+    protected $following;
     
     /**
      * Parser constructor.
      */
     function __construct()
     {
-        $this->friends = new CharacterFriends();
+        $this->following = new CharacterFollowing();
     }
     
     /**
-     * @return CharacterFriends
+     * @return CharacterFollowing
      */
     public function parse()
     {
         $this->initialize();
 
-        // no friends :(
+        // no followings
         if ($this->getDocument()->find('.parts__zero', 0)) {
-            return $this->friends;
+            return $this->following;
         }
     
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);
-
-        // parse stuff
+        
         $this->pageCount();
-        $this->parseFriends();
+        $this->parseFollowing();
     
         Benchmark::finish(__METHOD__,__LINE__);
         $finished = Benchmark::milliseconds();
         $duration = $finished - $started;
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
-        
-        return $this->friends;
+    
+        return $this->following;
     }
 
     /**
@@ -63,26 +63,26 @@ class Parser extends ParserHelper
         // page count
         $data = $this->getDocument()->find('.btn__pager__current', 0)->plaintext;
         list($current, $total) = explode(' of ', $data);
-
+    
         $this
-            ->friends
+            ->following
             ->setPageCurrent(filter_var($current, FILTER_SANITIZE_NUMBER_INT))
             ->setPageTotal(filter_var($total, FILTER_SANITIZE_NUMBER_INT));
 
-        // friend count
+        // member count
         $count = $this->getDocument()->find('.parts__total', 0)->plaintext;
         $count = filter_var($count, FILTER_SANITIZE_NUMBER_INT);
-        $this->friends->setTotal($count);
+        $this->following->setTotal($count);
     }
 
     /**
-     * Parse friends
+     * Parse members
      */
-    private function parseFriends()
+    private function parseFollowing()
     {
         $rows = $this->getDocumentFromClassname('.ldst__window');
 
-        // loop through the list of characters
+        // loo through the list of characters
         foreach($rows->find('div.entry') as $node) {
             // create simple character
             $character = new CharacterSimple();
@@ -91,9 +91,9 @@ class Parser extends ParserHelper
                 ->setName( trim($node->find('.entry__name')->plaintext) )
                 ->setServer( trim($node->find('.entry__world')->plaintext) )
                 ->setAvatar( explode('?', $node->find('.entry__chara__face img', 0)->src)[0] );
-            
+    
             // add character to friends list
-            $this->friends->addCharacter($character);
+            $this->following->addCharacter($character);
         }
     }
 }

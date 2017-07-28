@@ -10,7 +10,7 @@ use Lodestone\Parser\{
     Achievements,
     Character\Parser as CharacterParser,
     CharacterFriends\Parser as CharacterFriendsParser,
-    CharacterFollowing,
+    CharacterFollowing\Parser as CharacterFollowingParser,
     FreeCompany,
     FreeCompanyMembers,
     Linkshell,
@@ -139,7 +139,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_CHARACTERS_FOLLOWING_URL, $id);
-        return (new CharacterFollowing())->url($url . $urlBuilder->get())->parse();
+        return (new CharacterFollowingParser())->url($url . $urlBuilder->get())->parse();
     }
 
     /**

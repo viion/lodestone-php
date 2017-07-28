@@ -15,11 +15,6 @@ use Lodestone\{
 class Attribute extends AbstractEntity
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
     protected $name;
@@ -28,24 +23,6 @@ class Attribute extends AbstractEntity
      * @var int
      */
     protected $value;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     /**
      * @return string

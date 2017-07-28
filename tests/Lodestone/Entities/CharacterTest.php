@@ -54,7 +54,7 @@ class CharacterTest extends TestCase
         self::assertNotEmpty($character->getGender());
 
         // active job
-        self::assertNotEmpty($character->getActiveClassJob()->getName());
+        self::assertNotEmpty($character->getActiveClassJob()->getClassName());
         self::assertTrue(is_numeric($character->getActiveClassJob()->getLevel()));
     }
 
@@ -176,32 +176,4 @@ class CharacterTest extends TestCase
             throw $ex;
         }
     }
-    
-    //
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    //
-    
-    public function testCharacterInvalidActiveClass()
-    {
-        $api = new Api();
-    
-        // expect HttpNotFound to be thrown
-        self::expectException(ValidationException::class);
-    
-        try {
-            /** @var CharacterProfile $character */
-            $character = $api->getCharacter(1044326);
-        } catch (ValidationException $ex) {
-            throw $ex;
-        }
-    
-        try {
-            /** @var CharacterProfile $character */
-            $character = $api->getCharacter(2997799);
-        } catch (ValidationException $ex) {
-            throw $ex;
-        }
-    }
-    
-    
 }

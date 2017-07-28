@@ -49,7 +49,6 @@ trait TraitAttributes
             $attribute = new Attribute();
             $attribute
                 ->setName($node->find('.character__param__text')->plaintext)
-                ->setId($this->xivdb->getBaseParamId($attribute->getName()))
                 ->setValue(intval($node->find('span')->plaintext));
 
             $this->profile->addAttribute($attribute);
@@ -66,7 +65,6 @@ trait TraitAttributes
             $attribute = new Attribute();
             $attribute
                 ->setName($name)
-                ->setId($this->xivdb->getBaseParamId($attribute->getName()))
                 ->setValue(intval($node->plaintext));
 
             $this->profile->addAttribute($attribute);
@@ -87,7 +85,6 @@ trait TraitAttributes
         $attribute = new Attribute();
         $attribute
             ->setName($node->find('th')->plaintext)
-            ->setId($this->xivdb->getBaseParamId($attribute->getName()))
             ->setValue(intval($node->find('td')->plaintext));
 
         unset($node);

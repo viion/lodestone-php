@@ -580,13 +580,13 @@ class CharacterProfile extends AbstractEntity
     }
 
     /**
-     * @param int $classId
+     * @param string $key
      * @param ClassJob $role
      * @return CharacterProfile $this
      */
-    public function addClassjob(int $jobId, ClassJob $role)
+    public function addClassJob(string $key, ClassJob $role)
     {
-        $this->classjobs[$jobId] = $role;
+        $this->classjobs[$key] = $role;
         return $this;
     }
 
@@ -594,7 +594,7 @@ class CharacterProfile extends AbstractEntity
      * @param string $id
      * @return bool|ClassJob $job
      */
-    public function getClassjob($id)
+    public function getClassJob($id)
     {
         return $this->classjobs[$id] ?? false;
     }
@@ -602,7 +602,7 @@ class CharacterProfile extends AbstractEntity
     /**
      * @return array
      */
-    public function getClassjobs()
+    public function getClassJobs()
     {
         return $this->classjobs;
     }

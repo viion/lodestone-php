@@ -15,14 +15,9 @@ use Lodestone\{
 class Item extends AbstractEntity
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
-    protected $lodestoneId;
+    protected $id;
 
     /**
      * @var string
@@ -73,34 +68,13 @@ class Item extends AbstractEntity
      */
     public function setId($id)
     {
-        // Because XIVDB may not be updated
-        // immediately, we won't error when no id
-
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLodestoneId(): string
-    {
-        return $this->lodestoneId;
-    }
-
-    /**
-     * @param string $lodestoneId
-     * @return $this
-     */
-    public function setLodestoneId(string $lodestoneId)
-    {
         BaseValidator::getInstance()
-            ->check($lodestoneId, 'Item Lodestone ID')
+            ->check($id, 'Item Lodestone ID')
             ->isInitialized()
             ->isString()
             ->validate();
-
-        $this->lodestoneId = $lodestoneId;
+    
+        $this->id = $id;
         return $this;
     }
 

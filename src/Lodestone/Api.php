@@ -9,8 +9,8 @@ use Lodestone\Modules\{
 use Lodestone\Parser\{
     Achievements,
     Character\Parser as CharacterParser,
+    CharacterFriends\Parser as CharacterFriendsParser,
     CharacterFollowing,
-    CharacterFriends,
     FreeCompany,
     FreeCompanyMembers,
     Linkshell,
@@ -115,7 +115,7 @@ class Api
      * @softfail true
      * @param $id
      * @param $page
-     * @return array|bool
+     * @return Entities\Character\CharacterFriends
      */
     public function getCharacterFriends($id, $page = false)
     {
@@ -123,7 +123,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_CHARACTERS_FRIENDS_URL, $id);
-        return (new CharacterFriends())->url($url . $urlBuilder->get())->parse();
+        return (new CharacterFriendsParser())->url($url . $urlBuilder->get())->parse();
     }
 
     /**

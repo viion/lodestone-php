@@ -13,8 +13,8 @@ use Lodestone\Parser\{
     Achievements\Parser as AchievementsParser,
     
     
-    FreeCompany,
-    FreeCompanyMembers,
+    FreeCompany\Parser as FreeCompanyParser,
+    FreeCompanyMembers\Parser as FreeCompanyMembersParser,
     Linkshell,
     Lodestone,
     Search
@@ -164,7 +164,7 @@ class Api
     public function getFreeCompany($id)
     {
         $url = sprintf(Routes::LODESTONE_FREECOMPANY_URL, $id);
-        return (new FreeCompany($id))->url($url)->parse();
+        return (new FreeCompanyParser($id))->url($url)->parse();
     }
 
     /**
@@ -179,7 +179,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_FREECOMPANY_MEMBERS_URL, $id);
-        return (new FreeCompanyMembers())->url($url . $urlBuilder->get())->parse();
+        return (new FreeCompanyMembersParser())->url($url . $urlBuilder->get())->parse();
     }
 
     /**

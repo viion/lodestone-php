@@ -17,17 +17,17 @@ class Achievement extends AbstractEntity
     /**
      * @var int
      */
-    private $id;
+    protected $id;
     
     /**
      * @var int
      */
-    private $points = 0;
+    protected $points = 0;
     
     /**
      * @var \DateTime
      */
-    private $timestamp;
+    protected $timestamp;
     
     /**
      * @return int

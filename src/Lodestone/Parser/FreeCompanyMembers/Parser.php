@@ -1,15 +1,16 @@
 <?php
 
-namespace Lodestone\Parser;
+namespace Lodestone\Parser\FreeCompanyMembers;
 
 use Lodestone\Modules\Logging\Logger;
 use Lodestone\Parser\Html\ParserHelper;
 
 /**
- * Class FreeCompanyMembers
+ * Class Parser
+ *
  * @package src\Parser
  */
-class FreeCompanyMembers extends ParserHelper
+class Parser extends ParserHelper
 {
     /**
      * @return array|bool

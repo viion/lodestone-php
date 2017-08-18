@@ -47,6 +47,10 @@ switch($option) {
     case 'fc':
         $data = $api->getFreeCompany($id ? $id : '9231253336202687179');
         break;
+    
+    case 'fc_members':
+        $data = $api->getFreeCompanyMembers($id ? $id : '9231253336202687179');
+        break;
 
     case 'ls':
         $data = $api->getLinkshellMembers($id ? $id : '19984723346535274');

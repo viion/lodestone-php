@@ -15,7 +15,7 @@ use Lodestone\Parser\{
     
     FreeCompany\Parser as FreeCompanyParser,
     FreeCompanyMembers\Parser as FreeCompanyMembersParser,
-    Linkshell,
+    Linkshell\Parser as LinkshellParser,
     Lodestone,
     Search
 };
@@ -148,7 +148,7 @@ class Api
      * @test 730968
      * @param $id
      * @param int $category
-     * @return array|bool
+     * @return Entities\Character\Achievements
      */
     public function getCharacterAchievements($id, $category = 1)
     {
@@ -159,7 +159,7 @@ class Api
     /**
      * @test 9231253336202687179
      * @param $id
-     * @return array|bool
+     * @return Entities\FreeCompany\FreeCompany
      */
     public function getFreeCompany($id)
     {
@@ -170,8 +170,8 @@ class Api
     /**
      * @test 9231253336202687179
      * @param $id
-     * @param $page
-     * @return array|bool
+     * @param bool $page
+     * @return Entities\FreeCompany\FreeCompanyMembers
      */
     public function getFreeCompanyMembers($id, $page = false)
     {
@@ -185,8 +185,8 @@ class Api
     /**
      * @test 19984723346535274
      * @param $id
-     * @param $page
-     * @return array|bool
+     * @param bool $page
+     * @return Entities\Linkshell\Linkshell
      */
     public function getLinkshellMembers($id, $page = false)
     {
@@ -194,7 +194,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
-        return (new Linkshell($id))->url($url)->parse();
+        return (new LinkshellParser($id))->url($url)->parse();
     }
 
     /**

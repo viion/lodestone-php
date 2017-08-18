@@ -2,8 +2,13 @@
 
 namespace Lodestone\Parser\FreeCompanyMembers;
 
-use Lodestone\Modules\Logging\Logger;
-use Lodestone\Parser\Html\ParserHelper;
+use Lodestone\{
+    Entities\Character\CharacterSimple,
+    Entities\FreeCompany\FreeCompanyMembers,
+    Modules\Logging\Benchmark,
+    Modules\Logging\Logger,
+    Parser\Html\ParserHelper
+};
 
 /**
  * Class Parser
@@ -12,8 +17,21 @@ use Lodestone\Parser\Html\ParserHelper;
  */
 class Parser extends ParserHelper
 {
+    /** @var FreeCompanyMembers */
+    protected $members;
+    
     /**
-     * @return array|bool
+     * Parser constructor.
+     *
+     * @param string $id
+     */
+    function __construct()
+    {
+        $this->members = new FreeCompanyMembers();
+    }
+    
+    /**
+     * @return FreeCompanyMembers
      */
     public function parse()
     {
@@ -21,15 +39,21 @@ class Parser extends ParserHelper
 
         // no members
         if ($this->getDocument()->find('.parts__zero', 0)) {
-            return false;
+            return $this->members;
         }
-
-        $started = microtime(true);
+    
+        $started = Benchmark::milliseconds();
+        Benchmark::start(__METHOD__,__LINE__);
+        
         $this->pageCount();
         $this->parseList();
-        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', round(microtime(true) - $started, 3)));
-
-        return $this->data;
+    
+        Benchmark::finish(__METHOD__,__LINE__);
+        $finished = Benchmark::milliseconds();
+        $duration = $finished - $started;
+        Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
+        
+        return $this->members;
     }
 
     /**
@@ -40,17 +64,16 @@ class Parser extends ParserHelper
         // page count
         $data = $this->getDocument()->find('.btn__pager__current', 0)->plaintext;
         list($current, $total) = explode(' of ', $data);
-
-        $current = filter_var($current, FILTER_SANITIZE_NUMBER_INT);
-        $total = filter_var($total, FILTER_SANITIZE_NUMBER_INT);
-
-        $this->add('page_total', $total);
-        $this->add('page_current', $current);
-
+    
+        $this
+            ->members
+            ->setPageCurrent(filter_var($current, FILTER_SANITIZE_NUMBER_INT))
+            ->setPageTotal(filter_var($total, FILTER_SANITIZE_NUMBER_INT));
+    
         // member count
-        $data = $this->getDocument()->find('.parts__total', 0)->plaintext;
-        $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
-        $this->add('character_total', $data);
+        $count = $this->getDocument()->find('.parts__total', 0)->plaintext;
+        $count = filter_var($count, FILTER_SANITIZE_NUMBER_INT);
+        $this->members->setTotal($count);
     }
 
     /**
@@ -59,19 +82,21 @@ class Parser extends ParserHelper
     private function parseList()
     {
         $rows = $this->getDocumentFromClassname('.ldst__window');
-
-        $characters = [];
+    
+        // loop through the list of characters
         foreach($rows->find('li.entry') as $node) {
-            $characters[] = [
-                'id' => explode('/', $node->find('a', 0)->getAttribute('href'))[3],
-                'name' => trim($node->find('.entry__name')->plaintext),
-                'server' => trim($node->find('.entry__world')->plaintext),
-                'rank' => trim($node->find('.entry__freecompany__info span', 0)->plaintext),
-                'rankicon' => trim($node->find('.entry__freecompany__info img', 0)->src),
-                'avatar' => explode('?', $node->find('.entry__chara__face img', 0)->src)[0],
-            ];
+            // create simple character
+            $character = new CharacterSimple();
+            $character
+                ->setId( explode('/', $node->find('a', 0)->getAttribute('href'))[3] )
+                ->setName( trim($node->find('.entry__name')->plaintext) )
+                ->setServer( trim($node->find('.entry__world')->plaintext) )
+                ->setAvatar( explode('?', $node->find('.entry__chara__face img', 0)->src)[0] )
+                ->setRank( trim($node->find('.entry__freecompany__info span', 0)->plaintext) )
+                ->setRankicon( trim($node->find('.entry__freecompany__info img', 0)->src) );
+        
+            // add character to friends list
+            $this->members->addCharacter($character);
         }
-
-        $this->add('members', $characters);
     }
 }

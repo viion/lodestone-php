@@ -127,7 +127,7 @@ class CharacterFollowing extends AbstractEntity
     public function setCharacters(array $characters)
     {
         CharacterValidator::getInstance()
-            ->check($characters, 'Total')
+            ->check($characters, 'Characters')
             ->isInitialized()
             ->isArray()
             ->validate();
@@ -144,7 +144,7 @@ class CharacterFollowing extends AbstractEntity
     public function addCharacter(CharacterSimple $character)
     {
         CharacterValidator::getInstance()
-            ->check($character, 'Total')
+            ->check($character, 'Character')
             ->isInitialized()
             ->isObject()
             ->validate();

@@ -33,6 +33,23 @@ class FreeCompany extends AbstractEntity
     protected $seeking = [];
     
     /**
+     * FreeCompany constructor.
+     *
+     * @param $id
+     */
+    public function __construct($id)
+    {
+        FreeCompanyValidator::getInstance()
+            ->check($id, 'ID', $this->id)
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isNumeric()
+            ->validate();
+    
+        $this->id = $id;
+    }
+    
+    /**
      * @return mixed
      */
     public function getId()

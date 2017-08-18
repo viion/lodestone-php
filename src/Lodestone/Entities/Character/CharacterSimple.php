@@ -40,6 +40,16 @@ class CharacterSimple extends AbstractEntity
     private $avatar;
     
     /**
+     * @var string
+     */
+    private $rank;
+    
+    /**
+     * @var string
+     */
+    private $rankicon;
+    
+    /**
      * @return int
      */
     public function getId(): int
@@ -140,6 +150,44 @@ class CharacterSimple extends AbstractEntity
             ->validate();
         
         $this->avatar = $avatar;
+        
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getRank(): string
+    {
+        return $this->rank;
+    }
+    
+    /**
+     * @param string $rank
+     * @return CharacterSimple
+     */
+    public function setRank(string $rank)
+    {
+        $this->rank = $rank;
+        
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getRankicon(): string
+    {
+        return $this->rankicon;
+    }
+    
+    /**
+     * @param string $rankicon
+     * @return CharacterSimple
+     */
+    public function setRankicon(string $rankicon)
+    {
+        $this->rankicon = $rankicon;
         
         return $this;
     }

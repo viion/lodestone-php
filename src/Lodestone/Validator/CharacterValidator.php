@@ -13,7 +13,10 @@ class CharacterValidator extends BaseValidator
     const VALID_CHARACTER_REGEX = '/^([a-zA-Z\' \-]|\&[^\s]*\;)+\s?$/';
 
     private static $instance = null;
-
+    
+    /**
+     * @return CharacterValidator|null
+     */
     public static function getInstance() {
         if (null === self::$instance) {
             self::$instance = new CharacterValidator();

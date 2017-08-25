@@ -5,6 +5,7 @@ namespace Lodestone\Entities\Linkshell;
 use Lodestone\{
     Entities\Traits\CharacterListTrait,
     Entities\AbstractEntity,
+    Entities\Traits\ListTrait,
     Validator\LinkshellValidator
 };
 
@@ -15,6 +16,7 @@ use Lodestone\{
  */
 class Linkshell extends AbstractEntity
 {
+    use ListTrait;
     use CharacterListTrait;
     
     /** @var string */

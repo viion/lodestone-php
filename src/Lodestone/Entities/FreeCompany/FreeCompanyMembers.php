@@ -4,7 +4,8 @@ namespace Lodestone\Entities\FreeCompany;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Entities\Traits\CharacterListTrait
+    Entities\Traits\CharacterListTrait,
+    Entities\Traits\ListTrait
 };
 
 /**
@@ -14,5 +15,6 @@ use Lodestone\{
  */
 class FreeCompanyMembers extends AbstractEntity
 {
+    use ListTrait;
     use CharacterListTrait;
 }

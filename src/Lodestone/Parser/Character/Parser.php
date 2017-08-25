@@ -46,7 +46,7 @@ class Parser extends ParserHelper
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);
 
-        // parser stuff (order is important)
+        // parse stuff (order is important)
         $this->parseProfile();
         $this->parseClassJob();
         $this->parseAttributes();

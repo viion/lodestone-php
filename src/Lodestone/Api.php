@@ -6,16 +6,29 @@ namespace Lodestone;
 use Lodestone\Modules\{
     Logging\Logger, Http\Routes
 };
+
+use Lodestone\Entities\Search\{
+    SearchCharacter,
+    SearchFreeCompany,
+    SearchLinkshell
+};
+
 use Lodestone\Parser\{
-    Achievements,
     Character\Parser as CharacterParser,
-    CharacterFollowing,
-    CharacterFriends,
-    FreeCompany,
-    FreeCompanyMembers,
-    Linkshell,
-    Lodestone,
-    Search
+    Character\Search as CharacterSearch,
+    CharacterFriends\Parser as CharacterFriendsParser,
+    CharacterFollowing\Parser as CharacterFollowingParser,
+    
+    Achievements\Parser as AchievementsParser,
+    
+    FreeCompany\Parser as FreeCompanyParser,
+    FreeCompany\Search as FreeCompanySearch,
+    FreeCompanyMembers\Parser as FreeCompanyMembersParser,
+    
+    Linkshell\Parser as LinkshellParser,
+    Linkshell\Search as LinkshellSearch,
+    
+    Lodestone
 };
 
 /**
@@ -50,7 +63,7 @@ class Api
      * @param $name
      * @param bool $server
      * @param bool $page
-     * @return array|bool
+     * @return SearchCharacter
      */
     public function searchCharacter($name, $server = false, $page = false)
     {
@@ -60,7 +73,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = Routes::LODESTONE_CHARACTERS_SEARCH_URL;
-        return (new Search())->url($url . $urlBuilder->get())->parseCharacterSearch();
+        return (new CharacterSearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -68,7 +81,7 @@ class Api
      * @param $name
      * @param bool $server
      * @param bool $page
-     * @return array|bool
+     * @return SearchFreeCompany
      */
     public function searchFreeCompany($name, $server = false, $page = false)
     {
@@ -78,7 +91,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = Routes::LODESTONE_FREECOMPANY_SEARCH_URL;
-        return (new Search())->url($url . $urlBuilder->get())->parseFreeCompanySearch();
+        return (new FreeCompanySearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -86,7 +99,7 @@ class Api
      * @param $name
      * @param $server
      * @param $page
-     * @return array|bool
+     * @return SearchLinkshell
      */
     public function searchLinkshell($name, $server = false, $page = false)
     {
@@ -96,7 +109,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = Routes::LODESTONE_LINKSHELL_SEARCH_URL;
-        return (new Search())->url($url . $urlBuilder->get())->parseLinkshellSearch();
+        return (new LinkshellSearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -115,7 +128,7 @@ class Api
      * @softfail true
      * @param $id
      * @param $page
-     * @return array|bool
+     * @return Entities\Character\CharacterFriends
      */
     public function getCharacterFriends($id, $page = false)
     {
@@ -123,7 +136,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_CHARACTERS_FRIENDS_URL, $id);
-        return (new CharacterFriends())->url($url . $urlBuilder->get())->parse();
+        return (new CharacterFriendsParser())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -131,7 +144,7 @@ class Api
      * @softfail true
      * @param $id
      * @param $page
-     * @return array|bool
+     * @return Entities\Character\CharacterFollowing
      */
     public function getCharacterFollowing($id, $page = false)
     {
@@ -139,37 +152,37 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_CHARACTERS_FOLLOWING_URL, $id);
-        return (new CharacterFollowing())->url($url . $urlBuilder->get())->parse();
+        return (new CharacterFollowingParser())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
      * @test 730968
      * @param $id
-     * @param int $kind
-     * @return array|bool
+     * @param int $category
+     * @return Entities\Character\Achievements
      */
-    public function getCharacterAchievements($id, $kind = 1)
+    public function getCharacterAchievements($id, $category = 1)
     {
-        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $kind);
-        return (new Achievements())->url($url)->parse();
+        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $category);
+        return (new AchievementsParser($category))->url($url)->parse();
     }
 
     /**
      * @test 9231253336202687179
      * @param $id
-     * @return array|bool
+     * @return Entities\FreeCompany\FreeCompany
      */
     public function getFreeCompany($id)
     {
         $url = sprintf(Routes::LODESTONE_FREECOMPANY_URL, $id);
-        return (new FreeCompany())->url($url)->parse($id);
+        return (new FreeCompanyParser($id))->url($url)->parse();
     }
 
     /**
      * @test 9231253336202687179
      * @param $id
-     * @param $page
-     * @return array|bool
+     * @param bool $page
+     * @return Entities\FreeCompany\FreeCompanyMembers
      */
     public function getFreeCompanyMembers($id, $page = false)
     {
@@ -177,14 +190,14 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_FREECOMPANY_MEMBERS_URL, $id);
-        return (new FreeCompanyMembers())->url($url . $urlBuilder->get())->parse();
+        return (new FreeCompanyMembersParser())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
      * @test 19984723346535274
      * @param $id
-     * @param $page
-     * @return array|bool
+     * @param bool $page
+     * @return Entities\Linkshell\Linkshell
      */
     public function getLinkshellMembers($id, $page = false)
     {
@@ -192,7 +205,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
-        return (new Linkshell())->url($url)->parse($id);
+        return (new LinkshellParser($id))->url($url)->parse();
     }
 
     /**

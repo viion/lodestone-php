@@ -1,40 +1,55 @@
 <?php
-namespace Lodestone\Parser;
 
-use Lodestone\Modules\Logging\Benchmark;
-use Lodestone\Modules\Logging\Logger;
-use Lodestone\Parser\Html\ParserHelper;
+namespace Lodestone\Parser\FreeCompany;
+
+use Lodestone\{
+    Entities\FreeCompany\FreeCompany,
+    Modules\Logging\Benchmark,
+    Modules\Logging\Logger,
+    Parser\Html\ParserHelper
+};
 
 /**
- * Class FreeCompany
+ * Class Parser
+ *
  * @package Lodestone\Parser
  */
-class FreeCompany extends ParserHelper
+class Parser extends ParserHelper
 {
+    /** @var FreeCompany */
+    protected $freecompany;
+    
     /**
-     * @return array|bool
+     * Parser constructor.
+     *
+     * @param string $id
      */
-    public function parse($id)
+    function __construct($id)
     {
-        // todo this is temp until we make an "FreeCompanyProfile" class
-        $this->add('id', $id);
-
+        $this->freecompany = new FreeCompany($id);
+    }
+    
+    /**
+     * @return FreeCompany
+     */
+    public function parse()
+    {
         $this->initialize();
 
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);
 
+        // parse stuff
         $this->parseHeader();
         $this->parseProfile();
         $this->parseFocus();
-
+    
         Benchmark::finish(__METHOD__,__LINE__);
         $finished = Benchmark::milliseconds();
         $duration = $finished - $started;
         Logger::write(__CLASS__, __LINE__, sprintf('PARSE DURATION: %s ms', $duration));
 
-
-        return $this->data;
+        return $this->freecompany;
     }
 
     /**
@@ -50,21 +65,21 @@ class FreeCompany extends ParserHelper
         foreach($imgs as $img) {
             $crest[] = str_ireplace('64x64', '128x128', $img->getAttribute('src'));
         }
-        $this->add('crest', $crest);
+        $this->freecompany->setCrest($crest);
 
         // grand company
         $data = $box->find('.entry__freecompany__gc')->plaintext;
         $data = explode('<', trim($data));
         $data = trim($data[0]);
-        $this->add('grand_company', $data);
+        $this->freecompany->setGrandcompany($data);
 
         // name
         $data = trim($box->find('.entry__freecompany__name')->plaintext);
-        $this->add('name', $data);
+        $this->freecompany->setName($data);
 
         // server
         $data = trim($box->find('.entry__freecompany__gc', 1)->plaintext);
-        $this->add('server', $data);
+        $this->freecompany->setServer($data);
     }
 
     /**
@@ -77,55 +92,55 @@ class FreeCompany extends ParserHelper
         // tag
         $data = $box->find('.freecompany__text__tag', 1)->plaintext;
         $data = trim(str_ireplace(['«', '»'], null, $data));
-        $this->add('tag', $data);
+        $this->freecompany->setTag($data);
 
         // formed
         $timestamp = $this->getTimestamp($box->find('.freecompany__text', 2));
-        $this->add('formed', $timestamp);
+        $this->freecompany->setFormed($timestamp);
 
         // active members
         $data = $box->find('.freecompany__text', 3)->plaintext;
         $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+        $this->freecompany->setActiveMemberCount($data);
         $this->add('members', $data);
 
         // rank
         $data = $box->find('.freecompany__text', 4)->plaintext;
         $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
-        $this->add('rank', $data);
+        $this->freecompany->setRank($data);
 
         // ranking
         $weekly = $box->find('.character__ranking__data th', 0)->plaintext;
         $weekly = filter_var($weekly, FILTER_SANITIZE_NUMBER_INT);
         $monthly = $box->find('.character__ranking__data th', 1)->plaintext;
         $monthly = filter_var($monthly, FILTER_SANITIZE_NUMBER_INT);
-
-        $this->add('ranking', [
+        
+        $this->freecompany->setRanking((Object)[
             'weekly' => $weekly,
             'monthly' => $monthly,
         ]);
 
         // slogan
         $data = $box->find('.freecompany__text__message', 0)->innertext;
-        $data = str_ireplace("<br/>", "\n", $data);
-        $this->add('slogan', $data);
+        $data = trim(str_ireplace("<br/>", "\n", $data));
+        $this->freecompany->setSlogan($data);
 
         // estate
-        $this->add('estate', [
+        $this->freecompany->setEstate((Object)[
             'name' => $box->find('.freecompany__estate__name')->plaintext,
             'plot' => $box->find('.freecompany__estate__text')->plaintext,
             'greeting' => $box->find('.freecompany__estate__greeting')->plaintext,
         ]);
 
-        $reputation = [];
+        // reputation
         foreach($box->find('.freecompany__reputation') as $rep) {
             $progress = $rep->find('.character__bar div', 0)->getAttribute('style');
-            $reputation[] = [
+            $this->freecompany->addReputation((Object)[
                 'name' => $rep->find('.freecompany__reputation__gcname')->plaintext,
                 'rank' => $rep->find('.freecompany__reputation__rank')->plaintext,
                 'progress' => filter_var($progress, FILTER_SANITIZE_NUMBER_INT),
-            ];
+            ]);
         }
-        $this->add('reputation', $reputation);
     }
 
     /**
@@ -137,15 +152,16 @@ class FreeCompany extends ParserHelper
 
         // active
         $data = trim($box->find('.freecompany__text', 0)->plaintext);
-        $this->add('active', $data);
+        $this->freecompany->setActive($data);
 
         // recruitment
         $data = trim($box->find('.freecompany__text', 1)->plaintext);
+        $this->freecompany->setRecruitment($data);
         $this->add('recruitment', $data);
 
         // ---------------------------------------------------------------
 
-        $focus = [];
+        // focus
         if ($hasNodes = $box->find('.freecompany__focus_icon', 0)) {
             foreach ($hasNodes->find('li') as $node) {
                 $status = true;
@@ -153,19 +169,17 @@ class FreeCompany extends ParserHelper
                     $status = false;
                 }
 
-                $focus[] = [
+                $this->freecompany->addFocus((Object)[
                     'status' => $status,
                     'icon' => $node->find('img', 0)->src,
                     'name' => $node->find('p', 0)->plaintext,
-                ];
+                ]);
             }
         }
-
-        $this->add('focus', $focus);
-
+        
         // ---------------------------------------------------------------
 
-        $seeking = [];
+        // seeking
         if ($focusNodes = $box->find('.freecompany__focus_icon', 1)) {
             foreach ($focusNodes->find('li') as $node) {
                 $status = true;
@@ -173,14 +187,12 @@ class FreeCompany extends ParserHelper
                     $status = false;
                 }
 
-                $seeking[] = [
+                $this->freecompany->addSeeking((Object)[
                     'status' => $status,
                     'icon' => $node->find('img', 0)->src,
                     'name' => $node->find('p', 0)->plaintext,
-                ];
+                ]);
             }
         }
-
-        $this->add('seeking', $seeking);
     }
 }

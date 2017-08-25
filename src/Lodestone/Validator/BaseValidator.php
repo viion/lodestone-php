@@ -116,7 +116,7 @@ class BaseValidator
 
         return $this;
     }
-
+    
     /**
      * @return $this
      */

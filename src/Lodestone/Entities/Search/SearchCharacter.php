@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Entities\Character;
+namespace Lodestone\Entities\Search;
 
 use Lodestone\{
     Entities\AbstractEntity,
@@ -9,11 +9,11 @@ use Lodestone\{
 };
 
 /**
- * Class Profile
+ * Class SearchCharacter
  *
- * @package Lodestone\Entities\Character
+ * @package Lodestone\Entities\Search
  */
-class CharacterFollowing extends AbstractEntity
+class SearchCharacter extends AbstractEntity
 {
     use ListTrait;
     use CharacterListTrait;

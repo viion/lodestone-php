@@ -6,18 +6,29 @@ namespace Lodestone;
 use Lodestone\Modules\{
     Logging\Logger, Http\Routes
 };
+
+use Lodestone\Entities\Search\{
+    SearchCharacter,
+    SearchFreeCompany,
+    SearchLinkshell
+};
+
 use Lodestone\Parser\{
     Character\Parser as CharacterParser,
+    Character\Search as CharacterSearch,
     CharacterFriends\Parser as CharacterFriendsParser,
     CharacterFollowing\Parser as CharacterFollowingParser,
+    
     Achievements\Parser as AchievementsParser,
     
-    
     FreeCompany\Parser as FreeCompanyParser,
+    FreeCompany\Search as FreeCompanySearch,
     FreeCompanyMembers\Parser as FreeCompanyMembersParser,
+    
     Linkshell\Parser as LinkshellParser,
-    Lodestone,
-    Search
+    Linkshell\Search as LinkshellSearch,
+    
+    Lodestone
 };
 
 /**
@@ -52,7 +63,7 @@ class Api
      * @param $name
      * @param bool $server
      * @param bool $page
-     * @return array|bool
+     * @return SearchCharacter
      */
     public function searchCharacter($name, $server = false, $page = false)
     {
@@ -62,7 +73,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = Routes::LODESTONE_CHARACTERS_SEARCH_URL;
-        return (new Search())->url($url . $urlBuilder->get())->parseCharacterSearch();
+        return (new CharacterSearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -70,7 +81,7 @@ class Api
      * @param $name
      * @param bool $server
      * @param bool $page
-     * @return array|bool
+     * @return SearchFreeCompany
      */
     public function searchFreeCompany($name, $server = false, $page = false)
     {
@@ -80,7 +91,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = Routes::LODESTONE_FREECOMPANY_SEARCH_URL;
-        return (new Search())->url($url . $urlBuilder->get())->parseFreeCompanySearch();
+        return (new FreeCompanySearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -88,7 +99,7 @@ class Api
      * @param $name
      * @param $server
      * @param $page
-     * @return array|bool
+     * @return SearchLinkshell
      */
     public function searchLinkshell($name, $server = false, $page = false)
     {
@@ -98,7 +109,7 @@ class Api
         $urlBuilder->add('page', $page);
 
         $url = Routes::LODESTONE_LINKSHELL_SEARCH_URL;
-        return (new Search())->url($url . $urlBuilder->get())->parseLinkshellSearch();
+        return (new LinkshellSearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**

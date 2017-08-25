@@ -3,45 +3,31 @@
 namespace Lodestone\Entities\Linkshell;
 
 use Lodestone\{
-    Entities\Traits\CharacterListTrait,
     Entities\AbstractEntity,
     Validator\LinkshellValidator
 };
 
 /**
- * Class Linkshell
+ * Class LinkshellSimple
  *
  * @package Lodestone\Entities\Linkshell
  */
-class Linkshell extends AbstractEntity
+class LinkshellSimple extends AbstractEntity
 {
-    use CharacterListTrait;
-    
-    /** @var string */
-    protected $id;
-    
-    /** @var string */
-    protected $name;
-    
-    /** @var string */
-    protected $server;
+    /**
+     * @var string
+     */
+    private $id;
     
     /**
-     * Linkshell constructor.
-     *
-     * @param $id
+     * @var string
      */
-    public function __construct($id)
-    {
-        LinkshellValidator::getInstance()
-            ->check($id, 'ID', $this->id)
-            ->isInitialized()
-            ->isNotEmpty()
-            ->isNumeric()
-            ->validate();
-        
-        $this->id = $id;
-    }
+    private $name;
+    
+    /**
+     * @var string
+     */
+    private $server;
     
     /**
      * @return string
@@ -53,10 +39,16 @@ class Linkshell extends AbstractEntity
     
     /**
      * @param string $id
-     * @return Linkshell
+     * @return LinkshellSimple
      */
     public function setId(string $id)
     {
+        LinkshellValidator::getInstance()
+            ->check($id, 'ID', $this->id)
+            ->isInitialized()
+            ->isNotEmpty()
+            ->validate();
+        
         $this->id = $id;
         
         return $this;
@@ -72,10 +64,17 @@ class Linkshell extends AbstractEntity
     
     /**
      * @param string $name
-     * @return Linkshell
+     * @return LinkshellSimple
      */
     public function setName(string $name)
     {
+        LinkshellValidator::getInstance()
+            ->check($name, 'Name', $this->id)
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+        
         $this->name = $name;
         
         return $this;
@@ -91,10 +90,17 @@ class Linkshell extends AbstractEntity
     
     /**
      * @param string $server
-     * @return Linkshell
+     * @return LinkshellSimple
      */
     public function setServer(string $server)
     {
+        LinkshellValidator::getInstance()
+            ->check($server, 'Server', $this->id)
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+        
         $this->server = $server;
         
         return $this;

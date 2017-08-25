@@ -64,6 +64,10 @@ class Parser extends ParserHelper
      */
     private function pageCount()
     {
+        if (!$this->getDocument()->find('.btn__pager__current', 0)) {
+            return;
+        }
+        
         // page count
         $data = $this->getDocument()->find('.btn__pager__current', 0)->plaintext;
         list($current, $total) = explode(' of ', $data);
@@ -71,7 +75,8 @@ class Parser extends ParserHelper
         $this
             ->linkshell
             ->setPageCurrent(filter_var($current, FILTER_SANITIZE_NUMBER_INT))
-            ->setPageTotal(filter_var($total, FILTER_SANITIZE_NUMBER_INT));
+            ->setPageTotal(filter_var($total, FILTER_SANITIZE_NUMBER_INT))
+            ->setNextPrevious();
     
         // member count
         $count = $this->getDocument()->find('.parts__total', 0)->plaintext;
@@ -84,6 +89,10 @@ class Parser extends ParserHelper
      */
     private function parseList()
     {
+        if ($this->linkshell->getTotal() == 0) {
+            return;
+        }
+        
         $rows = $this->getDocumentFromClassname('.ldst__window');
     
         // loop through the list of characters

@@ -39,6 +39,10 @@ switch($option) {
     case 'character_following':
         $data = $api->getCharacterFollowing($id ? $id : 15609878);
         break;
+        
+    case 'character_search':
+        $data = $api->searchCharacter($id ? $id : 'Premium Virtue');
+        break;
     
     case 'achievements':
         $data = $api->getCharacterAchievements($id ? $id : 730968);
@@ -51,9 +55,17 @@ switch($option) {
     case 'fc_members':
         $data = $api->getFreeCompanyMembers($id ? $id : '9231253336202687179');
         break;
+    
+    case 'fc_search':
+        $data = $api->searchFreeCompany($id ? $id : 'Test');
+        break;
 
     case 'ls':
         $data = $api->getLinkshellMembers($id ? $id : '19984723346535274');
+        break;
+    
+    case 'ls_search':
+        $data = $api->searchLinkshell($id ? $id : 'Test');
         break;
 
     case 'devposts':

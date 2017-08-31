@@ -5,10 +5,11 @@
 [![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)
 [![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)
 
-**Travis Status **
+**Travis Status**
 
-- `master` ![master](https://travis-ci.org/viion/lodestone-php.svg?branch=master)
-- `dev` ![dev](https://travis-ci.org/viion/lodestone-php.svg?branch=dev)
+|`master`|`dev`|
+|---|---|
+|![master](https://travis-ci.org/viion/lodestone-php.svg?branch=master)|![dev](https://travis-ci.org/viion/lodestone-php.svg?branch=dev)|
 
 ---
 

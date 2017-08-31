@@ -4,6 +4,14 @@
 [![Total Downloads](https://poser.pugx.org/viion/lodestone-php/downloads)](https://packagist.org/packages/viion/lodestone-php)
 [![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)
 
+**Travis Status**
+
+|`master`|`dev`|
+|---|---|
+|![master](https://travis-ci.org/viion/lodestone-php.svg?branch=master)|![dev](https://travis-ci.org/viion/lodestone-php.svg?branch=dev)|
+
+---
+
 This project is a maintained PHP library for parsing data directly from the FFXIV Lodestone website.
 
 The goal is to provide an extremely fast and lightweight library, it is built with the purpose of parsing as many characters as possible, key being: Low memory, and micro-timed parsing methods.
@@ -28,6 +36,7 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 - [Entities](docs/Entities.md)
 - [Validation](docs/Validation.md)
 - [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)
+- [Travis CI](https://travis-ci.org/viion/lodestone-php/branches)
 
 ## Contributing
 

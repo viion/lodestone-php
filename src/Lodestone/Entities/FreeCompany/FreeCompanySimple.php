@@ -17,22 +17,22 @@ class FreeCompanySimple extends AbstractEntity
     /**
      * @var string
      */
-    private $id;
+    protected $id;
     
     /**
      * @var string
      */
-    private $name;
+    protected $name;
     
     /**
      * @var string
      */
-    private $server;
+    protected $server;
     
     /**
      * @var array
      */
-    private $avatar;
+    protected $avatar;
     
     /**
      * @return string

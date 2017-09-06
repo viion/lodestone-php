@@ -17,17 +17,17 @@ class LinkshellSimple extends AbstractEntity
     /**
      * @var string
      */
-    private $id;
+    protected $id;
     
     /**
      * @var string
      */
-    private $name;
+    protected $name;
     
     /**
      * @var string
      */
-    private $server;
+    protected $server;
     
     /**
      * @return string

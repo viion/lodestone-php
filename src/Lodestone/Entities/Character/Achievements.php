@@ -17,22 +17,22 @@ class Achievements extends AbstractEntity
     /**
      * @var int
      */
-    private $pointsObtained = 0;
+    protected $pointsObtained = 0;
     
     /**
      * @var int
      */
-    private $pointsTotal = 0;
+    protected $pointsTotal = 0;
     
     /**
      * @var int
      */
-    private $category;
+    protected $category;
     
     /**
      * @var array
      */
-    private $achievements = [];
+    protected $achievements = [];
     
     /**
      * @return int

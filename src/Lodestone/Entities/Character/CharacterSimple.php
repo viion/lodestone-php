@@ -22,32 +22,32 @@ class CharacterSimple extends AbstractEntity
     /**
      * @var int
      */
-    private $id;
+    protected $id;
     
     /**
      * @var string
      */
-    private $name;
+    protected $name;
     
     /**
      * @var string
      */
-    private $server;
+    protected $server;
     
     /**
      * @var string
      */
-    private $avatar;
+    protected $avatar;
     
     /**
      * @var string
      */
-    private $rank;
+    protected $rank;
     
     /**
      * @var string
      */
-    private $rankicon;
+    protected $rankicon;
     
     /**
      * @return int

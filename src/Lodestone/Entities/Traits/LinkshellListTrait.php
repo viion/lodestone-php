@@ -14,7 +14,9 @@ use Lodestone\{
  */
 trait LinkshellListTrait
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $linkshells = [];
     
     /**

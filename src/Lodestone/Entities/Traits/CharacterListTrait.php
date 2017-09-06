@@ -14,7 +14,9 @@ use Lodestone\{
  */
 trait CharacterListTrait
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $characters = [];
     
     /**

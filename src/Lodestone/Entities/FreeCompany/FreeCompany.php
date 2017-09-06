@@ -14,22 +14,89 @@ use Lodestone\{
  */
 class FreeCompany extends AbstractEntity
 {
+    /**
+     * @var string
+     */
     protected $id;
-    protected $crest;
+    
+    /**
+     * @var array
+     */
+    protected $crest = [];
+    
+    /**
+     * @var string
+     */
     protected $grandcompany;
+    
+    /**
+     * @var string
+     */
     protected $name;
+    
+    /**
+     * @var string
+     */
     protected $server;
+    
+    /**
+     * @var string
+     */
     protected $tag;
+    
+    /**
+     * @var string
+     */
     protected $formed;
+    
+    /**
+     * @var int
+     */
     protected $activeMembercount;
+    
+    /**
+     * @var string
+     */
     protected $rank;
+    
+    /**
+     * @var string
+     */
     protected $ranking;
+    
+    /**
+     * @var string
+     */
     protected $slogan;
+    
+    /**
+     * @var string
+     */
     protected $estate;
+    
+    /**
+     * @var array
+     */
     protected $reputation = [];
+    
+    /**
+     * @var string
+     */
     protected $active;
+    
+    /**
+     * @var string
+     */
     protected $recruitment;
+    
+    /**
+     * @var array
+     */
     protected $focus = [];
+    
+    /**
+     * @var array
+     */
     protected $seeking = [];
     
     /**

@@ -13,19 +13,29 @@ use Lodestone\Validator\BaseValidator;
  */
 trait ListTrait
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $pageCurrent = 0;
     
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $pageNext = 0;
     
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $pagePrevious = 0;
     
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $pageTotal = 0;
     
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $total = 0;
     
     /**

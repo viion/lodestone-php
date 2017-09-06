@@ -14,7 +14,9 @@ use Lodestone\{
  */
 trait FreeCompanyListTrait
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $freecompanies = [];
     
     /**

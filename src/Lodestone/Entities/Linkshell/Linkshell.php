@@ -19,13 +19,19 @@ class Linkshell extends AbstractEntity
     use ListTrait;
     use CharacterListTrait;
     
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $id;
     
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $name;
     
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $server;
     
     /**

@@ -72,7 +72,6 @@ class Achievement extends AbstractEntity
         CharacterValidator::getInstance()
             ->check($points, 'Points', $this->id)
             ->isInitialized()
-            ->isNotEmpty()
             ->isNumeric()
             ->validate();
     

@@ -51,7 +51,6 @@ class Achievements extends AbstractEntity
         CharacterValidator::getInstance()
             ->check($pointsObtained, 'pointsObtained')
             ->isInitialized()
-            ->isNotEmpty()
             ->isNumeric()
             ->validate();
         
@@ -69,7 +68,6 @@ class Achievements extends AbstractEntity
         CharacterValidator::getInstance()
             ->check($pointsTotal, 'pointsTotal')
             ->isInitialized()
-            ->isNotEmpty()
             ->isNumeric()
             ->validate();
         
@@ -95,7 +93,6 @@ class Achievements extends AbstractEntity
         CharacterValidator::getInstance()
             ->check($pointsTotal, 'pointsTotal')
             ->isInitialized()
-            ->isNotEmpty()
             ->isNumeric()
             ->validate();
         
@@ -113,7 +110,6 @@ class Achievements extends AbstractEntity
         CharacterValidator::getInstance()
             ->check($pointsObtained, 'pointsObtained')
             ->isInitialized()
-            ->isNotEmpty()
             ->isNumeric()
             ->validate();
         

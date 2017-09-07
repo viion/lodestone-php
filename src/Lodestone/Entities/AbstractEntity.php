@@ -66,6 +66,10 @@ class AbstractEntity
                     case 'float':
                         $arr[$propertyName] = $this->{$propertyName};
                         break;
+    
+                    case '\datetime':
+                        $arr[$propertyName] = $this->{$propertyName}->format('U');
+                        break;
 
                     // if array, need to loop through it
                     case 'array':

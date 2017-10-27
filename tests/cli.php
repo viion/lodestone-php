@@ -48,6 +48,10 @@ switch($option) {
         $data = $api->getCharacterAchievements($id ? $id : 730968);
         break;
 
+    case 'news':
+        $data = $api->getLodestoneNews();
+        break;
+
     case 'fc':
         $data = $api->getFreeCompany($id ? $id : '9231253336202687179');
         break;

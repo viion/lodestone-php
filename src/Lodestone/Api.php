@@ -223,7 +223,7 @@ class Api
      */
     public function getLodestoneNews()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NEWS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NEWS)->parseTopics();
     }
 
     /**
@@ -232,7 +232,7 @@ class Api
      */
     public function getLodestoneTopics()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_TOPICS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_TOPICS)->parseTopics();
     }
 
     /**
@@ -241,7 +241,7 @@ class Api
      */
     public function getLodestoneNotices()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NOTICES)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NOTICES)->parseNotices();
     }
 
     /**
@@ -250,7 +250,7 @@ class Api
      */
     public function getLodestoneMaintenance()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_MAINTENANCE)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_MAINTENANCE)->parseMaintenance();
     }
 
     /**
@@ -259,7 +259,7 @@ class Api
      */
     public function getLodestoneUpdates()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_UPDATES)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_UPDATES)->parseUpdates();
     }
 
     /**
@@ -268,7 +268,7 @@ class Api
      */
     public function getLodestoneStatus()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_STATUS)->parseBanners();
+        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_STATUS)->parseStatus();
     }
 
     /**

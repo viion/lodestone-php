@@ -58,6 +58,6 @@ class Routes
 
 
     // forums
-    const LODESTONE_FORUMS = 'http://forum.square-enix.com/ffxiv/';
+    const LODESTONE_FORUMS = 'https://forum.square-enix.com/ffxiv/';
     const LODESTONE_FORUMS_HOMEPAGE = self::LODESTONE_FORUMS .'forum.php';
 }

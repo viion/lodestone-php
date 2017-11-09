@@ -21,7 +21,7 @@ class CharacterTest extends TestCase
     {
         $this->commonValidCharacter(730968, 'Premium Virtue', 'Phoenix');
         $this->commonValidCharacter(12252236, 'Jade Rain', 'Jenova');
-        $this->commonValidCharacter(14261785, 'Annie Brooks', 'Jenova');
+        $this->commonValidCharacter(14261785, 'Snow Locaine', 'Jenova');
         $this->commonValidCharacter(14096803, 'Aerena Suroo', 'Jenova');
         $this->commonValidCharacter(12252236, 'Jade Rain', 'Jenova');
     }

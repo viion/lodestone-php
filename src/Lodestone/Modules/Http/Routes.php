@@ -15,7 +15,7 @@ namespace Lodestone\Modules\Http;
 class Routes
 {
     // characters
-    const LODESTONE_URL = 'http://na.finalfantasyxiv.com/';
+    const LODESTONE_URL = 'https://na.finalfantasyxiv.com/';
     const LODESTONE_CHARACTERS_URL = self::LODESTONE_URL . 'lodestone/character/%s/';
     const LODESTONE_CHARACTERS_FRIENDS_URL = self::LODESTONE_URL . 'lodestone/character/%s/friend';
     const LODESTONE_CHARACTERS_FOLLOWING_URL = self::LODESTONE_URL . 'lodestone/character/%s/following';

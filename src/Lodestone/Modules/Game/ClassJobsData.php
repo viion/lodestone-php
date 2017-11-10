@@ -26,7 +26,7 @@ class ClassJobsData
         4 =>  [ 4, 22, 'Lancer' ],
         5 =>  [ 5, 23, 'Archer' ],
         6 =>  [ 6, 24, 'Conjurer' ],
-        7 =>  [ 7, 26, 'Thaumaturge' ],
+        7 =>  [ 7, 25, 'Thaumaturge' ],
         
         8 =>  [ 8, 8, 'Carpenter' ],
         9 =>  [ 9, 9, 'Blacksmith' ],

@@ -53,7 +53,7 @@ class ClassJobsData
         27 => [ 26, 27, 'Summoner' ],
         28 => [ 26, 28, 'Scholar' ],
         
-        29 => [ 29, 29, 'Rogue' ],
+        29 => [ 29, 30, 'Rogue' ],
         30 => [ 29, 30, 'Ninja' ],
         
         31 => [ 31, 31, 'Machinist' ],

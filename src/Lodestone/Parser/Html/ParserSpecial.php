@@ -143,10 +143,6 @@ trait ParserSpecial
         $start = strpos($html, 'character__mounts');
         $html = substr($html, $start - 30);
 
-        // strip finish
-        $finish = strpos($html, 'ldst__side');
-        $html = substr($html, 0, $finish);
-
         if (!$html) {
             return false;
         }

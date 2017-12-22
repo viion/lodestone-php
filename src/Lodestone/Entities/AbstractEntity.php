@@ -50,7 +50,7 @@ class AbstractEntity
             // only add those with a var type
             if (isset($result['var'])) {
                 if (!$this->{$propertyName}) {
-                    continue;
+                    //continue;
                 }
 
                 $var = explode('|', $result['var'])[0];

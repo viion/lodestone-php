@@ -32,7 +32,7 @@ class CharacterProfile extends AbstractEntity
     /**
      * @var string
      */
-    protected $title = '';
+    protected $title = null;
 
     /**
      * @var string

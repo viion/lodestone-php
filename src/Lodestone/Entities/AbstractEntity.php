@@ -60,10 +60,15 @@ class AbstractEntity
                 switch($var) {
                     // basic
                     case 'string':
+                    case 'string|null':
                     case 'int':
+                    case 'int|null':
                     case 'integer':
+                    case 'integer|null':
                     case 'bool':
+                    case 'bool|null':
                     case 'float':
+                    case 'float|null':
                         $arr[$propertyName] = $this->{$propertyName};
                         break;
     

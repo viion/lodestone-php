@@ -26,22 +26,29 @@ trait TraitProfile
         Benchmark::start(__METHOD__,__LINE__);
 
         // parse main profile info
+        $box = $this->getSpecial__Profile_Data_Details();
+        $rows = $box->find('.character-block');
+        foreach ($rows as $node) {
+            if ($node->find('.character-block__title', 0)->plaintext == 'Race/Clan/Gender') {
+                $this->parseProfileRaceClanGender($node);
+            } elseif ($node->find('.character-block__title', 0)->plaintext == 'Nameday') {
+                $this->parseProfileNameDay($node);
+            } elseif ($node->find('.character-block__title', 0)->plaintext == 'City-state') {
+                $this->parseProfileCity($node);
+            } elseif ($node->find('.character-block__title', 0)->plaintext == 'Grand Company') {
+                $this->parseProfileGrandCompany($node);
+            } elseif ($node->find('.character__freecompany__name', 0)) {
+                $this->parseProfileFreeCompany($node);
+            }
+        }
         $this->parseProfileBasic();
         $this->parseProfileBiography();
-        $this->parseProfileRaceClanGender();
-        $this->parseProfileNameDay();
-        $this->parseProfileGuardian();
-        $this->parseProfileCity();
-
-        // grand company + free company
-        $this->parseProfileGrandCompany();
-        $this->parseProfileFreeCompany();
 
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
-     * Parse: Name, Server, Title, Picture
+     * Parse: Name, Server, Title
      */
     protected function parseProfileBasic()
     {
@@ -65,13 +72,6 @@ trait TraitProfile
             $this->profile->setTitle(trim(strip_tags($title[0])));
         }
 
-        // picture
-        $avatar = $this->getArrayFromRange('frame__chara__face', 2, $html);
-        $avatar = $this->getImageSource($avatar[1]);
-        $this->profile
-            ->setAvatar($avatar)
-            ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $avatar));
-
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
@@ -94,17 +94,13 @@ trait TraitProfile
     }
 
     /**
-     * Parse: Race, Clan and Gender
+     * Parse: Race, Clan, Gender and Avatar
      */
-    protected function parseProfileRaceClanGender()
+    protected function parseProfileRaceClanGender($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        $html = $this->getArrayFromRange('character__profile__data__detail', 'character__level');
-        $html = $this->getArrayFromRange('Race/Clan/Gender', 2, $html);
-
-        // refactor it
-        $html = trim($html[1]);
+        $html = $node->find('.character-block__name', 0)->innerHTML();
         $html = str_ireplace(['<br />','<br>','<br/>'], ' / ', $html);
 
         list($race, $clan, $gender) = explode('/', strip_tags($html));
@@ -113,41 +109,28 @@ trait TraitProfile
             ->setRace(strip_tags(trim($race)))
             ->setClan(strip_tags(trim($clan)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
+         
+        // picture
+        $avatar = $this->getImageSource($node->find('img', 0));
+        $this->profile
+            ->setAvatar($avatar)
+            ->setPortrait(str_ireplace('c0_96x96', 'l0_640x873', $avatar));
 
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
-     * Parse: Nameday
+     * Parse: Nameday and Guardian
      */
-    protected function parseProfileNameDay()
+    protected function parseProfileNameDay($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        $html = $this->getArrayFromRange('character__profile__data__detail', 'character__level');
-        $html = $this->getArrayFromRange('Nameday', 1, $html);
-
-        $this->profile->setNameday(strip_tags($html[1]));
-
-        Benchmark::finish(__METHOD__,__LINE__);
-    }
-
-    /**
-     * Parse: Guardian
-     */
-    protected function parseProfileGuardian()
-    {
-        Benchmark::start(__METHOD__,__LINE__);
-
-        $html = $this->getArrayFromRange('character__profile__data__detail', 'character__level');
-        $html = $this->getArrayFromRange('Guardian', 1, $html);
-
-        $name = strip_tags($html[1]);
-        $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
-
+        $this->profile->setNameday($node->find('.character-block__birth', 0)->plaintext);
         $guardian = new Guardian();
-        $guardian->setName($name);
-
+        $guardian
+            ->setName(html_entity_decode($node->find('.character-block__name', 0)->plaintext, ENT_QUOTES, "UTF-8"))
+            ->setIcon($this->getImageSource($node->find('img', 0)));
         $this->profile->setGuardian($guardian);
 
         Benchmark::finish(__METHOD__,__LINE__);
@@ -156,16 +139,13 @@ trait TraitProfile
     /**
      * Parse: City
      */
-    protected function parseProfileCity()
+    protected function parseProfileCity($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        $name = $this->getArrayFromRange('City-state', 2);
-        $name = trim(strip_tags($name[1]));
-        $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
-
         $city = new City();
-        $city->setName($name);
+        $city->setName(html_entity_decode($node->find('.character-block__name', 0)->plaintext, ENT_QUOTES, "UTF-8"));
+        $city->setIcon($this->getImageSource($node->find('img', 0)));
 
         $this->profile->setCity($city);
 
@@ -175,27 +155,22 @@ trait TraitProfile
     /**
      * Parse: Grand Company
      */
-    protected function parseProfileGrandCompany()
+    protected function parseProfileGrandCompany($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        $html = $this->getArrayFromRange('character__profile__data__detail', 'character__level');
-        $html = $this->getArrayFromRange('Grand Company', 1, $html);
+        $html = $node->find('.character-block__name', 0)->innerHTML();
 
         // not all characters have a grand company
-        if (isset($html[1])) {
-            list($name, $rank) = explode('/', strip_tags($html[1]));
+        list($name, $rank) = explode('/', strip_tags($html));
 
-            $name = trim($name);
-            $rank = trim($rank);
+        $grandcompany = new GrandCompany();
+        $grandcompany
+            ->setName(trim($name))
+            ->setIcon($this->getImageSource($node->find('img', 0)))
+            ->setRank(trim($rank));
 
-            $grandcompany = new GrandCompany();
-            $grandcompany
-                ->setName($name)
-                ->setRank($rank);
-
-            $this->profile->setGrandCompany($grandcompany);
-        }
+        $this->profile->setGrandCompany($grandcompany);
 
         Benchmark::finish(__METHOD__,__LINE__);
     }
@@ -203,18 +178,11 @@ trait TraitProfile
     /**
      * Parse: Free Company
      */
-    protected function parseProfileFreeCompany()
+    protected function parseProfileFreeCompany($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        $html = $this->getArrayFromRange('character__profile__data__detail', 'character__level');
-        $html = $this->getArrayFromRange('Free Company', 1, $html);
-
-        // not all characters have a free company
-        if (isset($html[1])) {
-            $url = trim(explode('/', $html[1])[3]);
-            $this->profile->setFreecompany($url);
-        }
+        $this->profile->setFreecompany(trim(explode('/', $node->find("a", 0)->getAttribute("href"))[3]));
 
         Benchmark::finish(__METHOD__,__LINE__);
     }

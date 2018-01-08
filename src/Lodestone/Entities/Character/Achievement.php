@@ -20,6 +20,16 @@ class Achievement extends AbstractEntity
     protected $id;
     
     /**
+     * @var string
+     */
+    protected $name;
+    
+    /**
+     * @var string
+     */
+    protected $icon;
+    
+    /**
      * @var int
      */
     protected $points = 0;
@@ -102,6 +112,40 @@ class Achievement extends AbstractEntity
         
         $this->timestamp = $timestamp;
         
+        return $this;
+    }
+    
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name)
+    {
+        CharacterValidator::getInstance()
+            ->check($name, 'Achievement Name')
+            ->isInitialized()
+            ->isString()
+            ->validate();
+
+        $this->name = $name;
+        return $this;
+    }
+    
+    /**
+     * @param string $icon
+     * @return $this
+     */
+    public function setIcon(string $icon)
+    {
+        CharacterValidator::getInstance()
+            ->check($icon, 'Icon URL')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->icon = $icon;
+
         return $this;
     }
 }

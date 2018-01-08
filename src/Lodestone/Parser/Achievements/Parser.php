@@ -66,7 +66,7 @@ class Parser extends ParserHelper
             $achievement = new Achievement();
 
             // Get achievements data
-            if (!empty($achnode = $node->find(($includeUnobtained ? '.entry__achievement--complete' : '.entry__achievement'), 0))) {
+            if (!empty($achnode = $node->find(($includeUnobtained ? '.entry__achievement' : '.entry__achievement--complete'), 0))) {
                 $achievement
                     ->setId( explode('/', $achnode->getAttribute('href'))[6] )
                     ->setName($node->find('.entry__activity__txt', 0)->plaintext)

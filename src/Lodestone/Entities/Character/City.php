@@ -15,11 +15,6 @@ use Lodestone\{
 class City extends AbstractEntity
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
     protected $name;
@@ -35,16 +30,6 @@ class City extends AbstractEntity
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return $this
-     */
-    public function setId(int $id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**

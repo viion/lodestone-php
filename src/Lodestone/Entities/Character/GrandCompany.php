@@ -22,12 +22,12 @@ class GrandCompany extends AbstractEntity
     /**
      * @var string
      */
-    protected $icon;
-
+    protected $rank;
+    
     /**
      * @var string
      */
-    protected $rank;
+    protected $icon;
 
     /**
      * @return int

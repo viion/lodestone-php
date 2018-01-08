@@ -34,7 +34,7 @@ class Parser extends ParserHelper
     /**
      * @return Achievements
      */
-    public function parse()
+    public function parse(bool $all)
     {
         $this->initialize();
     
@@ -42,7 +42,7 @@ class Parser extends ParserHelper
         Benchmark::start(__METHOD__,__LINE__);
         
         // parse achievements
-        $this->parseAchievements();
+        $this->parseAchievements($all);
      
         // fin
         Benchmark::finish(__METHOD__,__LINE__);
@@ -56,7 +56,7 @@ class Parser extends ParserHelper
     /**
      * Parse a characters achievements
      */
-    private function parseAchievements()
+    private function parseAchievements(bool $all)
     {
         $box = $this->getSpecial__Achievements();
         $rows = $box->find('li');
@@ -66,7 +66,7 @@ class Parser extends ParserHelper
             $achievement = new Achievement();
 
             // Get achievements data
-            if (!empty($achnode = $node->find('.entry__achievement--complete', 0))) {
+            if (!empty($achnode = $node->find(($all ? '.entry__achievement' : '.entry__achievement--complete'), 0))) {
                 $achievement
                     ->setId( explode('/', $achnode->getAttribute('href'))[6] )
                     ->setName($node->find('.entry__activity__txt', 0)->plaintext)

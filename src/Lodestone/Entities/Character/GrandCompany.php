@@ -15,11 +15,6 @@ use Lodestone\{
 class GrandCompany extends AbstractEntity
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
     protected $name;
@@ -40,16 +35,6 @@ class GrandCompany extends AbstractEntity
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**

@@ -29,16 +29,22 @@ trait TraitProfile
         $box = $this->getSpecial__Profile_Data_Details();
         $rows = $box->find('.character-block');
         foreach ($rows as $node) {
-            if ($node->find('.character-block__title')->plaintext == 'Race/Clan/Gender') {
-                $this->parseProfileRaceClanGender($node);
-            } elseif ($node->find('.character-block__title')->plaintext == 'NamedayGuardian') {
-                $this->parseProfileNameDay($node);
-            } elseif ($node->find('.character-block__title')->plaintext == 'City-state') {
-                $this->parseProfileCity($node);
-            } elseif ($node->find('.character-block__title')->plaintext == 'Grand Company') {
-                $this->parseProfileGrandCompany($node);
-            } elseif ($node->find('.character__freecompany__name', 0)) {
-                $this->parseProfileFreeCompany($node);
+            switch($node->find('.character-block__title')->plaintext) {
+                case 'Race/Clan/Gender':
+                    $this->parseProfileRaceClanGender($node);
+                    break;
+                case 'NamedayGuardian':
+                    $this->parseProfileNameDay($node);
+                    break;
+                case 'City-state':
+                    $this->parseProfileCity($node);
+                    break;
+                case 'Grand Company':
+                    $this->parseProfileGrandCompany($node);
+                    break;
+                default:
+                    $this->parseProfileFreeCompany($node);
+                    break;
             }
         }
         $this->parseProfileBasic();

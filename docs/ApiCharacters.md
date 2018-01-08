@@ -29,7 +29,7 @@ Returns: `array`
 
 Gets a list of characters who `$id` is following.
 
-### getCharacterAchievements( int $id, int $kind = 1)
+### getCharacterAchievements( int $id, int $kind = 1, bool $includeUnobtained = true)
 Returns: `array`
 
 Get a list of achievements for `$id` for a specified `$kind`, Kind is the category the achievements are under.

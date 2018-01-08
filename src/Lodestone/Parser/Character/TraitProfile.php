@@ -31,7 +31,7 @@ trait TraitProfile
         foreach ($rows as $node) {
             if ($node->find('.character-block__title')->plaintext == 'Race/Clan/Gender') {
                 $this->parseProfileRaceClanGender($node);
-            } elseif ($node->find('.character-block__title')->plaintext == 'Nameday') {
+            } elseif ($node->find('.character-block__title')->plaintext == 'NamedayGuardian') {
                 $this->parseProfileNameDay($node);
             } elseif ($node->find('.character-block__title')->plaintext == 'City-state') {
                 $this->parseProfileCity($node);

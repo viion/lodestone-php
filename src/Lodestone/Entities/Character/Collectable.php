@@ -18,6 +18,11 @@ class Collectable extends AbstractEntity
      * @var string
      */
     protected $name;
+    
+    /**
+     * @var string
+     */
+    protected $icon;
 
     /**
      * @param string
@@ -33,6 +38,24 @@ class Collectable extends AbstractEntity
             ->validate();
 
         $this->name = $name;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $icon
+     * @return $this
+     */
+    public function setIcon(string $icon)
+    {
+        BaseValidator::getInstance()
+            ->check($icon, 'Icon URL')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->icon = $icon;
 
         return $this;
     }

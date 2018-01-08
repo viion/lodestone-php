@@ -65,28 +65,32 @@ class Parser extends ParserHelper
             
             $achievement = new Achievement();
 
-            // add id and points
-            $achievement
-                ->setId( explode('/', $node->find('.entry__achievement', 0)->getAttribute('href'))[6] )
-                ->setPoints( intval($node->find('.entry__achievement__number', 0)->plaintext) );
-
-            // timestamp
-            $timestamp = $node->find('.entry__activity__time', 0)->plaintext;
-            $timestamp = trim(explode('(', $timestamp)[2]);
-            $timestamp = trim(explode(',', $timestamp)[0]);
-            $timestamp = $timestamp ? new \DateTime('@' . $timestamp) : null;
-
-            // if obtained, increment obtained points
-            if ($timestamp) {
-                $achievement->setTimestamp($timestamp);
-                $this->achievements->incPointsObtained($achievement->getPoints());
+            // Get achievements data
+            if (!empty($achnode = $node->find('.entry__achievement--complete', 0))) {
+                $achievement
+                    ->setId( explode('/', $achnode->getAttribute('href'))[6] )
+                    ->setName($node->find('.entry__activity__txt', 0)->plaintext)
+                    ->setIcon(explode('?', $node->find('.entry__achievement__frame', 0)->find('img', 0)->getAttribute("src"))[0])
+                    ->setPoints( intval($node->find('.entry__achievement__number', 0)->plaintext) );
+    
+                // timestamp
+                $timestamp = $node->find('.entry__activity__time', 0)->plaintext;
+                $timestamp = trim(explode('(', $timestamp)[2]);
+                $timestamp = trim(explode(',', $timestamp)[0]);
+                $timestamp = $timestamp ? new \DateTime('@' . $timestamp) : null;
+    
+                // if obtained, increment obtained points
+                if ($timestamp) {
+                    $achievement->setTimestamp($timestamp);
+                    $this->achievements->incPointsObtained($achievement->getPoints());
+                }
+                
+                // increment total points
+                $this->achievements->incPointsTotal($achievement->getPoints());
+    
+                // add achievement
+                $this->achievements->addAchievement($achievement);
             }
-            
-            // increment total points
-            $this->achievements->incPointsTotal($achievement->getPoints());
-
-            // add achievement
-            $this->achievements->addAchievement($achievement);
         }
     }
 }

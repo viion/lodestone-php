@@ -15,24 +15,9 @@ use Lodestone\{
 class Collectable extends AbstractEntity
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
     protected $name;
-
-    /**
-     * @param int
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     /**
      * @param string
@@ -51,15 +36,7 @@ class Collectable extends AbstractEntity
 
         return $this;
     }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
+    
     /**
      * @return string
      */

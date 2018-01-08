@@ -17,6 +17,11 @@ class BaseValidator
     public $name;
     public $errors;
 
+    /**
+     * @var int
+     */
+    public $id;
+
     private static $instance = null;
 
     public static function getInstance() {
@@ -45,12 +50,14 @@ class BaseValidator
     /**
    * @param $object
    * @param $name
+   * @param $id integer (optional)
    * @return $this
    */
-    public function check($object, $name)
+    public function check($object, $name, $id = null)
     {
         $this->object = $object;
         $this->name = $name;
+        $this->id = $id;
         return $this;
     }
 
@@ -109,7 +116,7 @@ class BaseValidator
 
         return $this;
     }
-
+    
     /**
      * @return $this
      */
@@ -143,6 +150,18 @@ class BaseValidator
             $this->errors[] = ValidationException::arrayValidation($this);
         }
 
+        return $this;
+    }
+    
+    /**
+     * @return $this
+     */
+    public function isObject()
+    {
+        if (!is_object($this->object)) {
+            $this->errors[] = ValidationException::objectValidation($this);
+        }
+        
         return $this;
     }
 

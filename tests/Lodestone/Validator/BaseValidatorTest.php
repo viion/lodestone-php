@@ -4,7 +4,8 @@ namespace Lodestone\Tests\Validator;
 
 use PHPUnit\Framework\TestCase;
 use Lodestone\Validator\{
-    BaseValidator, ValidationException
+    BaseValidator,
+    Exceptions\ValidationException
 };
 
 /**
@@ -63,6 +64,24 @@ class BaseValidatorTest extends TestCase
 
         // then
         self::assertTrue($result);
+    }
+
+    public function testIsNotEmptyWithId() {
+        // given
+        $string = null;
+        $id = 1234;
+
+        try {
+            // when
+            BaseValidator::getInstance()
+                ->check($string, $this->name, $id)
+                ->isNotEmpty()
+                ->validate();
+
+            self::fail('Expected ValidationException');
+        } catch(ValidationException $vex) {
+            self::assertEquals($this->name . ' cannot be empty for id: ' . $id . '.', $vex->getMessage());
+        }
     }
 
     /**

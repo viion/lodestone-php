@@ -18,7 +18,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 // enable logging
 define('LOGGER_ENABLED', true);
-$logger = new \Lodestone\Modules\Logger();
+$logger = new \Lodestone\Modules\Logging\Logger();
 $logger->write('TESTS',__LINE__,'Running tests ...');
 
 // api

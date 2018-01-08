@@ -2,8 +2,7 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Routes;
-use Lodestone\Modules\XIVDB\XIVDB;
+use Lodestone\Modules\Http\Routes;
 use Lodestone\Parser\Html\ParserHelper;
 
 /**
@@ -13,16 +12,6 @@ use Lodestone\Parser\Html\ParserHelper;
  */
 class Lodestone extends ParserHelper
 {
-    private $xivdb;
-
-    /**
-     * Lodestone constructor.
-     */
-    function __construct()
-    {
-        $this->xivdb = new XIVDB();
-    }
-
     /**
      * @return array
      */
@@ -251,7 +240,6 @@ class Lodestone extends ParserHelper
                 ],
                 'classjob' => [
                     'name' => $classjob,
-                    'id' => $this->xivdb->getRoleId($classjob),
                 ],
                 'leaderboard' => [
                     'rank' => $node->find('.deepdungeon__ranking__result__order', 0)->plaintext,

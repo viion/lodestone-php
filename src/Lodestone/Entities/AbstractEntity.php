@@ -2,7 +2,7 @@
 
 namespace Lodestone\Entities;
 
-use Lodestone\Modules\Benchmark;
+use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Validator\BaseValidator;
 
 /**
@@ -50,6 +50,7 @@ class AbstractEntity
             // only add those with a var type
             if (isset($result['var'])) {
                 if (!$this->{$propertyName}) {
+                    $arr[$propertyName] = null;
                     continue;
                 }
 
@@ -60,11 +61,20 @@ class AbstractEntity
                 switch($var) {
                     // basic
                     case 'string':
+                    case 'string|null':
                     case 'int':
+                    case 'int|null':
                     case 'integer':
+                    case 'integer|null':
                     case 'bool':
+                    case 'bool|null':
                     case 'float':
+                    case 'float|null':
                         $arr[$propertyName] = $this->{$propertyName};
+                        break;
+    
+                    case '\datetime':
+                        $arr[$propertyName] = $this->{$propertyName}->format('U');
                         break;
 
                     // if array, need to loop through it

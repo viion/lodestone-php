@@ -2,7 +2,7 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Modules\Benchmark;
+use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Entities\Character\{
     City,
     GrandCompany,
@@ -145,12 +145,8 @@ trait TraitProfile
         $name = strip_tags($html[1]);
         $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
 
-        $id = $this->xivdb->getGuardianId($name);
-
         $guardian = new Guardian();
-        $guardian
-            ->setName($name)
-            ->setId($id);
+        $guardian->setName($name);
 
         $this->profile->setGuardian($guardian);
 
@@ -168,13 +164,8 @@ trait TraitProfile
         $name = trim(strip_tags($name[1]));
         $name = html_entity_decode($name, ENT_QUOTES, "UTF-8");
 
-        $id = $this->xivdb->getTownId($name);
-        // todo - get icon from XIVDB and attach it
-
         $city = new City();
-        $city
-            ->setName($name)
-            ->setId($id);
+        $city->setName($name);
 
         $this->profile->setCity($city);
 
@@ -198,12 +189,8 @@ trait TraitProfile
             $name = trim($name);
             $rank = trim($rank);
 
-            $id = $this->xivdb->getGcId($name);
-            // todo - get icon from XIVDB and attach it (including rank)
-
             $grandcompany = new GrandCompany();
             $grandcompany
-                ->setId($id)
                 ->setName($name)
                 ->setRank($rank);
 

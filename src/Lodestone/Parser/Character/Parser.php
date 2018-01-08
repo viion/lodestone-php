@@ -5,10 +5,8 @@ namespace Lodestone\Parser\Character;
 use Lodestone\{
     Entities\Character\CharacterProfile,
     Parser\Html\ParserHelper,
-
-    Modules\XIVDB\XIVDB,
-    Modules\Benchmark,
-    Modules\Logger
+    Modules\Logging\Benchmark,
+    Modules\Logging\Logger
 };
 
 /**
@@ -25,9 +23,6 @@ class Parser extends ParserHelper
     use TraitGear;
     use TraitClassJobActive;
 
-    /** @var XIVDB $xivdb */
-    protected $xivdb;
-
     /** @var CharacterProfile */
     protected $profile;
 
@@ -38,7 +33,6 @@ class Parser extends ParserHelper
      */
     function __construct(int $id)
     {
-        $this->xivdb = new XIVDB();
         $this->profile = new CharacterProfile($id);
     }
 
@@ -52,7 +46,7 @@ class Parser extends ParserHelper
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);
 
-        // parser stuff (order is important)
+        // parse stuff (order is important)
         $this->parseProfile();
         $this->parseClassJob();
         $this->parseAttributes();

@@ -2,7 +2,7 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Modules\Benchmark,
+use Lodestone\Modules\Logging\Benchmark,
     Lodestone\Entities\Character\Collectable;
 
 /**
@@ -58,13 +58,8 @@ trait TraitCollectables
         Benchmark::start(__METHOD__,__LINE__);
         $name = trim($node->find('.character__item_icon', 0)->getAttribute('data-tooltip'));
 
-        $id = $this->xivdb->{'get'. $type .'Id'}($name);
-
-        // todo - get icon from XIVDB and attach it
-
         $collectable = new Collectable();
         $collectable
-            ->setId($id)
             ->setName($name);
 
         unset($node);

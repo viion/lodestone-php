@@ -29,13 +29,13 @@ trait TraitProfile
         $box = $this->getSpecial__Profile_Data_Details();
         $rows = $box->find('.character-block');
         foreach ($rows as $node) {
-            if ($node->find('.character-block__title', 0)->plaintext == 'Race/Clan/Gender') {
+            if ($node->find('.character-block__title')->plaintext == 'Race/Clan/Gender') {
                 $this->parseProfileRaceClanGender($node);
-            } elseif ($node->find('.character-block__title', 0)->plaintext == 'Nameday') {
+            } elseif ($node->find('.character-block__title')->plaintext == 'Nameday') {
                 $this->parseProfileNameDay($node);
-            } elseif ($node->find('.character-block__title', 0)->plaintext == 'City-state') {
+            } elseif ($node->find('.character-block__title')->plaintext == 'City-state') {
                 $this->parseProfileCity($node);
-            } elseif ($node->find('.character-block__title', 0)->plaintext == 'Grand Company') {
+            } elseif ($node->find('.character-block__title')->plaintext == 'Grand Company') {
                 $this->parseProfileGrandCompany($node);
             } elseif ($node->find('.character__freecompany__name', 0)) {
                 $this->parseProfileFreeCompany($node);

@@ -195,4 +195,26 @@ trait ParserSpecial
         unset($html);
         return $dom;
     }
+    
+    /**
+     * Special HTML action for Profile Data
+     *
+     * @return Document
+     */
+    protected function getSpecial__Profile_Data_Details()
+    {
+        $html = $this->dom->innerHtml();
+
+        // strip start
+        $start = strpos($html, 'character__profile__data__detail');
+        $html = substr($html, $start);
+
+        // strip finish
+        $finish = strpos($html, 'character__level clearfix');
+        $html = substr($html, 0, $finish);
+
+        $dom = $this->getDocumentFromHtml($html);
+        unset($html);
+        return $dom;
+    }
 }

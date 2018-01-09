@@ -26,25 +26,20 @@ trait TraitProfile
         Benchmark::start(__METHOD__,__LINE__);
 
         // parse main profile info
-        $box = $this->getSpecial__Profile_Data_Details();
-        $rows = $box->find('.character-block');
-        foreach ($rows as $node) {
-            switch($node->find('.character-block__title')->plaintext) {
-                case 'Race/Clan/Gender':
-                    $this->parseProfileRaceClanGender($node);
-                    break;
-                case 'NamedayGuardian':
-                    $this->parseProfileNameDay($node);
-                    break;
-                case 'City-state':
-                    $this->parseProfileCity($node);
-                    break;
-                case 'Grand Company':
-                    $this->parseProfileGrandCompany($node);
-                    break;
-                default:
-                    $this->parseProfileFreeCompany($node);
-                    break;
+        $rows = $this->getSpecial__Profile_Data_Details()->find('.character-block');
+        $this->parseProfileRaceClanGender($rows[0]);
+        $this->parseProfileNameDay($rows[1]);
+        $this->parseProfileCity($rows[2]);
+        if (!empty($rows[4])) {
+            $this->parseProfileGrandCompany($rows[3]);
+            $this->parseProfileFreeCompany($rows[4]);
+        } else {
+            if (!empty($rows[3])) {
+                if ($rows[3]->find('.character__freecompany__name')->plaintext != "") {
+                    $this->parseProfileFreeCompany($rows[3]);
+                } else {
+                    $this->parseProfileGrandCompany($rows[3]);
+                }
             }
         }
         $this->parseProfileBasic();

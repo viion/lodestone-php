@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "symfony/css-selector": "^3.2"
+        "symfony/css-selector": ">=3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.1"

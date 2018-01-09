@@ -29,11 +29,12 @@ Returns: `array`
 
 Gets a list of characters who `$id` is following.
 
-### getCharacterAchievements( int $id, int $kind = 1)
+### getCharacterAchievements( int $id, int $kind = 1, bool $includeUnobtained = false)
 Returns: `array`
 
 Get a list of achievements for `$id` for a specified `$kind`, Kind is the category the achievements are under.
 > Note: Fetching all achievement pages can take a significant amount of time
+> Note: Some achievements do not show, until obtained or until marked as visible on Lodestone. Some unobtainable (eg mutually exclusive) are always shown on Lodestone as well, but are skipped by parser.
 - 1 = Battle
 - 2 = Character
 - 4 = Items
@@ -42,7 +43,7 @@ Get a list of achievements for `$id` for a specified `$kind`, Kind is the catego
 - 8 = Quests
 - 11 = Exploration
 - 12 = Grand Company
-- 13 = Legacy (May not exist)
+- 13 = Legacy (only characters from before Realm Reborn (2.0) update can have this)
 
 Example:
 ```php

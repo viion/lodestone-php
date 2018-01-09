@@ -90,4 +90,4 @@ try {
 }
 ```
 
-Read more about exceptions and validation in: [Validation](docs/Validation.md)
+Read more about exceptions and validation in: [Validation](/docs/Validation.md)

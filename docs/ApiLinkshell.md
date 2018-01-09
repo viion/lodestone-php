@@ -15,7 +15,7 @@ Returns `array`
 Search for a specific linkshell. Server and page are both optional. Page should be a number if set, otherwise it defaults to page 1. Lodestone currently displays 50 linkshells per page with a maximum of 1,000.
 
 
-### getLinkshell( int $id )
+### getLinkshellMembers( int $id )
 Returns: `array`
 
 Get a list of members in the specified linkshell.

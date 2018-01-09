@@ -60,7 +60,8 @@ trait TraitCollectables
 
         $collectable = new Collectable();
         $collectable
-            ->setName($name);
+            ->setName($name)
+            ->setIcon($this->getImageSource($node->find('img', 0)));
 
         unset($node);
         Benchmark::finish(__METHOD__,__LINE__);

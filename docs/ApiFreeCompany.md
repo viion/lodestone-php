@@ -9,64 +9,17 @@
 - [API: Linkshell](/docs/ApiLinkshell.md)
 - [API: Lodestone](/docs/ApiLodestone.md)
 
-### getLodestoneBanners()
+### searchFreeCompany( string $name, ...[string $server], [$page = false])
 Returns `array`
 
-Get the current lodestone banners.
+Search for a specific free company. Server and page are both optional. Page should be a number if set, otherwise it defaults to page 1. Lodestone currently displays 50 free companies per page with a maximum of 1,000.
 
-### getLodestoneNews()
-Returns `array`
+### getFreeCompany( $id )
+Returns `FreeCompany` Model
 
-Get the current lodestone news.
+Get general information about Free Company without members
 
-### getLodestoneTopics()
-Returns `array`
+### getFreeCompanyMembers( $id, $page = 1)
+Returns `FreeCompanyMembers` Model
 
-Get the current lodestone topics.
-
-### getLodestoneNotices()
-Returns `array`
-
-Get the current lodestone notices.
-
-### getLodestoneMaintenance()
-Returns `array`
-
-Get the current maintenance posts.
-
-### getLodestoneUpdates()
-Returns `array`
-
-Get the current update posts.
-
-### getLodestoneStatus()
-Returns `array`
-
-Get the current game status posts.
-
-### getWorldStatus()
-Returns `array`
-
-Get the world status page. 
-
-> Note that this page is not available when the game is under maintenance (ironic... i know)
-
-----
-
-The below are pages directly linked from the Lodestone but are independent.
-
-### getDevBlog()
-Returns `array`
-
-Get the current dev blogs.
-
-### getFeast(...[$season = false], [$params = []])
-Returns `array`
-
-Get the current feast information. Season can be provided to view older feasts. Params would be based on the current live site (there are many to mention and they're complicated)
-
-
-### getDeepDungeon(...[$params = []])
-Returns `array`
-
-Get the current deep dungeon information. Params would be based on the current live site (there are many to mention and they're complicated)
+Returns page with members. Default one is first page. Reverts to 1st page, if requsting a page, which does not exist

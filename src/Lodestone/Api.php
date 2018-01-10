@@ -65,7 +65,7 @@ class Api
      * @param bool $page
      * @return SearchCharacter
      */
-    public function searchCharacter($name, $server = false, $page = false)
+    public function searchCharacter($name, $server = false, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('q', str_ireplace(' ', '+', $name));
@@ -83,7 +83,7 @@ class Api
      * @param bool $page
      * @return SearchFreeCompany
      */
-    public function searchFreeCompany($name, $server = false, $page = false)
+    public function searchFreeCompany($name, $server = false, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('q', str_ireplace(' ', '+', $name));
@@ -101,7 +101,7 @@ class Api
      * @param $page
      * @return SearchLinkshell
      */
-    public function searchLinkshell($name, $server = false, $page = false)
+    public function searchLinkshell($name, $server = false, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('q', str_ireplace(' ', '+', $name));
@@ -130,7 +130,7 @@ class Api
      * @param $page
      * @return Entities\Character\CharacterFriends
      */
-    public function getCharacterFriends($id, $page = false)
+    public function getCharacterFriends($id, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
@@ -146,7 +146,7 @@ class Api
      * @param $page
      * @return Entities\Character\CharacterFollowing
      */
-    public function getCharacterFollowing($id, $page = false)
+    public function getCharacterFollowing($id, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
@@ -184,7 +184,7 @@ class Api
      * @param bool $page
      * @return Entities\FreeCompany\FreeCompanyMembers
      */
-    public function getFreeCompanyMembers($id, $page = false)
+    public function getFreeCompanyMembers($id, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
@@ -199,7 +199,7 @@ class Api
      * @param bool $page
      * @return Entities\Linkshell\Linkshell
      */
-    public function getLinkshellMembers($id, $page = false)
+    public function getLinkshellMembers($id, $page = 1)
     {
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);

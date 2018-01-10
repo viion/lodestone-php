@@ -134,7 +134,7 @@ class ParserHelper
         $timestamp = $html->plaintext;
         $timestamp = trim(explode('(', $timestamp)[2]);
         $timestamp = trim(explode(',', $timestamp)[0]);
-        return $timestamp ? date('Y-m-d H:i:s', $timestamp) : null;
+        return $timestamp ? $timestamp : null;
     }
 
     // Get

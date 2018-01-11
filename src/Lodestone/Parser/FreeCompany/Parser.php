@@ -115,7 +115,7 @@ class Parser extends ParserHelper
         $monthly = $box->find('.character__ranking__data th', 1)->plaintext;
         $monthly = filter_var($monthly, FILTER_SANITIZE_NUMBER_INT);
         
-        $this->freecompany->setRanking([
+        $this->freecompany->setRanking((Object)[
             'weekly' => $weekly,
             'monthly' => $monthly,
         ]);
@@ -126,7 +126,7 @@ class Parser extends ParserHelper
         $this->freecompany->setSlogan($data);
 
         // estate
-        $this->freecompany->setEstate([
+        $this->freecompany->setEstate((Object)[
             'name' => $box->find('.freecompany__estate__name')->plaintext,
             'plot' => $box->find('.freecompany__estate__text')->plaintext,
             'greeting' => $box->find('.freecompany__estate__greeting')->plaintext,
@@ -135,7 +135,7 @@ class Parser extends ParserHelper
         // reputation
         foreach($box->find('.freecompany__reputation') as $rep) {
             $progress = $rep->find('.character__bar div', 0)->getAttribute('style');
-            $this->freecompany->addReputation([
+            $this->freecompany->addReputation((Object)[
                 'name' => $rep->find('.freecompany__reputation__gcname')->plaintext,
                 'rank' => $rep->find('.freecompany__reputation__rank')->plaintext,
                 'progress' => filter_var($progress, FILTER_SANITIZE_NUMBER_INT),
@@ -169,7 +169,7 @@ class Parser extends ParserHelper
                     $status = false;
                 }
 
-                $this->freecompany->addFocus([
+                $this->freecompany->addFocus((Object)[
                     'status' => $status,
                     'icon' => $node->find('img', 0)->src,
                     'name' => $node->find('p', 0)->plaintext,
@@ -187,7 +187,7 @@ class Parser extends ParserHelper
                     $status = false;
                 }
 
-                $this->freecompany->addSeeking([
+                $this->freecompany->addSeeking((Object)[
                     'status' => $status,
                     'icon' => $node->find('img', 0)->src,
                     'name' => $node->find('p', 0)->plaintext,

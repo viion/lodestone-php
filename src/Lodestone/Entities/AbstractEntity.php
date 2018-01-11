@@ -83,7 +83,10 @@ class AbstractEntity
                             $arr[$propertyName][] = ($value instanceof AbstractEntity) ? $value->toArray() : $value;
                         }
                         break;
-
+                    
+                    case 'object':
+                        $arr[$propertyName] = (array)$this->{$propertyName};
+                        break;
                     // assume a class, get its data
                     default:
                         $arr[$propertyName] = $this->{$propertyName}->toArray();

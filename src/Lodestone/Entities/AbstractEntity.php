@@ -86,14 +86,9 @@ class AbstractEntity
                     
                     case 'object':
                         $arr[$propertyName] = (array)$this->{$propertyName};
-                        foreach($arr[$propertyName] as $i => $value) {
-                            if (!is_string($value)) {
-                                $arr[$propertyName][] = ($value instanceof AbstractEntity) ? $value->toArray() : (array)$value;
-                                unset($arr[$propertyName][$i]);
-                            }
+                        foreach($this->{$propertyName} as $i => $value) {
+                            $arr[$propertyName][$i] = (is_object($value)) ? (array)$value : $value;
                         }
-                        //reset keys
-                        $arr[$propertyName] = array_values($arr[$propertyName]);
                         break;
                     // assume a class, get its data
                     default:

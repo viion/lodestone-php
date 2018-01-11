@@ -92,6 +92,8 @@ class AbstractEntity
                                 unset($arr[$propertyName][$i]);
                             }
                         }
+                        //reset keys
+                        $arr[$propertyName] = array_values($arr[$propertyName]);
                         break;
                     // assume a class, get its data
                     default:

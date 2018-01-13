@@ -98,7 +98,7 @@ class Search extends ParserHelper
             $obj = new FreeCompanySimple();
             $obj->setId( explode('/', $node->find('a', 0)->getAttribute('href'))[3] )
                 ->setName( trim($node->find('.entry__name')->plaintext) )
-                ->setServer( trim($node->find('.entry__world')->plaintext) )
+                ->setServer( trim($node->find('.entry__world', 1)->plaintext) )
                 ->setAvatar( $crest );
             
             $this->results->addFreeCompany($obj);

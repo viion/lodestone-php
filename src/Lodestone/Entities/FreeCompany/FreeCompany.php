@@ -60,7 +60,7 @@ class FreeCompany extends AbstractEntity
     protected $rank;
     
     /**
-     * @var string
+     * @var object
      */
     protected $ranking;
     
@@ -70,12 +70,12 @@ class FreeCompany extends AbstractEntity
     protected $slogan;
     
     /**
-     * @var string
+     * @var object
      */
     protected $estate;
     
     /**
-     * @var array
+     * @var object
      */
     protected $reputation = [];
     
@@ -90,12 +90,12 @@ class FreeCompany extends AbstractEntity
     protected $recruitment;
     
     /**
-     * @var array
+     * @var object
      */
     protected $focus = [];
     
     /**
-     * @var array
+     * @var object
      */
     protected $seeking = [];
     

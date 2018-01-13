@@ -104,7 +104,11 @@ class Parser extends ParserHelper
                 ->setName( trim($node->find('.entry__name')->plaintext) )
                 ->setServer( trim($node->find('.entry__world')->plaintext) )
                 ->setAvatar( explode('?', $node->find('.entry__chara__face img', 0)->src)[0] );
-            
+            if ($rank = $node->find('.entry__chara_info__linkshell')->plaintext) {
+                $character
+                    ->setRank($rank)
+                    ->setRankicon($this->getImageSource($node->find('.entry__chara_info__linkshell>img')));
+            }
             // add character to friends list
             $this->linkshell->addCharacter($character);
             

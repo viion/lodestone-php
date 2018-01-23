@@ -108,7 +108,7 @@ trait TraitGear
                            continue;
                        }
 
-                       list($mname, $mvalue) = explode('<br>', @html_entity_decode($mhtml));
+                       list($mname, $mvalue) = explode('<br>', html_entity_decode($mhtml));
 
                        $item->addMateria([
                            'name' => trim(strip_tags($mname)),

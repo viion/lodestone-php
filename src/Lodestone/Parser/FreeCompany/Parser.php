@@ -161,33 +161,33 @@ class Parser extends ParserHelper
 
         // ---------------------------------------------------------------
 
-        // focus
-        if ($hasNodes = $box->find('.freecompany__focus_icon', 0)) {
-            foreach ($hasNodes->find('li') as $node) {
-                $status = true;
-                if ($node->getAttribute('class') == 'freecompany__focus_icon--off') {
-                    $status = false;
-                }
-
-                $this->freecompany->addFocus((Object)[
-                    'status' => $status,
-                    'icon' => $node->find('img', 0)->src,
-                    'name' => $node->find('p', 0)->plaintext,
-                ]);
-            }
-        }
-        
-        // ---------------------------------------------------------------
-
         // seeking
-        if ($focusNodes = $box->find('.freecompany__focus_icon', 1)) {
-            foreach ($focusNodes->find('li') as $node) {
+        if ($seekNodes = $box->find('.freecompany__focus_icon--role', 0)) {
+            foreach ($seekNodes->find('li') as $node) {
                 $status = true;
                 if ($node->getAttribute('class') == 'freecompany__focus_icon--off') {
                     $status = false;
                 }
 
                 $this->freecompany->addSeeking((Object)[
+                    'status' => $status,
+                    'icon' => $node->find('img', 0)->src,
+                    'name' => $node->find('p', 0)->plaintext,
+                ]);
+            }
+        }
+                
+        // ---------------------------------------------------------------
+
+        // focus
+        if ($focusNodes = $box->find('.freecompany__focus_icon:not(.freecompany__focus_icon--role)', 0)) {
+            foreach ($focusNodes->find('li') as $node) {
+                $status = true;
+                if ($node->getAttribute('class') == 'freecompany__focus_icon--off') {
+                    $status = false;
+                }
+
+                $this->freecompany->addFocus((Object)[
                     'status' => $status,
                     'icon' => $node->find('img', 0)->src,
                     'name' => $node->find('p', 0)->plaintext,

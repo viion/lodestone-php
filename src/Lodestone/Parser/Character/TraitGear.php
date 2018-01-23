@@ -64,7 +64,7 @@ trait TraitGear
 
             // if item is a ring, check if its ring 1 or 2
             if ($slot == 'ring') {
-                $slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
+                $slot = $this->profile->getGear('ring1') ? 'ring2' : 'ring1';
             }
 
             // save slot

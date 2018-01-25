@@ -74,7 +74,7 @@ trait TraitGear
             // add mirage
             $mirage = $this->getArrayFromRange('db-tooltip__item__mirage', 8, $html);
             if ($mirage) {
-                $mirage = explode("/", $mirage[6]);
+                $mirage = stripos($mirage[6], '/lodestone/playguide') === false ? explode('/', $mirage[8]) : explode("/", $mirage[6]);
                 $mirage = trim($mirage[5]);
                 $item->setMirageId($mirage);
             }

@@ -64,7 +64,7 @@ trait TraitGear
 
             // if item is a ring, check if its ring 1 or 2
             if ($slot == 'ring') {
-                $slot = $this->profile->getGear('ring1') ? 'ring2' : 'ring1';
+                $slot = isset($gear['ring1']) ? 'ring2' : 'ring1';
             }
 
             // save slot
@@ -108,11 +108,12 @@ trait TraitGear
                            continue;
                        }
 
-                       list($mname, $mvalue) = explode('<br>', html_entity_decode($mhtml));
+                       $mdetails = explode('<br>', html_entity_decode($mhtml));
+                       if (empty($mdetails[1])) {$mdetails[1] = null;}
 
                        $item->addMateria([
-                           'name' => trim(strip_tags($mname)),
-                           'value' => trim(strip_tags($mvalue)),
+                           'name' => trim(strip_tags($mdetails[0])),
+                           'value' => trim(strip_tags($mdetails[1])),
                        ]);
                    }
                }

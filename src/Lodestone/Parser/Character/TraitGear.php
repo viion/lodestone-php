@@ -108,11 +108,12 @@ trait TraitGear
                            continue;
                        }
 
-                       list($mname, $mvalue) = explode('<br>', html_entity_decode($mhtml));
+                       $mdetails = explode('<br>', html_entity_decode($mhtml));
+                       if (empty($mdetails[1])) {$mdetails[1] = null;}
 
                        $item->addMateria([
-                           'name' => trim(strip_tags($mname)),
-                           'value' => trim(strip_tags($mvalue)),
+                           'name' => trim(strip_tags($mdetails[0])),
+                           'value' => trim(strip_tags($mdetails[1])),
                        ]);
                    }
                }

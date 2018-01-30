@@ -35,13 +35,6 @@ trait TraitAttributes
             }
         }
 
-        $box = $this->getSpecial__AttributesPart2();
-
-        // status resistances
-        foreach($box->find('.character__param__list', 0)->find('tr') as $node) {
-            $this->profile->addAttribute($this->parseAttributeCommon($node));
-        }
-
         $box = $this->getSpecial__AttributesPart3();
 
         // hp, mp, tp, cp, gp etc
@@ -50,22 +43,6 @@ trait TraitAttributes
             $attribute
                 ->setName($node->find('.character__param__text')->plaintext)
                 ->setValue(intval($node->find('span')->plaintext));
-
-            $this->profile->addAttribute($attribute);
-        }
-
-        $box = $this->getSpecial__AttributesPart4();
-
-        // elemental
-        foreach($box->find('li') as $node) {
-            $name = explode('__', $node->innerHtml())[1];
-            $name = explode(' ', $name)[0];
-            $name = ucwords($name);
-
-            $attribute = new Attribute();
-            $attribute
-                ->setName($name)
-                ->setValue(intval($node->plaintext));
 
             $this->profile->addAttribute($attribute);
         }

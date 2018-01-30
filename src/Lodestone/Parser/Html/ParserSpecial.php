@@ -41,28 +41,6 @@ trait ParserSpecial
     }
 
     /**
-     * Special HTML action for Attributes (Part 2)
-     *
-     * @return Document
-     */
-    protected function getSpecial__AttributesPart2()
-    {
-        $html = $this->dom->innerHtml();
-
-        // strip start
-        $start = strpos($html, 'character__resists');
-        $html = substr($html, $start);
-
-        // strip finish
-        $finish = strpos($html, 'character__job clearfix');
-        $html = substr($html, 0, $finish);
-
-        $dom = $this->getDocumentFromHtml($html);
-        unset($html);
-        return $dom;
-    }
-
-    /**
      * Special HTML action for Attributes (Part 3)
      *
      * @return Document
@@ -76,30 +54,9 @@ trait ParserSpecial
         $html = substr($html, $start - 100);
 
         // strip finish
-        $finish = strpos($html, 'character__param__element');
+        $finish = strpos($html, 'character__param__text__hp');
+        $finish = $finish + 500; // todo - this is a bit of a hack, could possibly use "TP"
         $html = substr($html, 0, $finish);
-
-        $dom = $this->getDocumentFromHtml($html);
-        unset($html);
-        return $dom;
-    }
-
-    /**
-     * Special HTML action for Attributes (Part 4)
-     *
-     * @return Document
-     */
-    protected function getSpecial__AttributesPart4()
-    {
-        $html = $this->dom->innerHtml();
-
-        // strip start
-        $start = strpos($html, 'character__param__element');
-        $html = substr($html, $start - 5);
-
-        // strip finish
-        $finish = strpos($html, 'icon-c__water');
-        $html = substr($html, 0, $finish + 200);
 
         $dom = $this->getDocumentFromHtml($html);
         unset($html);

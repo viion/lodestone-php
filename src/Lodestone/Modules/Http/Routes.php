@@ -21,6 +21,7 @@ class Routes
     const LODESTONE_CHARACTERS_FOLLOWING_URL = self::LODESTONE_URL . 'lodestone/character/%s/following';
     const LODESTONE_CHARACTERS_SEARCH_URL = self::LODESTONE_URL .'lodestone/character';
     const LODESTONE_ACHIEVEMENTS_URL = self::LODESTONE_URL . 'lodestone/character/%s/achievement/kind/%s/';
+    const LODESTONE_ACHIEVEMENTS_CAT_URL = self::LODESTONE_URL . 'lodestone/character/%s/achievement/category/%s/';
 
     // free company
     const LODESTONE_FREECOMPANY_URL = self::LODESTONE_URL . 'lodestone/freecompany/%s/';

@@ -158,16 +158,17 @@ class Api
     /**
      * @test 730968
      * @param $id
-     * @param int $category
+     * @param int $type = 1
+     * @param bool $includeUnobtained = false
+     * @param int $category = false
      * @return Entities\Character\Achievements
      */
     public function getCharacterAchievements($id, $type = 1, $includeUnobtained = false, $category = false)
     {
-        if ($category) {
-            $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type);
-        } else {
-            $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $type);
-        }
+        $url = $category === false
+            ? sprintf(Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type)
+            : sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $type);
+
         return (new AchievementsParser($type))->url($url)->parse($includeUnobtained);
     }
 

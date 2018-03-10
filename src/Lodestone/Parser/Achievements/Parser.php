@@ -74,20 +74,20 @@ class Parser extends ParserHelper
                     ->setPoints( intval($node->find('.entry__achievement__number', 0)->plaintext) );
     
                 // timestamp
-                if ($timestamp = $node->find('.entry__activity__time', 0)) {
-                    // this could do with cleaning up, probably use a regex expression instead.
-                    $timestamp = trim($timestamp->plaintext);
+                $timestamp = $node->find('.entry__activity__time', 0);
+                if ($timestamp) {
+                    $timestamp = $timestamp->plaintext;
                     $timestamp = trim(explode('(', $timestamp)[2]);
                     $timestamp = trim(explode(',', $timestamp)[0]);
                     $timestamp = $timestamp ? new \DateTime('@' . $timestamp) : null;
-                    
+        
                     // if obtained, increment obtained points
                     if ($timestamp) {
                         $achievement->setTimestamp($timestamp);
                         $this->achievements->incPointsObtained($achievement->getPoints());
                     }
                 }
-
+                
                 // increment total points
                 $this->achievements->incPointsTotal($achievement->getPoints());
     

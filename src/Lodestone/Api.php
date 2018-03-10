@@ -166,8 +166,8 @@ class Api
     public function getCharacterAchievements($id, $type = 1, $includeUnobtained = false, $category = false)
     {
         $url = $category === false
-            ? sprintf(Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type)
-            : sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $type);
+            ? sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $type)
+            : sprintf(Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type);
 
         return (new AchievementsParser($type))->url($url)->parse($includeUnobtained);
     }

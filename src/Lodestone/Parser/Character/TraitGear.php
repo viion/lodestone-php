@@ -92,7 +92,7 @@ trait TraitGear
             if ($creator) {
                 $creator = explode("/", $creator[1]);
                 $creator = trim($creator[3]);
-                $item->setCreatorId($creator);
+                $item->setCreator($creator);
             }
 
             // add dye

@@ -324,11 +324,9 @@ class Api
         foreach($devLinks as $url) {
             $lodestone->url($url);
             $postId = str_ireplace('post', null, explode('#', $url)[1]);
-
-            $data[] = [
-                'id' => $postId,
-                'thread' => $lodestone->parseDevPost($postId),
-            ];
+            $post = $lodestone->parseDevPost($postId);
+            $post['id'] = $postId;
+            $data[] = $post;
         }
 
         return $data;

@@ -6,16 +6,17 @@
 - [API: Forums](/docs/ApiForums.md)
 - [API: FreeCompany](/docs/ApiFreeCompany.md)
 - [API: Internals](/docs/ApiInternals.md)
+- [API: Linkshell](/docs/ApiLinkshell.md)
 - [API: PvPTeam](/docs/ApiPvPTeam.md)
 - [API: Lodestone](/docs/ApiLodestone.md)
 
-### searchLinkshell( string $name, ...[string $server], [$page = false])
+### searchPvPTeam( string $name, ...[string $server], [$page = false])
 Returns `array`
 
-Search for a specific linkshell. Server and page are both optional. Page should be a number if set, otherwise it defaults to page 1. Lodestone currently displays 50 linkshells per page with a maximum of 1,000.
+Search for a specific PvPTeam. Server and page are both optional. Page should be a number if set, otherwise it defaults to page 1. Lodestone currently displays 50 PvPTeams per page with a maximum of 1,000.
 
 
-### getLinkshellMembers( int $id, $page = 1 )
-Returns: `LinkshellMembers` Model
+### getPvPTeam( int $id )
+Returns: `PvPTeam` Model
 
 Returns page with members. Default one is first page. Reverts to 1st page, if requsting a page, which does not exist

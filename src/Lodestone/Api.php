@@ -28,6 +28,9 @@ use Lodestone\Parser\{
     Linkshell\Parser as LinkshellParser,
     Linkshell\Search as LinkshellSearch,
     
+    PvPTeam\Parser as PvPTeamParser,
+    PvPTeam\Search as PvPTeamSearch,
+    
     Lodestone
 };
 
@@ -110,6 +113,24 @@ class Api
 
         $url = Routes::LODESTONE_LINKSHELL_SEARCH_URL;
         return (new LinkshellSearch())->url($url . $urlBuilder->get())->parse();
+    }
+    
+        /**
+     * @test Ankora
+     * @param $name
+     * @param $server
+     * @param $page
+     * @return SearchPvPTeam
+     */
+    public function searchPvPTeam($name, $server = false, $page = 1)
+    {
+        $urlBuilder = new UrlBuilder();
+        $urlBuilder->add('q', str_ireplace(' ', '+', $name));
+        $urlBuilder->add('worldname', $server);
+        $urlBuilder->add('page', $page);
+
+        $url = Routes::LODESTONE_PVPTEAM_SEARCH_URL;
+        return (new PvPTeamSearch())->url($url . $urlBuilder->get())->parse();
     }
 
     /**
@@ -211,6 +232,19 @@ class Api
 
         $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
         return (new LinkshellParser($id))->url($url)->parse();
+    }
+    
+    /**
+     * @test c7a8e4e6fbb5aa2a9488015ed46a3ec3d97d7d0d
+     * @param $id
+     * @return Entities\PvPTeam\PvPTeam
+     */
+    public function getPvPTeamMembers($id)
+    {
+        $urlBuilder = new UrlBuilder();
+
+        $url = sprintf(Routes::LODESTONE_PVPTEAM_MEMBERS_URL, $id) . $urlBuilder->get();
+        return (new PvPTeamParser($id))->url($url)->parse();
     }
 
     /**
@@ -342,12 +376,10 @@ class Api
      */
     public function getFeast($season = false, $params = [])
     {
-        $url = Routes::LODESTONE_FEAST_CURRENT;
-        switch($season) {
-            case 1: Routes::LODESTONE_FEAST_SEASON_1; break;
-            case 2: Routes::LODESTONE_FEAST_SEASON_2; break;
-            case 3: Routes::LODESTONE_FEAST_SEASON_3; break;
-            case 4: Routes::LODESTONE_FEAST_SEASON_4; break;
+        if ($season !== false && is_numeric($season)) {
+            $url = sprintf(Routes::LODESTONE_FEAST_SEASON, $season);
+        } else {
+            $url = Routes::LODESTONE_FEAST_CURRENT;
         }
 
         $urlBuilder = new UrlBuilder();

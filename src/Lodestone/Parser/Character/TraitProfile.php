@@ -27,18 +27,21 @@ trait TraitProfile
 
         // parse main profile info
         $rows = $this->getSpecial__Profile_Data_Details()->find('.character-block');
-        $this->parseProfileRaceClanGender($rows[0]);
-        $this->parseProfileNameDay($rows[1]);
-        $this->parseProfileCity($rows[2]);
-        if (!empty($rows[4])) {
-            $this->parseProfileGrandCompany($rows[3]);
-            $this->parseProfileFreeCompany($rows[4]);
-        } else {
-            if (!empty($rows[3])) {
-                if ($rows[3]->find('.character__freecompany__name')->plaintext != "") {
-                    $this->parseProfileFreeCompany($rows[3]);
-                } else {
-                    $this->parseProfileGrandCompany($rows[3]);
+        foreach ($rows as $row) {
+            $blocktitle = $row->find('.character-block__title')->plaintext;
+            if (in_array($blocktitle, array('Race/Clan/Gender', 'Volk / Stamm / Geschlecht', 'Race / Ethnie / Sexe', '種族/部族/性別'))) {
+                $this->parseProfileRaceClanGender($row);
+            } elseif (in_array($blocktitle, array('NamedayGuardian', 'NamenstagSchutzgott', 'Date de naissanceDivinité', '誕生日守護神'))) {
+                $this->parseProfileNameDay($row);
+            } elseif (in_array($blocktitle, array('City-state', 'Stadtstaat', 'Cité de départ', '開始都市'))) {
+                $this->parseProfileCity($row);
+            } elseif (in_array($blocktitle, array('Grand Company', 'Staatliche Gesellschaft', 'Grande compagnie', '所属グランドカンパニー'))) {
+                $this->parseProfileGrandCompany($row);
+            } else {
+                if ($row->find('.character__freecompany__name')->plaintext != "") {
+                    $this->parseProfileFreeCompany($row);
+                } elseif ($row->find('.character__pvpteam__name')->find('h4')->plaintext != "") {
+                    $this->parseProfilePvPTeam($row);
                 }
             }
         }
@@ -184,6 +187,18 @@ trait TraitProfile
         Benchmark::start(__METHOD__,__LINE__);
 
         $this->profile->setFreecompany(trim(explode('/', $node->find("a", 0)->getAttribute("href"))[3]));
+
+        Benchmark::finish(__METHOD__,__LINE__);
+    }
+    
+    /**
+     * Parse: PvP Team
+     */
+    protected function parseProfilePvPTeam($node)
+    {
+        Benchmark::start(__METHOD__,__LINE__);
+
+        $this->profile->setPvPTeam(trim(explode('/', $node->find("a", 0)->getAttribute("href"))[3]));
 
         Benchmark::finish(__METHOD__,__LINE__);
     }

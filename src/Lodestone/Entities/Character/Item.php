@@ -37,17 +37,17 @@ class Item extends AbstractEntity
     /**
      * @var string
      */
-    protected $mirageId;
+    protected $mirage;
 
     /**
      * @var int
      */
-    protected $creatorId;
+    protected $creator;
 
     /**
      * @var string
      */
-    protected $dyeId;
+    protected $dye;
 
     /**
      * @var array
@@ -155,74 +155,74 @@ class Item extends AbstractEntity
     /**
      * @return int
      */
-    public function getMirageId(): int
+    public function getMirage(): int
     {
-        return $this->mirageId;
+        return $this->mirage;
     }
 
     /**
-     * @param string $mirageId
+     * @param string $mirage
      * @return $this
      */
-    public function setMirageId(string $mirageId)
+    public function setMirage(array $mirage)
     {
         // can be empty
         BaseValidator::getInstance()
-            ->check($mirageId, 'Item mirage')
+            ->check($mirage, 'Item mirage')
             ->isInitialized()
-            ->isStringOrEmpty()
+            ->isArray()
             ->validate();
 
-        $this->mirageId = $mirageId;
+        $this->mirage = $mirage;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getCreatorId(): int
+    public function getCreator(): int
     {
-        return $this->creatorId;
+        return $this->creator;
     }
 
     /**
-     * @param int $creatorId
+     * @param int $creator
      * @return $this
      */
-    public function setCreatorId(int $creatorId)
+    public function setCreator(int $creator)
     {
         // can be empty
         BaseValidator::getInstance()
-            ->check($creatorId, 'Item Creator')
+            ->check($creator, 'Item Creator')
             ->isInitialized()
             ->isNumeric()
             ->validate();
 
-        $this->creatorId = $creatorId;
+        $this->creator = $creator;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getDyeId(): string
+    public function getDye(): string
     {
-        return $this->dyeId;
+        return $this->dye;
     }
 
     /**
-     * @param string $dyeId
+     * @param string $dye
      * @return $this
      */
-    public function setDyeId(string $dyeId)
+    public function setDye(array $dye)
     {
         BaseValidator::getInstance()
-            ->check($dyeId, 'Item Dye')
+            ->check($dye, 'Item Dye')
             ->isInitialized()
-            ->isStringOrEmpty()
+            ->isArray()
             ->validate();
 
-        $this->dyeId = $dyeId;
+        $this->dye = $dye;
         return $this;
     }
 

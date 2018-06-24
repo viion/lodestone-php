@@ -75,8 +75,15 @@ trait TraitGear
             $mirage = $this->getArrayFromRange('db-tooltip__item__mirage', 8, $html);
             if ($mirage) {
                 $mirage = stripos($mirage[6], '/lodestone/playguide') === false ? explode('/', $mirage[8]) : explode("/", $mirage[6]);
-                $mirage = trim($mirage[5]);
-                $item->setMirageId($mirage);
+
+                // grab mirage name and id
+                $mirageName = trim(str_ireplace('<a href="', null, $mirage[0]));
+                $mirageId = trim($mirage[5]);
+                
+                $item->setMirage([
+                    'id' => $mirageId,
+                    'name' => $mirageName
+                ]);
             }
 
 
@@ -85,15 +92,20 @@ trait TraitGear
             if ($creator) {
                 $creator = explode("/", $creator[1]);
                 $creator = trim($creator[3]);
-                $item->setCreatorId($creator);
+                $item->setCreator($creator);
             }
 
             // add dye
             $dye = $this->getArrayFromRange('class="stain"', 4, $html);
             if ($dye) {
-                $dye = explode("/", $dye[1]);
-                $dye = trim($dye[5]);
-                $item->setDyeId($dye);
+                // grab mirage name and id
+                $dyeName = trim(strip_tags($dye[2]));
+                $dyeId = trim(explode("/", $dye[1])[5]);
+                
+                $item->setDye([
+                    'id' => $dyeId,
+                    'name' => $dyeName
+                ]);
             }
 
             // add materia

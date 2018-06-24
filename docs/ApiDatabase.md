@@ -9,4 +9,5 @@
 - [API: FreeCompany](/docs/ApiFreeCompany.md)
 - [API: Internals](/docs/ApiInternals.md)
 - [API: Linkshell](/docs/ApiLinkshell.md)
+- [API: PvPTeam](/docs/ApiPvPTeam.md)
 - [API: Lodestone](/docs/ApiLodestone.md)

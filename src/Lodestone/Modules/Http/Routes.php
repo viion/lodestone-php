@@ -31,6 +31,10 @@ class Routes
     // linkshell
     const LODESTONE_LINKSHELL_SEARCH_URL = self::LODESTONE_URL . 'lodestone/linkshell';
     const LODESTONE_LINKSHELL_MEMBERS_URL = self::LODESTONE_URL .'lodestone/linkshell/%s/';
+    
+    // linkshell
+    const LODESTONE_PVPTEAM_SEARCH_URL = self::LODESTONE_URL . 'lodestone/pvpteam';
+    const LODESTONE_PVPTEAM_MEMBERS_URL = self::LODESTONE_URL .'lodestone/pvpteam/%s/';
 
     // homepage
     const LODESTONE_BANNERS = self::LODESTONE_URL .'lodestone/';
@@ -42,11 +46,8 @@ class Routes
     const LODESTONE_STATUS = self::LODESTONE_URL .'lodestone/news/category/4';
 
     // feast
-    const LODESTONE_FEAST_SEASON_1 = self::LODESTONE_URL .'lodestone/ranking/thefeast/result/1/';
-    const LODESTONE_FEAST_SEASON_2 = self::LODESTONE_URL .'lodestone/ranking/thefeast/result/2/';
-    const LODESTONE_FEAST_SEASON_3 = self::LODESTONE_URL .'lodestone/ranking/thefeast/result/3/';
-    const LODESTONE_FEAST_SEASON_4 = self::LODESTONE_URL .'lodestone/ranking/thefeast/'; // CURRENT
-    const LODESTONE_FEAST_CURRENT = self::LODESTONE_FEAST_SEASON_4;
+    const LODESTONE_FEAST_CURRENT = self::LODESTONE_URL .'lodestone/ranking/thefeast/';
+    const LODESTONE_FEAST_SEASON = self::LODESTONE_FEAST_CURRENT . 'result/%s/';
 
     // deep dungeon
     const LODESTONE_DEEP_DUNGEON = self::LODESTONE_URL .'lodestone/ranking/deepdungeon/';

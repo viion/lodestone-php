@@ -88,6 +88,11 @@ class CharacterProfile extends AbstractEntity
      * @var string|null
      */
     protected $freecompany = null;
+    
+    /**
+     * @var string|null
+     */
+    protected $pvpteam = null;
 
     /**
      * @var array
@@ -151,6 +156,10 @@ class CharacterProfile extends AbstractEntity
         // remove free company id, being kicked
         // should not generate a new hash
         unset($data['freecompany']);
+        
+        // remove pvp team id, being kicked
+        // should not generate a new hash
+        unset($data['pvpteam']);
 
         // remove biography as this is too "open"
         // and could become malformed easily.
@@ -523,6 +532,24 @@ class CharacterProfile extends AbstractEntity
             ->validate();
 
         $this->freecompany = $freecompany;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $pvpteam
+     * @return $this
+     */
+    public function setPvPTeam($pvpteam)
+    {
+        CharacterValidator::getInstance()
+            ->check($pvpteam, 'PvP Team', $this->id)
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->pvpteam = $pvpteam;
 
         return $this;
     }

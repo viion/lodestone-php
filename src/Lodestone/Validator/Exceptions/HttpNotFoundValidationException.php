@@ -23,7 +23,7 @@ class HttpNotFoundValidationException extends ValidationException
             '%s not found. Status code: %d. URL: %s',
             $validator->name,
             $validator->object,
-            $validator->id,
+            $validator->id
         );
         parent::__construct($message, $code, $previous);
     }

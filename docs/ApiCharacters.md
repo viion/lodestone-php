@@ -30,7 +30,7 @@ Returns: `array`
 
 Gets a list of characters who `$id` is following.
 
-### getCharacterAchievements( int $id, int $kind = 1, bool $includeUnobtained = false)
+### getCharacterAchievements( int $id, int $kind = 1, bool $includeUnobtained = false, $category = false, bool $details = false, $achid = false)
 Returns: `array`
 
 Get a list of achievements for `$id` for a specified `$kind`, Kind is the category the achievements are under.
@@ -45,6 +45,10 @@ Get a list of achievements for `$id` for a specified `$kind`, Kind is the catego
 - 11 = Exploration
 - 12 = Grand Company
 - 13 = Legacy (only characters from before Realm Reborn (2.0) update can have this)
+
+`$category` stands for subcategory of the `$type`, allowing additional filtering, if set
+`$includeUnobtained` if set to `true` will also grab achievements, that are not yet obtained, which may reduce performance
+`$details` if set to `true` will also get achievements details like category, subcategory, how to get them and their respective rewards (title and item). This will signifficantly impact performance, thus it's advised to adding `$achid` to limit get only the achievement specified, instead of all of them. If `$details` is `false` `$achid` will be ignored.
 
 Example:
 ```php

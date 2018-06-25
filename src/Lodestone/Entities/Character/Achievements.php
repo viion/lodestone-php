@@ -30,6 +30,11 @@ class Achievements extends AbstractEntity
     protected $category;
     
     /**
+     * @var int
+     */
+    protected $character;
+    
+    /**
      * @var array
      */
     protected $achievements = [];
@@ -140,6 +145,32 @@ class Achievements extends AbstractEntity
             ->validate();
         
         $this->category = $category;
+        
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCharacter(): string
+    {
+        return $this->character;
+    }
+    
+    /**
+     * @param int $category
+     * @return Achievements
+     */
+    public function setCharacter(int $id)
+    {
+        CharacterValidator::getInstance()
+            ->check($id, 'character ID')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isNumeric()
+            ->validate();
+        
+        $this->character = $id;
         
         return $this;
     }

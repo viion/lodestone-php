@@ -154,6 +154,36 @@ trait ParserSpecial
     }
     
     /**
+     * Special HTML action for Achievement Details
+     *
+     * @return Document
+     */
+    protected function getSpecial__AchievementDetails()
+    {
+        $html = $this->dom->innerHtml();
+        
+        $dom = $this->getDocumentFromHtml($html)->find('.ldst__achievement');
+        
+        unset($html);
+        return $dom;
+    }
+    
+    /**
+     * Special HTML action for Achievement Details
+     *
+     * @return Document
+     */
+    protected function getSpecial__AchievementCategories()
+    {
+        $html = $this->dom->innerHtml();
+        
+        $dom = $this->getDocumentFromHtml($html)->find('.btn__category');
+        
+        unset($html);
+        return $dom;
+    }
+    
+    /**
      * Special HTML action for Profile Data
      *
      * @return Document

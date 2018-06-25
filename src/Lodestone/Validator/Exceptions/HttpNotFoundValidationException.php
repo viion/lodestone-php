@@ -20,9 +20,10 @@ class HttpNotFoundValidationException extends ValidationException
     public function __construct(HttpRequestValidator $validator, $code = HttpRequestValidator::HTTP_NOT_FOUND, $previous = null)
     {
         $message = sprintf(
-            '%s not found. Status code: %d',
+            '%s not found. Status code: %d. URL: %s',
             $validator->name,
-            $validator->object
+            $validator->object,
+            $validator->id,
         );
         parent::__construct($message, $code, $previous);
     }

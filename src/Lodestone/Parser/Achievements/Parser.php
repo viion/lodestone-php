@@ -7,6 +7,7 @@ use Lodestone\{
     Entities\Character\Achievement,
     Modules\Logging\Benchmark,
     Modules\Logging\Logger,
+    Modules\Http\Routes,
     Parser\Html\ParserHelper
 };
 
@@ -25,24 +26,33 @@ class Parser extends ParserHelper
      *
      * @param int $category
      */
-    function __construct(int $category)
+    function __construct(int $category, $id)
     {
         $this->achievements = new Achievements();
+        $this->achievements->setCharacter($id);
         $this->achievements->setCategory($category);
     }
     
     /**
      * @return Achievements
      */
-    public function parse(bool $includeUnobtained)
+    public function parse(bool $includeUnobtained, bool $details, $achid = false)
     {
-        $this->initialize();
+        if ($achid === false) {
+            $this->initialize();
+        }
     
         $started = Benchmark::milliseconds();
         Benchmark::start(__METHOD__,__LINE__);
         
         // parse achievements
-        $this->parseAchievements($includeUnobtained);
+        if ($achid === false) {
+            $this->parseAchievements($includeUnobtained, $details);
+        } else {
+            $achievement = new Achievement();
+            $this->parseAchievementDetails($achievement, $achid);
+            $this->achievements->addAchievement($achievement);
+        }
      
         // fin
         Benchmark::finish(__METHOD__,__LINE__);
@@ -56,7 +66,7 @@ class Parser extends ParserHelper
     /**
      * Parse a characters achievements
      */
-    private function parseAchievements(bool $includeUnobtained)
+    private function parseAchievements(bool $includeUnobtained, bool $details)
     {
         $box = $this->getSpecial__Achievements();
         $rows = $box->find('li');
@@ -67,33 +77,89 @@ class Parser extends ParserHelper
 
             // Get achievements data
             if (!empty($achnode = $node->find(($includeUnobtained ? '.entry__achievement' : '.entry__achievement--complete'), 0))) {
+                $achid = explode('/', $achnode->getAttribute('href'))[6];
                 $achievement
-                    ->setId( explode('/', $achnode->getAttribute('href'))[6] )
+                    ->setId($achid)
                     ->setName($node->find('.entry__activity__txt', 0)->plaintext)
                     ->setIcon(explode('?', $node->find('.entry__achievement__frame', 0)->find('img', 0)->getAttribute("src"))[0])
                     ->setPoints( intval($node->find('.entry__achievement__number', 0)->plaintext) );
-    
-                // timestamp
-                $timestamp = $node->find('.entry__activity__time', 0);
-                if ($timestamp) {
-                    $timestamp = $timestamp->plaintext;
-                    $timestamp = trim(explode('(', $timestamp)[2]);
-                    $timestamp = trim(explode(',', $timestamp)[0]);
-                    $timestamp = $timestamp ? new \DateTime('@' . $timestamp) : null;
-        
-                    // if obtained, increment obtained points
-                    if ($timestamp) {
-                        $achievement->setTimestamp($timestamp);
-                        $this->achievements->incPointsObtained($achievement->getPoints());
-                    }
+                
+                if ($details) {
+                    $this->parseAchievementDetails($achievement, $achid);
                 }
                 
-                // increment total points
-                $this->achievements->incPointsTotal($achievement->getPoints());
+                // timestamp
+                $this->achievementTime($achievement, $node->find('.entry__activity__time', 0));
     
                 // add achievement
                 $this->achievements->addAchievement($achievement);
             }
+        }
+    }
+    
+    /**
+     * Parse achievement details
+     */
+    private function parseAchievementDetails($achievement, $achid)
+    {
+        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_DET_URL, $this->achievements->getCharacter(), $achid);
+        $this->url($url)->initialize();
+        $box = $this->getSpecial__AchievementDetails();
+        $achievement
+            ->setId($achid)
+            ->setName($box->find('.entry__achievement--list>p')->plaintext)
+            ->setIcon(explode('?', $box->find('.entry__achievement__frame', 0)->find('img', 0)->getAttribute("src"))[0])
+            ->setPoints(intval($box->find('.entry__achievement__number', 0)->plaintext));
+        
+        $this->achievementTime($achievement, $box->find('.entry__activity__time', 0));
+        
+        //How to description and title reward
+        $howto = $box->find('.achievement__base--text');
+        if (!empty($howto[1])) {
+            $achievement->setTitle($howto[1]->plaintext);
+        }
+        $achievement->setHowto($howto[0]->plaintext);
+        
+        //Category
+        $rows = $this->getSpecial__AchievementCategories();
+        foreach ($rows->find('dt') as $row) {
+            if ($row->find('.close')->count()) {
+                $achievement->setCategory($row->plaintext);
+                break;
+            }
+        }
+        
+        //Subcategory
+        $achievement->setSubcategory($rows->find('dd .active')->plaintext);
+        
+        //Item reward
+        $item = $box->find('.item-list__name');
+        if ($item->count()) {
+            $achievement->setItem(
+                explode('/',  $box->find('.item-list__name a', 0)->getAttribute('href'))[5],
+                $box->find('.item-list__name')->plaintext,
+                explode('?', $box->find('.db-list__item__icon__item_image', 0)->find('img', 0)->getAttribute("src"))[0]
+            );
+        }
+    }
+    
+    private function achievementTime($achievement, $timestamp): void
+    {
+        if ($timestamp) {
+            $timestamp = $timestamp->plaintext;
+            $timestamp = trim(explode('(', $timestamp)[2]);
+            $timestamp = trim(explode(',', $timestamp)[0]);
+            $timestamp = $timestamp ? new \DateTime('@' . $timestamp) : null;
+            if ($timestamp) {
+                // if obtained, increment obtained points
+                $this->achievements->incPointsObtained($achievement->getPoints());
+                $this->achievements->incPointsTotal($achievement->getPoints());
+                $achievement->setTimestamp($timestamp);
+            } else {
+                $this->achievements->incPointsTotal($achievement->getPoints());
+            }
+        } else {
+            $this->achievements->incPointsTotal($achievement->getPoints());
         }
     }
 }

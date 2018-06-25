@@ -27,12 +27,37 @@ class Achievement extends AbstractEntity
     /**
      * @var string
      */
+    protected $category;
+    
+    /**
+     * @var string
+     */
+    protected $subcategory;
+    
+    /**
+     * @var string
+     */
+    protected $howto;
+    
+    /**
+     * @var string
+     */
     protected $icon;
     
     /**
      * @var int
      */
     protected $points = 0;
+    
+    /**
+     * @var string
+     */
+    protected $title;
+    
+    /**
+     * @var array
+     */
+    protected $item = [];
     
     /**
      * @var \DateTime
@@ -145,6 +170,109 @@ class Achievement extends AbstractEntity
             ->validate();
 
         $this->icon = $icon;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $howto
+     * @return $this
+     */
+    public function setHowto(string $howto)
+    {
+        CharacterValidator::getInstance()
+            ->check($howto, 'How to')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->howto = $howto;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $title
+     * @return $this
+     */
+    public function setTitle(string $title)
+    {
+        CharacterValidator::getInstance()
+            ->check($title, 'Title')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->title = $title;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $category
+     * @return $this
+     */
+    public function setCategory(string $category)
+    {
+        CharacterValidator::getInstance()
+            ->check($category, 'Category')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->category = $category;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $title
+     * @return $this
+     */
+    public function setSubcategory(string $subcategory)
+    {
+        CharacterValidator::getInstance()
+            ->check($subcategory, 'Subcategory')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+
+        $this->subcategory = $subcategory;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $item
+     * @return $this
+     */
+    public function setItem(string $id, string $name, string $icon)
+    {
+        CharacterValidator::getInstance()
+            ->check($id, 'Item ID')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+            
+        CharacterValidator::getInstance()
+            ->check($name, 'Item name')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+            
+        CharacterValidator::getInstance()
+            ->check($icon, 'Item icon')
+            ->isInitialized()
+            ->isNotEmpty()
+            ->isString()
+            ->validate();
+        $this->item = ['id'=>$id,'name'=>$name,'icon'=>$icon];
 
         return $this;
     }

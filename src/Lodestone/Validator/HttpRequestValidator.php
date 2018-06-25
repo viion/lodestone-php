@@ -74,7 +74,7 @@ class HttpRequestValidator extends BaseValidator
     public function isNotHttpError()
     {
         if ($this->object < self::HTTP_OK || $this->object > self::HTTP_PERM_REDIRECT) {
-            $this->errors[] = new ValidationException('Requested page is not available');
+            $this->errors[] = new ValidationException('Requested page '.$this->id.' is not available');
         }
 
         return $this;

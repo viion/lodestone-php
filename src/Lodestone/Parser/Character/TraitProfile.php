@@ -29,13 +29,13 @@ trait TraitProfile
         $rows = $this->getSpecial__Profile_Data_Details()->find('.character-block');
         foreach ($rows as $row) {
             $blocktitle = $row->find('.character-block__title')->plaintext;
-            if (in_array($blocktitle, ['Race/Clan/Gender', 'Volk / Stamm / Geschlecht', 'Race / Ethnie / Sexe', '種族/部族/性別'])) {
+            if (in_array($blocktitle, array('Race/Clan/Gender', 'Volk / Stamm / Geschlecht', 'Race / Ethnie / Sexe', '種族/部族/性別'))) {
                 $this->parseProfileRaceClanGender($row);
-            } elseif (in_array($blocktitle, ['NamedayGuardian', 'NamenstagSchutzgott', 'Date de naissanceDivinité', '誕生日守護神'])) {
+            } elseif (in_array($blocktitle, array('NamedayGuardian', 'NamenstagSchutzgott', 'Date de naissanceDivinité', '誕生日守護神'))) {
                 $this->parseProfileNameDay($row);
-            } elseif (in_array($blocktitle, ['City-state', 'Stadtstaat', 'Cité de départ', '開始都市'])) {
+            } elseif (in_array($blocktitle, array('City-state', 'Stadtstaat', 'Cité de départ', '開始都市'))) {
                 $this->parseProfileCity($row);
-            } elseif (in_array($blocktitle, ['Grand Company', 'Staatliche Gesellschaft', 'Grande compagnie', '所属グランドカンパニー'])) {
+            } elseif (in_array($blocktitle, array('Grand Company', 'Staatliche Gesellschaft', 'Grande compagnie', '所属グランドカンパニー'))) {
                 $this->parseProfileGrandCompany($row);
             } else {
                 if ($row->find('.character__freecompany__name')->plaintext != "") {

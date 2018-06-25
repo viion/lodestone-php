@@ -17,6 +17,36 @@ use Lodestone\{
 class PvPTeamMembers extends CharacterSimple
 {
     /**
+     * @var int
+     */
+    protected $id;
+    
+    /**
+     * @var string
+     */
+    protected $name;
+    
+    /**
+     * @var string
+     */
+    protected $server;
+    
+    /**
+     * @var string
+     */
+    protected $avatar;
+    
+    /**
+     * @var string
+     */
+    protected $rank;
+    
+    /**
+     * @var string
+     */
+    protected $rankicon;
+    
+    /**
      * @var string
      */
     protected $feasts = 0;

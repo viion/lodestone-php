@@ -49,7 +49,7 @@ class AbstractEntity
 
             // only add those with a var type
             if (isset($result['var'])) {
-                if (!$this->{$propertyName}) {
+                if (!$this->{$propertyName} && $this->{$propertyName} !== '0' && $this->{$propertyName} !== 0) {
                     $arr[$propertyName] = null;
                     continue;
                 }

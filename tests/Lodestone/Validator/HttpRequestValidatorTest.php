@@ -24,7 +24,7 @@ class HttpRequestValidatorTest extends TestCase
 
         // when
         $result = HttpRequestValidator::getInstance()
-            ->check($httpCode, 'test http code')
+            ->check($httpCode, 'test http code', 'https://google.com')
             ->isNotHttpError()
             ->validate();
 
@@ -42,14 +42,14 @@ class HttpRequestValidatorTest extends TestCase
         try {
             // when
             HttpRequestValidator::getInstance()
-                ->check($httpCode, 'test http code')
+                ->check($httpCode, 'test http code', 'https://google.com')
                 ->isNotHttpError()
                 ->validate();
 
             self::fail("Expected ValidationException");
         } catch(ValidationException $vex) {
             // then
-            self::assertEquals('Requested page is not available', $vex->getMessage());
+            self::assertEquals('Requested page https://google.com is not available', $vex->getMessage());
         }
     }
 
@@ -64,14 +64,14 @@ class HttpRequestValidatorTest extends TestCase
         try {
             // when
             HttpRequestValidator::getInstance()
-                ->check($httpCode, 'test http code')
+                ->check($httpCode, 'test http code', 'https://google.com')
                 ->isNotHttpError()
                 ->validate();
 
             self::fail("Expected ValidationException");
         } catch(ValidationException $vex) {
             // then
-            self::assertEquals('Requested page is not available', $vex->getMessage());
+            self::assertEquals('Requested page https://google.com is not available', $vex->getMessage());
         }
     }
 }

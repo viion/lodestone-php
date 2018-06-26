@@ -5,6 +5,7 @@ namespace Lodestone\Parser\Character;
 use Lodestone\Dom\NodeList,
     Lodestone\Entities\Character\Item,
     Lodestone\Modules\Logging\Benchmark;
+use Lodestone\Entities\Character\ItemSimple;
 
 /**
  * Class TraitGear
@@ -80,10 +81,9 @@ trait TraitGear
                 $mirageName = trim(str_ireplace('<a href="', null, $mirage[0]));
                 $mirageId = trim($mirage[5]);
                 
-                $item->setMirage([
-                    'id' => $mirageId,
-                    'name' => $mirageName
-                ]);
+                $mirageItem = new ItemSimple();
+                $mirageItem->setId($mirageId);
+                $mirageItem->setName($mirageName);
             }
 
 
@@ -102,10 +102,10 @@ trait TraitGear
                 $dyeName = trim(strip_tags($dye[2]));
                 $dyeId = trim(explode("/", $dye[1])[5]);
                 
-                $item->setDye([
-                    'id' => $dyeId,
-                    'name' => $dyeName
-                ]);
+                $dyeObject = new ItemSimple();
+                $dyeObject->setId($dyeId);
+                $dyeObject->setName($dyeName);
+                $item->setDye($dyeObject);
             }
 
             // add materia
@@ -123,10 +123,10 @@ trait TraitGear
                        $mdetails = explode('<br>', html_entity_decode($mhtml));
                        if (empty($mdetails[1])) {$mdetails[1] = null;}
 
-                       $item->addMateria([
-                           'name' => trim(strip_tags($mdetails[0])),
-                           'value' => trim(strip_tags($mdetails[1])),
-                       ]);
+                       $materiaObject = new ItemSimple();
+                       $materiaObject->setName(trim(strip_tags($mdetails[0])));
+                       $materiaObject->setValue(trim(strip_tags($mdetails[1])));
+                       $item->addMateria($materiaObject);
                    }
                }
             }

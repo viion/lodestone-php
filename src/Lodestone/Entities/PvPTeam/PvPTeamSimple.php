@@ -16,18 +16,21 @@ class PvPTeamSimple extends AbstractEntity
 {
     /**
      * @var string
+     * @index ID
      */
     protected $id;
     
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Server
      */
-    protected $datacenter;
+    protected $server;
     
     /**
      * @return string
@@ -85,7 +88,7 @@ class PvPTeamSimple extends AbstractEntity
      */
     public function getServer(): string
     {
-        return $this->datacenter;
+        return $this->server;
     }
     
     /**
@@ -101,7 +104,7 @@ class PvPTeamSimple extends AbstractEntity
             ->isString()
             ->validate();
         
-        $this->datacenter = $server;
+        $this->server = $server;
         
         return $this;
     }

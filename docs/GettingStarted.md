@@ -81,12 +81,12 @@ $hash = $character->getHash();
 
 To ensure an accurate sha1, data that is out of control of the player is removed from the hash calculation, for characters this includes:
 
-- avatar/portrait: urls can change
-- Most icons: urls can change
-- free company: being kicked from an fc would change hash
-- biography: se may decide to adjust this or how the HTML is formatted
-- stats: stat formula's do change per class.
-
+- Avatar/Portrait: urls can change
+- Icons: urls can change
+- Free Company: being kicked from an fc would change the hash
+- Bio: se may decide to adjust this or how the HTML is formatted
+- Attributes: stat formula's do change per class.
+- PVP Team: Being kicked from a PVP Team would change the hash
 
 ##### Exceptions
 

@@ -16,7 +16,10 @@ use Lodestone\Parser\Html\ParserHelper;
  */
 class Search extends ParserHelper
 {
-    /** @var SearchPvPTeam */
+    /**
+     * @var SearchPvPTeam
+     * @index Results
+     */
     protected $results;
 
     /**

@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 //error_reporting(-1);
 /**
@@ -7,7 +8,7 @@
  */
 
 // composer auto loader
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 define('BENCHMARK_ENABLED', true);
 define('LOGGER_ENABLED', true);
@@ -18,12 +19,20 @@ define('LOGGER_ENABLE_PRINT_TIME', true);
 
 $option = isset($argv[1]) ? trim($argv[1]) : false;
 $arg1   = isset($argv[2]) ? trim($argv[2]) : false;
-if (!$option) {
-    die('Please provide an option: character, fc, ls');
-}
 
 // create api instance
 $api = new \Lodestone\Api();
+
+
+if (!$option) {
+    echo "\nPlease provide an option argument: php bin/console <option> <param...>\n";
+    
+    foreach (get_class_methods($api) as $method) {
+        echo "- {$method}\n";
+    }
+    
+    die("\n");
+}
 
 // Character = 730968
 // following = 15609878
@@ -32,6 +41,5 @@ $api = new \Lodestone\Api();
 // ls = 19984723346535274
 
 $data = $arg1 ? $api->{$option}($arg1) : $api->{$option}();
-
-print_r($data ? $data : "\nNo data, was the command correct? > ". $option);
+print_r($data ? (method_exists($data, 'toArray') ? $data->toArray() : $data) : "\nNo data, was the command correct? > ". $option);
 print_r("\n");

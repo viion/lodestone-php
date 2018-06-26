@@ -4,7 +4,7 @@ namespace Lodestone\Parser\Character;
 
 use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Entities\Character\{
-    City,
+    Town,
     GrandCompany,
     Guardian
 };
@@ -30,11 +30,11 @@ trait TraitProfile
         foreach ($rows as $row) {
             $blocktitle = $row->find('.character-block__title')->plaintext;
             if (in_array($blocktitle, ['Race/Clan/Gender', 'Volk / Stamm / Geschlecht', 'Race / Ethnie / Sexe', '種族/部族/性別'])) {
-                $this->parseProfileRaceClanGender($row);
+                $this->parseProfileRaceTribeGender($row);
             } elseif (in_array($blocktitle, ['NamedayGuardian', 'NamenstagSchutzgott', 'Date de naissanceDivinité', '誕生日守護神'])) {
                 $this->parseProfileNameDay($row);
-            } elseif (in_array($blocktitle, ['City-state', 'Stadtstaat', 'Cité de départ', '開始都市'])) {
-                $this->parseProfileCity($row);
+            } elseif (in_array($blocktitle, ['Town-state', 'Stadtstaat', 'Cité de départ', '開始都市'])) {
+                $this->parseProfileTown($row);
             } elseif (in_array($blocktitle, ['Grand Company', 'Staatliche Gesellschaft', 'Grande compagnie', '所属グランドカンパニー'])) {
                 $this->parseProfileGrandCompany($row);
             } else {
@@ -46,7 +46,7 @@ trait TraitProfile
             }
         }
         $this->parseProfileBasic();
-        $this->parseProfileBiography();
+        $this->parseProfileBio();
 
         Benchmark::finish(__METHOD__,__LINE__);
     }
@@ -80,9 +80,9 @@ trait TraitProfile
     }
 
     /**
-     * Parse: Biography
+     * Parse: Bio
      */
-    protected function parseProfileBiography()
+    protected function parseProfileBio()
     {
         Benchmark::start(__METHOD__,__LINE__);
 
@@ -91,27 +91,27 @@ trait TraitProfile
         $bio = html_entity_decode($bio, ENT_QUOTES, "UTF-8");
 
         if (strip_tags($bio)) {
-            $this->profile->setBiography($bio);
+            $this->profile->setBio($bio);
         }
 
         Benchmark::finish(__METHOD__,__LINE__);
     }
 
     /**
-     * Parse: Race, Clan, Gender and Avatar
+     * Parse: Race, Tribe, Gender and Avatar
      */
-    protected function parseProfileRaceClanGender($node)
+    protected function parseProfileRaceTribeGender($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
         $html = $node->find('.character-block__name', 0)->innerHTML();
         $html = str_ireplace(['<br />','<br>','<br/>'], ' / ', $html);
 
-        list($race, $clan, $gender) = explode('/', strip_tags($html));
+        list($race, $tribe, $gender) = explode('/', strip_tags($html));
 
         $this->profile
             ->setRace(strip_tags(trim($race)))
-            ->setClan(strip_tags(trim($clan)))
+            ->setTribe(strip_tags(trim($tribe)))
             ->setGender(strip_tags(trim($gender)) == '♀' ? 'female' : 'male');
          
         // picture
@@ -141,17 +141,17 @@ trait TraitProfile
     }
 
     /**
-     * Parse: City
+     * Parse: Town
      */
-    protected function parseProfileCity($node)
+    protected function parseProfileTown($node)
     {
         Benchmark::start(__METHOD__,__LINE__);
 
-        $city = new City();
-        $city->setName(html_entity_decode($node->find('.character-block__name', 0)->plaintext, ENT_QUOTES, "UTF-8"));
-        $city->setIcon($this->getImageSource($node->find('img', 0)));
+        $town = new Town();
+        $town->setName(html_entity_decode($node->find('.character-block__name', 0)->plaintext, ENT_QUOTES, "UTF-8"));
+        $town->setIcon($this->getImageSource($node->find('img', 0)));
 
-        $this->profile->setCity($city);
+        $this->profile->setTown($town);
 
         Benchmark::finish(__METHOD__,__LINE__);
     }

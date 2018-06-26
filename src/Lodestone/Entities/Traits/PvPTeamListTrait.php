@@ -16,30 +16,31 @@ trait PvPTeamListTrait
 {
     /**
      * @var array
+     * @index PvPTeams
      */
-    protected $PvPTeams = [];
+    protected $pvpTeams = [];
     
     /**
      * @return array
      */
     public function getPvPTeams(): array
     {
-        return $this->PvPTeams;
+        return $this->pvpTeams;
     }
     
     /**
-     * @param array $PvPTeams
+     * @param array $pvpTeams
      * @return $this
      */
-    public function setPvPTeams(array $PvPTeams)
+    public function setPvPTeams(array $pvpTeams)
     {
         PvPTeamValidator::getInstance()
-            ->check($PvPTeams, 'PvPTeams')
+            ->check($pvpTeams, 'PvPTeams')
             ->isInitialized()
             ->isArray()
             ->validate();
         
-        $this->PvPTeams = $PvPTeams;
+        $this->pvpTeams = $pvpTeams;
         
         return $this;
     }
@@ -48,15 +49,15 @@ trait PvPTeamListTrait
      * @param PvPTeamSimple $character
      * @return $this
      */
-    public function addPvPTeam(PvPTeamSimple $character)
+    public function addPvPTeam(PvPTeamSimple $pvpTeams)
     {
         PvPTeamValidator::getInstance()
-            ->check($character, 'PvPTeam')
+            ->check($pvpTeams, 'PvPTeam')
             ->isInitialized()
             ->isObject()
             ->validate();
         
-        $this->PvPTeams[] = $character;
+        $this->pvpTeams[] = $pvpTeams;
         
         return $this;
     }

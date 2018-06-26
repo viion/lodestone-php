@@ -5,7 +5,7 @@ namespace Lodestone\Entities\Search;
 use Lodestone\{
     Entities\AbstractEntity,
     Entities\Traits\PvPTeamListTrait,
-    //Entities\Traits\ListTrait
+    Entities\Traits\ListTrait
 };
 
 /**
@@ -15,6 +15,6 @@ use Lodestone\{
  */
 class SearchPvPTeam extends AbstractEntity
 {
-    //use ListTrait;
+    use ListTrait;
     use PvPTeamListTrait;
 }

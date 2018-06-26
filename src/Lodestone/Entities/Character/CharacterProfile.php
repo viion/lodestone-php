@@ -96,7 +96,7 @@ class CharacterProfile extends AbstractEntity
      * @var GrandCompany|null
      * @index GrandCompany
      */
-    protected $grandcompany = null;
+    protected $grandCompany = null;
 
     /**
      * @var string|null
@@ -510,23 +510,23 @@ class CharacterProfile extends AbstractEntity
     /**
      * @return GrandCompany|null
      */
-    public function getGrandcompany()
+    public function getGrandCompany()
     {
-        return $this->grandcompany;
+        return $this->grandCompany;
     }
 
     /**
-     * @param GrandCompany $grandcompany
+     * @param GrandCompany $grandCompany
      * @return $this
      */
-    public function setGrandcompany($grandcompany)
+    public function setGrandCompany($grandCompany)
     {
         CharacterValidator::getInstance()
-            ->check($grandcompany, 'Grand Company', $this->id)
+            ->check($grandCompany, 'Grand Company', $this->id)
             ->isInitialized()
             ->validate();
 
-        $this->grandcompany = $grandcompany;
+        $this->grandCompany = $grandCompany;
 
         return $this;
     }

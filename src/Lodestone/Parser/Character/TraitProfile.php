@@ -33,7 +33,7 @@ trait TraitProfile
                 $this->parseProfileRaceTribeGender($row);
             } elseif (in_array($blocktitle, ['NamedayGuardian', 'NamenstagSchutzgott', 'Date de naissanceDivinité', '誕生日守護神'])) {
                 $this->parseProfileNameDay($row);
-            } elseif (in_array($blocktitle, ['Town-state', 'Stadtstaat', 'Cité de départ', '開始都市'])) {
+            } elseif (in_array($blocktitle, ['City-state', 'Stadtstaat', 'Cité de départ', '開始都市'])) {
                 $this->parseProfileTown($row);
             } elseif (in_array($blocktitle, ['Grand Company', 'Staatliche Gesellschaft', 'Grande compagnie', '所属グランドカンパニー'])) {
                 $this->parseProfileGrandCompany($row);

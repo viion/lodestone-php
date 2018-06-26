@@ -1,3 +1,17 @@
+- [Getting Started](docs/GettingStarted.md)  
+  - [API: Characters](docs/ApiCharacters.md)  
+  - [API: Database](docs/ApiDatabase.md)  
+  - [API: Forums](docs/ApiForums.md)  
+  - [API: FreeCompany](docs/ApiFreeCompany.md)  
+  - [API: Internals](docs/ApiInternals.md)  
+  - [API: Linkshell](docs/ApiLinkshell.md)  
+  - [API: PvPTeam](/docs/ApiPvPTeam.md)  
+  - [API: Lodestone](docs/ApiLodestone.md)  
+- [Entities](docs/Entities.md)  
+- [Validation](docs/Validation.md)  
+- [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)  
+- [Travis CI](https://travis-ci.org/viion/lodestone-php/branches)
+
 # Legacy
 
 The files: `src/Lodestone/Dom` were forked from another Html Dom Parser and have been modified for this project. Much of the code and functions still exist so this readme is available for legacy purposes.

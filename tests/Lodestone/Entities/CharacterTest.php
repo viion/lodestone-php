@@ -49,8 +49,8 @@ class CharacterTest extends TestCase
         self::assertNotEmpty($character->getAvatar());
         self::assertNotEmpty($character->getPortrait());
         self::assertNotEmpty($character->getGuardian());
-        self::assertNotEmpty($character->getCity());
-        self::assertNotEmpty($character->getClan());
+        self::assertNotEmpty($character->getTown());
+        self::assertNotEmpty($character->getTribe());
         self::assertNotEmpty($character->getGender());
 
         // active job

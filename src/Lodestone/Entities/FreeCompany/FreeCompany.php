@@ -16,86 +16,103 @@ class FreeCompany extends AbstractEntity
 {
     /**
      * @var string
+     * @index ID
      */
     protected $id;
     
     /**
      * @var array
+     * @index Crest
      */
     protected $crest = [];
     
     /**
      * @var string
+     * @index GrandCompany
      */
-    protected $grandcompany;
+    protected $grandCompany;
     
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Server
      */
     protected $server;
     
     /**
      * @var string
+     * @index Tag
      */
     protected $tag;
     
     /**
      * @var string
+     * @index Formed
      */
     protected $formed;
     
     /**
      * @var int
+     * @index ActiveMemberCount
      */
-    protected $activeMembercount;
+    protected $activeMemberCount;
     
     /**
      * @var string
+     * @index Rank
      */
     protected $rank;
     
     /**
      * @var object
+     * @index Ranking
      */
     protected $ranking;
     
     /**
      * @var string
+     * @index Slogan
      */
     protected $slogan;
     
     /**
      * @var object
+     * @index Estate
      */
     protected $estate;
     
     /**
      * @var object
+     * @index Reputation
      */
     protected $reputation = [];
     
     /**
      * @var string
+     * @index Active
      */
     protected $active;
     
     /**
      * @var string
+     * @index Recruitment
      */
     protected $recruitment;
     
     /**
      * @var object
+     * @index Focus
      */
     protected $focus = [];
     
     /**
      * @var object
+     * @index Seeking
      */
     protected $seeking = [];
     
@@ -157,18 +174,18 @@ class FreeCompany extends AbstractEntity
     /**
      * @return mixed
      */
-    public function getGrandcompany()
+    public function getGrandCompany()
     {
-        return $this->grandcompany;
+        return $this->grandCompany;
     }
     
     /**
-     * @param mixed $grandcompany
+     * @param mixed $grandCompany
      * @return FreeCompany
      */
-    public function setGrandcompany($grandcompany)
+    public function setGrandCompany($grandCompany)
     {
-        $this->grandcompany = $grandcompany;
+        $this->grandCompany = $grandCompany;
         
         return $this;
     }
@@ -254,16 +271,16 @@ class FreeCompany extends AbstractEntity
      */
     public function getActiveMemberCount()
     {
-        return $this->activeMembercount;
+        return $this->activeMemberCount;
     }
     
     /**
-     * @param mixed $activeMembercount
+     * @param mixed $activeMemberCount
      * @return FreeCompany
      */
-    public function setActiveMemberCount($activeMembercount)
+    public function setActiveMemberCount($activeMemberCount)
     {
-        $this->activeMembercount = $activeMembercount;
+        $this->activeMemberCount = $activeMemberCount;
         
         return $this;
     }

@@ -16,106 +16,127 @@ class CharacterProfile extends AbstractEntity
 {
     /**
      * @var int
+     * @index ID
      */
     protected $id;
 
     /**
      * @var string
+     * @index Name
      */
     protected $name;
 
     /**
      * @var string
+     * @index Server
      */
     protected $server;
 
     /**
      * @var string
+     * @index Title
      */
     protected $title = null;
 
     /**
      * @var string
+     * @index Avatar
      */
     protected $avatar;
 
     /**
      * @var string
+     * @index Portrait
      */
     protected $portrait;
 
     /**
      * @var string
+     * @index Bio
      */
-    protected $biography = '';
+    protected $bio = '';
 
     /**
      * @var string
+     * @index Race
      */
     protected $race;
 
     /**
      * @var string
+     * @index Tribe
      */
-    protected $clan;
+    protected $tribe;
 
     /**
      * @var string
+     * @index Gender
      */
     protected $gender;
 
     /**
      * @var string
+     * @index NamesDay
      */
     protected $nameday;
 
     /**
      * @var Guardian
+     * @index GuardianDeity
      */
     protected $guardian;
 
     /**
-     * @var City
+     * @var Town
+     * @index Town
      */
-    protected $city;
+    protected $town;
 
     /**
      * @var GrandCompany|null
+     * @index GrandCompany
      */
     protected $grandcompany = null;
 
     /**
      * @var string|null
+     * @index FreeCompany
      */
     protected $freecompany = null;
     
     /**
      * @var string|null
+     * @index PvPTeam
      */
     protected $pvpteam = null;
 
     /**
      * @var array
+     * @index ClassJobs
      */
     protected $classjobs = [];
 
     /**
      * @var array
+     * @index Attributes
      */
     protected $attributes = [];
 
     /**
      * @var Collectables
+     * @index Collectables
      */
     protected $collectables = null;
 
     /**
      * @var array
+     * @index Gear
      */
     protected $gear = [];
 
     /**
      * @var ClassJob
+     * @index ActiveClassJob
      */
     protected $activeClassJob = null;
 
@@ -141,32 +162,32 @@ class CharacterProfile extends AbstractEntity
 
     public function getHash()
     {
-        $data = $this->toArray();
+        $data = $this->toArray(1);
 
         // remove hash, obvs (its blank anyway)
-        unset($data['hash']);
+        unset($data['Hash']);
 
         // remove images, urls can change
-        unset($data['avatar']);
-        unset($data['portrait']);
-        unset($data['guardian']['icon']);
-        unset($data['city']['icon']);
-        unset($data['grandcompany']['icon']);
+        unset($data['Avatar']);
+        unset($data['Portrait']);
+        unset($data['GuardianDeity']['Icon']);
+        unset($data['Town']['Icon']);
+        unset($data['GrandCompany']['Icon']);
 
         // remove free company id, being kicked
         // should not generate a new hash
-        unset($data['freecompany']);
+        unset($data['FreeCompany']);
         
         // remove pvp team id, being kicked
         // should not generate a new hash
-        unset($data['pvpteam']);
+        unset($data['PvPTeam']);
 
-        // remove biography as this is too "open"
+        // remove bio as this is too "open"
         // and could become malformed easily.
-        unset($data['biography']);
+        unset($data['Bio']);
 
         // remove stats, SE can change the formula
-        unset($data['stats']);
+        unset($data['Stats']);
 
         return sha1(serialize($data));
     }
@@ -312,24 +333,24 @@ class CharacterProfile extends AbstractEntity
     /**
      * @return string
      */
-    public function getBiography(): string
+    public function getBio(): string
     {
-        return $this->biography;
+        return $this->bio;
     }
 
     /**
-     * @param string $biography
+     * @param string $bio
      * @return $this
      */
-    public function setBiography(string $biography)
+    public function setBio(string $bio)
     {
         CharacterValidator::getInstance()
-            ->check($biography, 'Biography', $this->id)
+            ->check($bio, 'Bio', $this->id)
             ->isInitialized()
             ->isStringOrEmpty()
             ->validate();
 
-        $this->biography = $biography;
+        $this->bio = $bio;
 
         return $this;
     }
@@ -363,25 +384,25 @@ class CharacterProfile extends AbstractEntity
     /**
      * @return string
      */
-    public function getClan(): string
+    public function getTribe(): string
     {
-        return $this->clan;
+        return $this->tribe;
     }
 
     /**
-     * @param string $clan
+     * @param string $tribe
      * @return $this
      */
-    public function setClan(string $clan)
+    public function setTribe(string $tribe)
     {
         CharacterValidator::getInstance()
-            ->check($clan, 'Clan', $this->id)
+            ->check($tribe, 'Tribe', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
             ->validate();
 
-        $this->clan = $clan;
+        $this->tribe = $tribe;
 
         return $this;
     }
@@ -463,25 +484,25 @@ class CharacterProfile extends AbstractEntity
     }
 
     /**
-     * @return City
+     * @return Town
      */
-    public function getCity(): City
+    public function getTown(): Town
     {
-        return $this->city;
+        return $this->town;
     }
 
     /**
-     * @param City $city
+     * @param Town $town
      * @return $this
      */
-    public function setCity(City $city)
+    public function setTown(Town $town)
     {
         CharacterValidator::getInstance()
-            ->check($city, 'City', $this->id)
+            ->check($town, 'Town', $this->id)
             ->isInitialized()
             ->validate();
 
-        $this->city = $city;
+        $this->town = $town;
 
         return $this;
     }

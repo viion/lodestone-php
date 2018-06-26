@@ -16,21 +16,15 @@ class Guardian extends AbstractEntity
 {
     /**
      * @var string
+     * @index Name
      */
     protected $name;
 
     /**
      * @var string
+     * @index Icon
      */
     protected $icon;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     /**
      * @return string

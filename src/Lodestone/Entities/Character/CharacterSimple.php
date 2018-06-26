@@ -21,31 +21,37 @@ class CharacterSimple extends AbstractEntity
 {
     /**
      * @var int
+     * @index ID
      */
     protected $id;
     
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Server
      */
     protected $server;
     
     /**
      * @var string
+     * @index Avatar
      */
     protected $avatar;
     
     /**
      * @var string
+     * @index Rank
      */
     protected $rank;
     
     /**
      * @var string
+     * @index RankIcon
      */
     protected $rankicon;
     

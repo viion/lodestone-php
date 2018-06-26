@@ -16,11 +16,13 @@ class Collectable extends AbstractEntity
 {
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Icon
      */
     protected $icon;
 

@@ -16,16 +16,19 @@ class LinkshellSimple extends AbstractEntity
 {
     /**
      * @var string
+     * @index ID
      */
     protected $id;
     
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Server
      */
     protected $server;
     

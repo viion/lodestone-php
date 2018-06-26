@@ -16,41 +16,49 @@ class Item extends AbstractEntity
 {
     /**
      * @var string
+     * @index ID
      */
     protected $id;
 
     /**
      * @var string
+     * @index Name
      */
     protected $name;
 
     /**
      * @var string
+     * @index Slot
      */
     protected $slot;
 
     /**
      * @var string
+     * @index Category
      */
     protected $category;
 
     /**
-     * @var string
+     * @var ItemSimple
+     * @index Mirage
      */
     protected $mirage;
 
     /**
      * @var int
+     * @index Creator
      */
     protected $creator;
 
     /**
-     * @var string
+     * @var ItemSimple
+     * @index Dye
      */
     protected $dye;
 
     /**
      * @var array
+     * @index Materia
      */
     protected $materia = [];
 
@@ -170,7 +178,7 @@ class Item extends AbstractEntity
         BaseValidator::getInstance()
             ->check($mirage, 'Item mirage')
             ->isInitialized()
-            ->isArray()
+            ->isObject()
             ->validate();
 
         $this->mirage = $mirage;
@@ -214,12 +222,12 @@ class Item extends AbstractEntity
      * @param string $dye
      * @return $this
      */
-    public function setDye(array $dye)
+    public function setDye(ItemSimple $dye)
     {
         BaseValidator::getInstance()
             ->check($dye, 'Item Dye')
             ->isInitialized()
-            ->isArray()
+            ->isObject()
             ->validate();
 
         $this->dye = $dye;
@@ -254,12 +262,12 @@ class Item extends AbstractEntity
      * @param array $materia
      * @return $this
      */
-    public function addMateria(array $materia)
+    public function addMateria(ItemSimple $materia)
     {
         BaseValidator::getInstance()
             ->check($materia, 'Materia Array (add)')
             ->isInitialized()
-            ->isArray()
+            ->isObject()
             ->validate();
 
         $this->materia[] = $materia;

@@ -16,51 +16,61 @@ class Achievement extends AbstractEntity
 {
     /**
      * @var int
+     * @index ID
      */
     protected $id;
     
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Category
      */
     protected $category;
     
     /**
      * @var string
+     * @index SubCategory
      */
     protected $subcategory;
     
     /**
      * @var string
+     * @index HowTo
      */
     protected $howto;
     
     /**
      * @var string
+     * @index Icon
      */
     protected $icon;
     
     /**
      * @var int
+     * @index Points
      */
     protected $points = 0;
     
     /**
      * @var string
+     * @index Title
      */
     protected $title;
     
     /**
      * @var array
+     * @index Item
      */
     protected $item = [];
     
     /**
      * @var \DateTime
+     * @index Timestamp
      */
     protected $timestamp;
     

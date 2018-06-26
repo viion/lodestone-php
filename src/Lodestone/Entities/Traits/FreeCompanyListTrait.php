@@ -16,30 +16,31 @@ trait FreeCompanyListTrait
 {
     /**
      * @var array
+     * @index FreeCompanies
      */
-    protected $freecompanies = [];
+    protected $freeCompanies = [];
     
     /**
      * @return array
      */
     public function getFreeCompanies(): array
     {
-        return $this->freecompanies;
+        return $this->freeCompanies;
     }
     
     /**
-     * @param array $freecompanies
+     * @param array $freeCompanies
      * @return $this
      */
-    public function setFreeCompanies(array $freecompanies)
+    public function setFreeCompanies(array $freeCompanies)
     {
         FreeCompanyValidator::getInstance()
-            ->check($freecompanies, 'FreeCompanies')
+            ->check($freeCompanies, 'FreeCompanies')
             ->isInitialized()
             ->isArray()
             ->validate();
         
-        $this->freecompanies = $freecompanies;
+        $this->freeCompanies = $freeCompanies;
         
         return $this;
     }
@@ -56,7 +57,7 @@ trait FreeCompanyListTrait
             ->isObject()
             ->validate();
         
-        $this->freecompanies[] = $character;
+        $this->freeCompanies[] = $character;
 
         return $this;
     }

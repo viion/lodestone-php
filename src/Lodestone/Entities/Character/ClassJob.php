@@ -16,41 +16,49 @@ class ClassJob extends AbstractEntity
 {
     /**
      * @var int
+     * @index ClassID
      */
     protected $classId;
     
     /**
      * @var int
+     * @index JobID
      */
     protected $jobId;
     
     /**
      * @var string
+     * @index ClassName
      */
     protected $className;
     
     /**
      * @var string
+     * @index JobName
      */
     protected $jobName;
 
     /**
      * @var int
+     * @index Level
      */
     protected $level;
 
     /**
      * @var int
+     * @index ExpLevel
      */
     protected $expLevel;
 
     /**
      * @var int
+     * @index ExpLevelTogo
      */
     protected $expLevelTogo;
 
     /**
      * @var int
+     * @index ExpLevelMax
      */
     protected $expLevelMax;
     

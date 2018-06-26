@@ -25,7 +25,7 @@ class AbstractEntity
      *
      * @return array
      */
-    public function toArray()
+    public function toArray($useTitleCase = false)
     {
         Benchmark::start(__METHOD__,__LINE__);
         $reflector = new \ReflectionClass(get_class($this));
@@ -37,6 +37,8 @@ class AbstractEntity
         $arr = [];
         foreach($properties as $property) {
             $propertyName = $property->name;
+            $propertyIndex = $property->name;
+            
             $doc = $reflector
                 ->getProperty($propertyName)
                 ->getDocComment();
@@ -46,11 +48,16 @@ class AbstractEntity
             if (preg_match_all('/@(\w+)\s+(.*)\r?\n/m', $doc, $matches)) {
                 $result = array_combine($matches[1], $matches[2]);
             }
+    
+            // if to use title case index
+            if ($useTitleCase && isset($result['index'])) {
+                $propertyIndex = ucwords(trim($result['index']));
+            }
 
             // only add those with a var type
             if (isset($result['var'])) {
                 if (!$this->{$propertyName} && $this->{$propertyName} !== '0' && $this->{$propertyName} !== 0) {
-                    $arr[$propertyName] = null;
+                    $arr[$propertyIndex] = null;
                     continue;
                 }
 
@@ -70,29 +77,29 @@ class AbstractEntity
                     case 'bool|null':
                     case 'float':
                     case 'float|null':
-                        $arr[$propertyName] = $this->{$propertyName};
+                        $arr[$propertyIndex] = $this->{$propertyName};
                         break;
     
                     case '\datetime':
-                        $arr[$propertyName] = $this->{$propertyName}->format('U');
+                        $arr[$propertyIndex] = $this->{$propertyName}->format('U');
                         break;
 
                     // if array, need to loop through it
                     case 'array':
                         foreach($this->{$propertyName} as $i => $value) {
-                            $arr[$propertyName][] = ($value instanceof AbstractEntity) ? $value->toArray() : $value;
+                            $arr[$propertyIndex][] = ($value instanceof AbstractEntity) ? $value->toArray($useTitleCase) : $value;
                         }
                         break;
                     
                     case 'object':
-                        $arr[$propertyName] = (array)$this->{$propertyName};
-                        foreach($this->{$propertyName} as $i => $value) {
-                            $arr[$propertyName][$i] = (is_object($value)) ? (array)$value : $value;
+                        $arr[$propertyIndex] = (array)$this->{$propertyName};
+                        foreach($this->{$propertyIndex} as $i => $value) {
+                            $arr[$propertyIndex][$i] = (is_object($value)) ? (array)$value : $value;
                         }
                         break;
                     // assume a class, get its data
                     default:
-                        $arr[$propertyName] = $this->{$propertyName}->toArray();
+                        $arr[$propertyIndex] = $this->{$propertyName}->toArray($useTitleCase);
                         break;
                 }
             }

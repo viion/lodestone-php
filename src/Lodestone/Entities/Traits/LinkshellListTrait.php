@@ -16,6 +16,7 @@ trait LinkshellListTrait
 {
     /**
      * @var array
+     * @index Linkshells
      */
     protected $linkshells = [];
     

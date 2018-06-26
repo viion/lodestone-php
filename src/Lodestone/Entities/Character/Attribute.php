@@ -16,11 +16,13 @@ class Attribute extends AbstractEntity
 {
     /**
      * @var string
+     * @index Name
      */
     protected $name;
 
     /**
      * @var int
+     * @index Value
      */
     protected $value;
 

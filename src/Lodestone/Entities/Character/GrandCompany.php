@@ -16,26 +16,21 @@ class GrandCompany extends AbstractEntity
 {
     /**
      * @var string
+     * @index Name
      */
     protected $name;
 
     /**
      * @var string
+     * @index Rank
      */
     protected $rank;
     
     /**
      * @var string
+     * @index Icon
      */
     protected $icon;
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     /**
      * @return string

@@ -16,6 +16,7 @@ trait CharacterListTrait
 {
     /**
      * @var array
+     * @index Characters
      */
     protected $characters = [];
     

@@ -15,26 +15,31 @@ trait ListTrait
 {
     /**
      * @var int
+     * @index PageCurrent
      */
     protected $pageCurrent = 0;
     
     /**
      * @var int
+     * @index PageNext
      */
     protected $pageNext = 0;
     
     /**
      * @var int
+     * @index PagePrevious
      */
     protected $pagePrevious = 0;
     
     /**
      * @var int
+     * @index PageTotal
      */
     protected $pageTotal = 0;
     
     /**
      * @var int
+     * @index Total
      */
     protected $total = 0;
     

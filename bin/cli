@@ -24,8 +24,8 @@ $arg1   = isset($argv[2]) ? trim($argv[2]) : false;
 $api = new \Lodestone\Api();
 
 
-if (!$option) {
-    echo "\nPlease provide an option argument: php bin/console <option> <param...>\n";
+if (!$option || !in_array($option, get_class_methods($api))) {
+    echo "\nPlease provide a valid option argument: php bin/console <option> <param...>\n";
     
     foreach (get_class_methods($api) as $method) {
         echo "- {$method}\n";
@@ -41,5 +41,5 @@ if (!$option) {
 // ls = 19984723346535274
 
 $data = $arg1 ? $api->{$option}($arg1) : $api->{$option}();
-print_r($data ? (method_exists($data, 'toArray') ? $data->toArray() : $data) : "\nNo data, was the command correct? > ". $option);
+print_r($data ? (method_exists($data, 'toArray') ? $data->toArray(1) : $data) : "\nNo data, was the command correct? > ". $option);
 print_r("\n");

@@ -5,7 +5,7 @@ namespace Lodestone\Entities\PvPTeam;
 use Lodestone\{
     Entities\Traits\CharacterListTrait,
     Entities\AbstractEntity,
-    //Entities\Traits\ListTrait,
+    Entities\Traits\ListTrait,
     Validator\PvPTeamValidator
 };
 
@@ -16,28 +16,32 @@ use Lodestone\{
  */
 class PvPTeam extends AbstractEntity
 {
-    //use ListTrait;
+    use ListTrait;
     use CharacterListTrait;
     
     /**
      * @var string
+     * @index ID
      */
     protected $id;
     
     /**
      * @var array
+     * @index Crest
      */
     protected $crest = [];
     
     /**
      * @var string
+     * @index Name
      */
     protected $name;
     
     /**
      * @var string
+     * @index Server
      */
-    protected $datacenter;
+    protected $server;
     
     
     
@@ -101,7 +105,7 @@ class PvPTeam extends AbstractEntity
      */
     public function getServer(): string
     {
-        return $this->datacenter;
+        return $this->server;
     }
     
     /**
@@ -110,7 +114,7 @@ class PvPTeam extends AbstractEntity
      */
     public function setServer(string $server)
     {
-        $this->datacenter = $server;
+        $this->server = $server;
         
         return $this;
     }

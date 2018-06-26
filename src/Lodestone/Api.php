@@ -115,7 +115,7 @@ class Api
         return (new LinkshellSearch())->url($url . $urlBuilder->get())->parse();
     }
     
-        /**
+    /**
      * @test Ankora
      * @param $name
      * @param $server
@@ -184,14 +184,15 @@ class Api
      * @param int $category = false
      * @return Entities\Character\Achievements
      */
-    public function getCharacterAchievements($id, $type = 1, bool $includeUnobtained = false, $category = false, bool $details = false, $achid = false)
+    public function getCharacterAchievements($id, $type = 1, bool $includeUnobtained = false, $category = false, bool $details = false, $detailsAchievementId = false)
     {
-        if ($details === true && $achid !== false) {
-            return (new AchievementsParser($type, $id))->parse($includeUnobtained, $details, $achid);
+        if ($details === true && $detailsAchievementId !== false) {
+            return (new AchievementsParser($type, $id))->parse($includeUnobtained, $details, $detailsAchievementId);
         } else {
             $url = $category === false
                 ? sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $type)
                 : sprintf(Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type);
+            
             return (new AchievementsParser($type, $id))->url($url)->parse($includeUnobtained, $details);
         }
     }

@@ -36,9 +36,9 @@ class Parser extends ParserHelper
     /**
      * @return Achievements
      */
-    public function parse(bool $includeUnobtained, bool $details, $achid = false)
+    public function parse(bool $includeUnobtained, bool $details, $detailsAchievementId = false)
     {
-        if ($achid === false) {
+        if ($detailsAchievementId === false) {
             $this->initialize();
         }
     
@@ -46,11 +46,11 @@ class Parser extends ParserHelper
         Benchmark::start(__METHOD__,__LINE__);
         
         // parse achievements
-        if ($achid === false) {
+        if ($detailsAchievementId === false) {
             $this->parseAchievements($includeUnobtained, $details);
         } else {
             $achievement = new Achievement();
-            $this->parseAchievementDetails($achievement, $achid);
+            $this->parseAchievementDetails($achievement, $detailsAchievementId);
             $this->achievements->addAchievement($achievement);
         }
      
@@ -77,15 +77,15 @@ class Parser extends ParserHelper
 
             // Get achievements data
             if (!empty($achnode = $node->find(($includeUnobtained ? '.entry__achievement' : '.entry__achievement--complete'), 0))) {
-                $achid = explode('/', $achnode->getAttribute('href'))[6];
+                $detailsAchievementId = explode('/', $achnode->getAttribute('href'))[6];
                 $achievement
-                    ->setId($achid)
+                    ->setId($detailsAchievementId)
                     ->setName($node->find('.entry__activity__txt', 0)->plaintext)
                     ->setIcon(explode('?', $node->find('.entry__achievement__frame', 0)->find('img', 0)->getAttribute("src"))[0])
                     ->setPoints( intval($node->find('.entry__achievement__number', 0)->plaintext) );
                 
                 if ($details) {
-                    $this->parseAchievementDetails($achievement, $achid);
+                    $this->parseAchievementDetails($achievement, $detailsAchievementId);
                 }
                 
                 // timestamp
@@ -100,13 +100,13 @@ class Parser extends ParserHelper
     /**
      * Parse achievement details
      */
-    private function parseAchievementDetails($achievement, $achid)
+    private function parseAchievementDetails($achievement, $detailsAchievementId)
     {
-        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_DET_URL, $this->achievements->getCharacter(), $achid);
+        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_DET_URL, $this->achievements->getCharacter(), $detailsAchievementId);
         $this->url($url)->initialize();
         $box = $this->getSpecial__AchievementDetails();
         $achievement
-            ->setId($achid)
+            ->setId($detailsAchievementId)
             ->setName($box->find('.entry__achievement--list>p')->plaintext)
             ->setIcon(explode('?', $box->find('.entry__achievement__frame', 0)->find('img', 0)->getAttribute("src"))[0])
             ->setPoints(intval($box->find('.entry__achievement__number', 0)->plaintext));

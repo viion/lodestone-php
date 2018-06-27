@@ -56,7 +56,7 @@ class Parser extends ParserHelper
         $this->PvPTeam->setCrest($crest);
         
         $this->PvPTeam->setName( trim($box->find('.entry__pvpteam__name--team')->plaintext) );
-        $this->PvPTeam->setServer(trim($box->find('.entry__pvpteam__name--dc')->plaintext));
+        $this->PvPTeam->setDataCenter(trim($box->find('.entry__pvpteam__name--dc')->plaintext));
 
         // parse
         $this->parseList();

@@ -28,9 +28,9 @@ class PvPTeamSimple extends AbstractEntity
     
     /**
      * @var string
-     * @index Server
+     * @index DataCenter
      */
-    protected $server;
+    protected $dataCenter;
     
     /**
      * @return string
@@ -86,25 +86,25 @@ class PvPTeamSimple extends AbstractEntity
     /**
      * @return string
      */
-    public function getServer(): string
+    public function getDataCenter(): string
     {
-        return $this->server;
+        return $this->dataCenter;
     }
     
     /**
-     * @param string $server
+     * @param string $dataCenter
      * @return PvPTeamSimple
      */
-    public function setServer(string $server)
+    public function setDataCenter(string $dataCenter)
     {
         PvPTeamValidator::getInstance()
-            ->check($server, 'Server', $this->id)
+            ->check($dataCenter, 'Data Center', $this->id)
             ->isInitialized()
             ->isNotEmpty()
             ->isString()
             ->validate();
         
-        $this->server = $server;
+        $this->dataCenter = $dataCenter;
         
         return $this;
     }

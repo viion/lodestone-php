@@ -39,9 +39,9 @@ class PvPTeam extends AbstractEntity
     
     /**
      * @var string
-     * @index Server
+     * @index DataCenter
      */
-    protected $server;
+    protected $dataCenter;
     
     
     
@@ -103,18 +103,18 @@ class PvPTeam extends AbstractEntity
     /**
      * @return string
      */
-    public function getServer(): string
+    public function getDataCenter(): string
     {
-        return $this->server;
+        return $this->dataCenter;
     }
     
     /**
-     * @param string $server
+     * @param string $dataCenter
      * @return PvPTeam
      */
-    public function setServer(string $server)
+    public function setDataCenter(string $dataCenter)
     {
-        $this->server = $server;
+        $this->dataCenter = $dataCenter;
         
         return $this;
     }

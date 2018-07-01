@@ -15,7 +15,7 @@ class HttpRequest
     /**
      * curl options
      */
-    const CURL_OPTIONS = [
+    protected $CURL_OPTIONS = [
         CURLOPT_POST => false,
         CURLOPT_BINARYTRANSFER => false,
         CURLOPT_HEADER => true,
@@ -25,11 +25,18 @@ class HttpRequest
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_MAXREDIRS => 3,
         CURLOPT_HTTPHEADER => ['Content-type: text/html; charset=utf-8', 'Accept-Language: en'],
-        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
         CURLOPT_ENCODING => '',
         CURLOPT_SSL_VERIFYPEER => false,
     ];
-
+    
+    public function __construct($useragent = "")
+    {
+        if (!empty($useragent)) {
+            $this->CURL_OPTIONS[CURLOPT_USERAGENT] = $useragent;
+        }
+    }
+    
   /**
    * @param $url
    * @return bool|string
@@ -42,7 +49,7 @@ class HttpRequest
 
         // build handle
         $handle = curl_init();
-        curl_setopt_array($handle, self::CURL_OPTIONS);
+        curl_setopt_array($handle, $this->CURL_OPTIONS);
         curl_setopt($handle, CURLOPT_URL, $url);
 
         // handle response

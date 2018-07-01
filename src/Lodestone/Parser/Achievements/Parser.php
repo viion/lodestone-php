@@ -36,7 +36,7 @@ class Parser extends ParserHelper
     /**
      * @return Achievements
      */
-    public function parse(bool $includeUnobtained, bool $details, $detailsAchievementId = false)
+    public function parse(bool $includeUnobtained, bool $details, $detailsAchievementId = false, string $useragent, string $language)
     {
         if ($detailsAchievementId === false) {
             $this->initialize();
@@ -47,10 +47,10 @@ class Parser extends ParserHelper
         
         // parse achievements
         if ($detailsAchievementId === false) {
-            $this->parseAchievements($includeUnobtained, $details);
+            $this->parseAchievements($includeUnobtained, $details, $useragent, $language);
         } else {
             $achievement = new Achievement();
-            $this->parseAchievementDetails($achievement, $detailsAchievementId);
+            $this->parseAchievementDetails($achievement, $detailsAchievementId, $useragent, $language);
             $this->achievements->addAchievement($achievement);
         }
      
@@ -66,7 +66,7 @@ class Parser extends ParserHelper
     /**
      * Parse a characters achievements
      */
-    private function parseAchievements(bool $includeUnobtained, bool $details)
+    private function parseAchievements(bool $includeUnobtained, bool $details, string $useragent, string $language)
     {
         $box = $this->getSpecial__Achievements();
         $rows = $box->find('li');
@@ -85,7 +85,7 @@ class Parser extends ParserHelper
                     ->setPoints( intval($node->find('.entry__achievement__number', 0)->plaintext) );
                 
                 if ($details) {
-                    $this->parseAchievementDetails($achievement, $detailsAchievementId);
+                    $this->parseAchievementDetails($achievement, $detailsAchievementId, $useragent, $language);
                 }
                 
                 // timestamp
@@ -100,10 +100,10 @@ class Parser extends ParserHelper
     /**
      * Parse achievement details
      */
-    private function parseAchievementDetails($achievement, $detailsAchievementId)
+    private function parseAchievementDetails($achievement, $detailsAchievementId, string $useragent, string $language)
     {
-        $url = sprintf(Routes::LODESTONE_ACHIEVEMENTS_DET_URL, $this->achievements->getCharacter(), $detailsAchievementId);
-        $this->url($url)->initialize();
+        $url = sprintf((new Routes($language))::$LODESTONE_ACHIEVEMENTS_DET_URL, $this->achievements->getCharacter(), $detailsAchievementId);
+        $this->url($url, $useragent)->initialize();
         $box = $this->getSpecial__AchievementDetails();
         $achievement
             ->setId($detailsAchievementId)

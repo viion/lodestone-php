@@ -45,9 +45,9 @@ class ParserHelper
      * @param $url
      * @return $this
      */
-    public function url($url)
+    public function url($url, $useragent = "")
     {
-        $http = new HttpRequest();
+        $http = new HttpRequest($useragent);
         $this->html = $http->get($url);
         $this->htmlOriginal = $this->html;
         return $this;

@@ -42,6 +42,9 @@ use Lodestone\Parser\{
  */
 class Api
 {
+    private $useragent = '';
+    private $language = 'na';
+    
     /**
      * @test .
      * @return Lodestone/Lodestone
@@ -75,8 +78,8 @@ class Api
         $urlBuilder->add('worldname', $server);
         $urlBuilder->add('page', $page);
 
-        $url = Routes::LODESTONE_CHARACTERS_SEARCH_URL;
-        return (new CharacterSearch())->url($url . $urlBuilder->get())->parse();
+        $url = (new Routes($this->language))::$LODESTONE_CHARACTERS_SEARCH_URL;
+        return (new CharacterSearch())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
 
     /**
@@ -93,8 +96,8 @@ class Api
         $urlBuilder->add('worldname', $server);
         $urlBuilder->add('page', $page);
 
-        $url = Routes::LODESTONE_FREECOMPANY_SEARCH_URL;
-        return (new FreeCompanySearch())->url($url . $urlBuilder->get())->parse();
+        $url = (new Routes($this->language))::$LODESTONE_FREECOMPANY_SEARCH_URL;
+        return (new FreeCompanySearch())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
 
     /**
@@ -111,8 +114,8 @@ class Api
         $urlBuilder->add('worldname', $server);
         $urlBuilder->add('page', $page);
 
-        $url = Routes::LODESTONE_LINKSHELL_SEARCH_URL;
-        return (new LinkshellSearch())->url($url . $urlBuilder->get())->parse();
+        $url = (new Routes($this->language))::$LODESTONE_LINKSHELL_SEARCH_URL;
+        return (new LinkshellSearch())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
     
     /**
@@ -129,8 +132,8 @@ class Api
         $urlBuilder->add('worldname', $server);
         $urlBuilder->add('page', $page);
 
-        $url = Routes::LODESTONE_PVPTEAM_SEARCH_URL;
-        return (new PvPTeamSearch())->url($url . $urlBuilder->get())->parse();
+        $url = (new Routes($this->language))::$LODESTONE_PVPTEAM_SEARCH_URL;
+        return (new PvPTeamSearch())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
 
     /**
@@ -140,8 +143,8 @@ class Api
      */
     public function getCharacter($id)
     {
-        $url = sprintf(Routes::LODESTONE_CHARACTERS_URL, $id);
-        return (new CharacterParser($id))->url($url)->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_CHARACTERS_URL, $id);
+        return (new CharacterParser($id))->url($url, $this->useragent)->parse();
     }
 
     /**
@@ -156,8 +159,8 @@ class Api
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
 
-        $url = sprintf(Routes::LODESTONE_CHARACTERS_FRIENDS_URL, $id);
-        return (new CharacterFriendsParser())->url($url . $urlBuilder->get())->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_CHARACTERS_FRIENDS_URL, $id);
+        return (new CharacterFriendsParser())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
 
     /**
@@ -172,8 +175,8 @@ class Api
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
 
-        $url = sprintf(Routes::LODESTONE_CHARACTERS_FOLLOWING_URL, $id);
-        return (new CharacterFollowingParser())->url($url . $urlBuilder->get())->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_CHARACTERS_FOLLOWING_URL, $id);
+        return (new CharacterFollowingParser())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
 
     /**
@@ -187,13 +190,13 @@ class Api
     public function getCharacterAchievements($id, $type = 1, bool $includeUnobtained = false, $category = false, bool $details = false, $detailsAchievementId = false)
     {
         if ($details === true && $detailsAchievementId !== false) {
-            return (new AchievementsParser($type, $id))->parse($includeUnobtained, $details, $detailsAchievementId);
+            return (new AchievementsParser($type, $id))->parse($includeUnobtained, $details, $detailsAchievementId, $this->useragent, $this->language);
         } else {
             $url = $category === false
-                ? sprintf(Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $type)
-                : sprintf(Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type);
+                ? sprintf((new Routes($this->language))::$LODESTONE_ACHIEVEMENTS_URL, $id, $type)
+                : sprintf((new Routes($this->language))::$LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $type);
             
-            return (new AchievementsParser($type, $id))->url($url)->parse($includeUnobtained, $details);
+            return (new AchievementsParser($type, $id))->url($url, $this->useragent)->parse($includeUnobtained, $details, $this->useragent, $this->language);
         }
     }
 
@@ -204,8 +207,8 @@ class Api
      */
     public function getFreeCompany($id)
     {
-        $url = sprintf(Routes::LODESTONE_FREECOMPANY_URL, $id);
-        return (new FreeCompanyParser($id))->url($url)->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_FREECOMPANY_URL, $id);
+        return (new FreeCompanyParser($id))->url($url, $this->useragent)->parse();
     }
 
     /**
@@ -219,8 +222,8 @@ class Api
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
 
-        $url = sprintf(Routes::LODESTONE_FREECOMPANY_MEMBERS_URL, $id);
-        return (new FreeCompanyMembersParser())->url($url . $urlBuilder->get())->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_FREECOMPANY_MEMBERS_URL, $id);
+        return (new FreeCompanyMembersParser())->url($url . $urlBuilder->get(), $this->useragent)->parse();
     }
 
     /**
@@ -234,8 +237,8 @@ class Api
         $urlBuilder = new UrlBuilder();
         $urlBuilder->add('page', $page);
 
-        $url = sprintf(Routes::LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
-        return (new LinkshellParser($id))->url($url)->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_LINKSHELL_MEMBERS_URL, $id) . $urlBuilder->get();
+        return (new LinkshellParser($id))->url($url, $this->useragent)->parse();
     }
     
     /**
@@ -247,8 +250,8 @@ class Api
     {
         $urlBuilder = new UrlBuilder();
 
-        $url = sprintf(Routes::LODESTONE_PVPTEAM_MEMBERS_URL, $id) . $urlBuilder->get();
-        return (new PvPTeamParser($id))->url($url)->parse();
+        $url = sprintf((new Routes($this->language))::$LODESTONE_PVPTEAM_MEMBERS_URL, $id) . $urlBuilder->get();
+        return (new PvPTeamParser($id))->url($url, $this->useragent)->parse();
     }
 
     /**
@@ -257,7 +260,7 @@ class Api
      */
     public function getLodestoneBanners()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_BANNERS)->parseBanners();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_BANNERS, $this->useragent)->parseBanners();
     }
 
     /**
@@ -266,7 +269,7 @@ class Api
      */
     public function getLodestoneNews()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NEWS)->parseTopics();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_NEWS, $this->useragent)->parseTopics();
     }
 
     /**
@@ -275,7 +278,7 @@ class Api
      */
     public function getLodestoneTopics()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_TOPICS)->parseTopics();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_TOPICS, $this->useragent)->parseTopics();
     }
 
     /**
@@ -284,7 +287,7 @@ class Api
      */
     public function getLodestoneNotices()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_NOTICES)->parseNotices();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_NOTICES, $this->useragent)->parseNotices();
     }
 
     /**
@@ -293,7 +296,7 @@ class Api
      */
     public function getLodestoneMaintenance()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_MAINTENANCE)->parseMaintenance();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_MAINTENANCE, $this->useragent)->parseMaintenance();
     }
 
     /**
@@ -302,7 +305,7 @@ class Api
      */
     public function getLodestoneUpdates()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_UPDATES)->parseUpdates();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_UPDATES, $this->useragent)->parseUpdates();
     }
 
     /**
@@ -311,7 +314,7 @@ class Api
      */
     public function getLodestoneStatus()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_STATUS)->parseStatus();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_STATUS, $this->useragent)->parseStatus();
     }
 
     /**
@@ -320,7 +323,7 @@ class Api
      */
     public function getWorldStatus()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_WORLD_STATUS)->parseWorldStatus();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_WORLD_STATUS, $this->useragent)->parseWorldStatus();
     }
 
     /**
@@ -329,7 +332,7 @@ class Api
      */
     public function getDevBlog()
     {
-        return $this->getLodeStoneInstance()->url(Routes::LODESTONE_DEV_BLOG)->parseDevBlog();
+        return $this->getLodeStoneInstance()->url((new Routes($this->language))::$LODESTONE_DEV_BLOG, $this->useragent)->parseDevBlog();
     }
 
     /**
@@ -339,7 +342,7 @@ class Api
     public function getDevPosts()
     {
         $lodestone = new Lodestone();
-        $lodestone->url(Routes::LODESTONE_FORUMS);
+        $lodestone->url((new Routes($this->language))::$LODESTONE_FORUMS, $this->useragent);
 
         // todo : support multiple languages
         $lang = 'en';
@@ -349,7 +352,7 @@ class Api
         }
 
         // get dev tracking search results
-        $lodestone->url($devTrackerUrl);
+        $lodestone->url($devTrackerUrl, $this->useragent);
 
         // get dev posts
         $devLinks = $lodestone->parseDevPostLinks();
@@ -360,7 +363,7 @@ class Api
         // get all dev posts
         $data = [];
         foreach($devLinks as $url) {
-            $lodestone->url($url);
+            $lodestone->url($url, $this->useragent);
             $postId = str_ireplace('post', null, explode('#', $url)[1]);
             $post = $lodestone->parseDevPost($postId);
             $post['id'] = $postId;
@@ -381,15 +384,15 @@ class Api
     public function getFeast($season = false, $params = [])
     {
         if ($season !== false && is_numeric($season)) {
-            $url = sprintf(Routes::LODESTONE_FEAST_SEASON, $season);
+            $url = sprintf((new Routes($this->language))::$LODESTONE_FEAST_SEASON, $season);
         } else {
-            $url = Routes::LODESTONE_FEAST_CURRENT;
+            $url = (new Routes($this->language))::$LODESTONE_FEAST_CURRENT;
         }
 
         $urlBuilder = new UrlBuilder();
         $urlBuilder->addMulti($params);
 
-        return (new Lodestone())->url($url . $urlBuilder->get())->parseFeast();
+        return (new Lodestone())->url($url . $urlBuilder->get(), $this->useragent)->parseFeast();
     }
 
     /**
@@ -404,6 +407,35 @@ class Api
         $urlBuilder = new UrlBuilder();
         $urlBuilder->addMulti($params);
 
-        return (new Lodestone())->url(Routes::LODESTONE_DEEP_DUNGEON . $urlBuilder->get())->parseDeepDungeon();
+        return (new Lodestone())->url((new Routes($this->language))::$LODESTONE_DEEP_DUNGEON . $urlBuilder->get(), $this->useragent)->parseDeepDungeon();
+    }
+    
+    /**
+     * Set optional useragent
+     *
+     * @test .
+     * @param string $useragent
+     * @return this
+     */
+    public function setUseragent(string $useragent = "")
+    {
+        $this->useragent = $useragent;
+        return $this;
+    }
+    
+    /**
+     * Set optional langauge
+     *
+     * @test .
+     * @param string $useragent
+     * @return this
+     */
+    public function setLanguage(string $language = "")
+    {
+        if (!in_array($language, ['na', 'jp', 'eu', 'fr', 'de'])) {
+            $language = "";
+        }
+        $this->language = $language;
+        return $this;
     }
 }

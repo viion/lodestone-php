@@ -39,6 +39,10 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 - [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)
 - [Travis CI](https://travis-ci.org/viion/lodestone-php/branches)
 
+## Settings
+It's possible to set your own UserAgent used by CURL: simply use `->setUseragent('useragent')`
+It's also possible to change LodeStone language by `->setLanguage('na')`. Accepted langauge values are `na`, `eu`, `jp`, `fr`, `de`
+
 ## Contributing
 
 - [Read the contributing guide first!](CONTRIBUTING.md)

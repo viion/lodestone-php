@@ -10,14 +10,14 @@
 - [Entities](docs/Entities.md)  
 - [Validation](docs/Validation.md)  
 - [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)  
-- [Travis CI](https://travis-ci.org/viion/lodestone-php/branches)
+- [Travis CI](https://travis-ci.org/Simbiat/lodestone-php/branches)
 
 # Getting Started
 
 ### Install via composer:
 
 ```php
-composer require viion/lodestone-php
+composer require Simbiat/lodestone-php
 ```
 
 If you are not familiar with composer, you can download this repository and you will need symfony/css repository as well. You would need to build your own auto-loader for this!

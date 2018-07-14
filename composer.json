@@ -1,15 +1,15 @@
 {
-    "name": "viion/lodestone-php",
+    "name": "simbiat/lodestone-php",
     "type": "library",
     "keywords": ["ffxiv","php","parser","lodestone"],
-    "description": "Small lodestone parser built in PHP. Relys on the XIVDB API for some data conversion.",
-    "homepage": "https://github.com/viion/lodestone-php",
+    "description": "Small lodestone parser built in PHP based on one from Viion.",
+    "homepage": "https://github.com/Simbiat/lodestone-php",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Freeman",
-            "email": "josh@viion.co.uk",
-            "homepage": "http://xivdb.com",
+            "name": "Dmitry Kustov",
+            "email": "simbiat@outlook.com",
+            "homepage": "https://simbiat.ru",
             "role": "Developer"
         }
     ],

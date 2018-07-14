@@ -1,14 +1,14 @@
 # Final Fantasy XIV: Lodestone PHP Parser
 
-[![Latest Stable Version](https://poser.pugx.org/viion/lodestone-php/v/stable)](https://packagist.org/packages/viion/lodestone-php)
-[![Total Downloads](https://poser.pugx.org/viion/lodestone-php/downloads)](https://packagist.org/packages/viion/lodestone-php)
-[![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)
+[![Latest Stable Version](https://poser.pugx.org/Simbiat/lodestone-php/v/stable)](https://packagist.org/packages/Simbiat/lodestone-php)
+[![Total Downloads](https://poser.pugx.org/Simbiat/lodestone-php/downloads)](https://packagist.org/packages/Simbiat/lodestone-php)
+[![License](https://poser.pugx.org/Simbiat/lodestone-php/license)](https://packagist.org/packages/Simbiat/lodestone-php)
 
 **Travis Status**
 
 |`master`|`dev`|
 |---|---|
-|![master](https://travis-ci.org/viion/lodestone-php.svg?branch=master)|![dev](https://travis-ci.org/viion/lodestone-php.svg?branch=dev)|
+|![master](https://travis-ci.org/Simbiat/lodestone-php.svg?branch=master)|![dev](https://travis-ci.org/Simbiat/lodestone-php.svg?branch=dev)|
 
 ---
 
@@ -37,7 +37,7 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 - [Entities](docs/Entities.md)
 - [Validation](docs/Validation.md)
 - [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)
-- [Travis CI](https://travis-ci.org/viion/lodestone-php/branches)
+- [Travis CI](https://travis-ci.org/Simbiat/lodestone-php/branches)
 
 ## Settings
 It's possible to set your own UserAgent used by CURL: simply use `->setUseragent('useragent')`

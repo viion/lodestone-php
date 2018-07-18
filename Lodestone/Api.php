@@ -42,7 +42,7 @@ use Lodestone\Parser\{
 class Api
 {
     #Use traits
-    use Search\Converters;
+    use Modules\Converters;
     use Search\Functions;
     
     const langallowed = ['na', 'jp', 'eu', 'fr', 'de'];
@@ -253,9 +253,9 @@ class Api
             $this->url = sprintf($this->language.Routes::LODESTONE_ACHIEVEMENTS_DET_URL, $id, $achievementId);
         } else {
             if ($category === false) {
-                $this->url = sprintf($this->language.Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $kind);
+                $this->url = sprintf($this->language.Routes::LODESTONE_ACHIEVEMENTS_URL, $id, $this->getAchKindId($kind));
             } else {
-                $this->url = sprintf($this->language.Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $kind);
+                $this->url = sprintf($this->language.Routes::LODESTONE_ACHIEVEMENTS_CAT_URL, $id, $this->getAchCatId($kind));
             }
         }
         $this->typesettings['id'] = $id;

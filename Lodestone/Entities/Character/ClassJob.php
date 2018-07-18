@@ -13,32 +13,7 @@ use Lodestone\{
  * @package Lodestone\Entities\Character
  */
 class ClassJob extends AbstractEntity
-{
-    /**
-     * @var int
-     * @index ClassID
-     */
-    protected $classId;
-    
-    /**
-     * @var int
-     * @index JobID
-     */
-    protected $jobId;
-    
-    /**
-     * @var string
-     * @index ClassName
-     */
-    protected $className;
-    
-    /**
-     * @var string
-     * @index JobName
-     */
-    protected $jobName;
-
-    /**
+{/**
      * @var int
      * @index Level
      */
@@ -61,100 +36,6 @@ class ClassJob extends AbstractEntity
      * @index ExpLevelMax
      */
     protected $expLevelMax;
-    
-    /**
-     * @return int
-     */
-    public function getClassId(): int
-    {
-        return $this->classId;
-    }
-    
-    /**
-     * @param int $classId
-     * @return $this
-     */
-    public function setClassId($classId)
-    {
-        $this->classId = $classId;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getJobId(): int
-    {
-        return $this->jobId;
-    }
-
-    /**
-     * @param int $jobId
-     * @return $this
-     */
-    public function setJobId($jobId)
-    {
-        $this->jobId = $jobId;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClassName(): string
-    {
-        return $this->className;
-    }
-
-    /**
-     * @param string $className
-     * @return $this
-     */
-    public function setClassName(string $className)
-    {
-        BaseValidator::getInstance()
-            ->check($className, 'ClassName')
-            ->isInitialized()
-            ->isNotEmpty()
-            ->isString();
-
-        $this->className = $className;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getJobName(): string
-    {
-        return $this->jobName;
-    }
-    
-    /**
-     * @param string $jobName
-     * @return $this
-     */
-    public function setJobName(string $jobName)
-    {
-        BaseValidator::getInstance()
-            ->check($jobName, 'JobName')
-            ->isInitialized()
-            ->isNotEmpty()
-            ->isString();
-        
-        $this->jobName = $jobName;
-        return $this;
-    }
-    
-    /**
-     * Legacy name containing both class+job name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return sprintf('%s/%s', $this->getClassName(), $this->getJobName());
-    }
     
     /**
      * @return int

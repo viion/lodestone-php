@@ -575,8 +575,7 @@ class CharacterProfile extends AbstractEntity
     {
         CharacterValidator::getInstance()
             ->check($activeClassJob, 'Active ClassJob', $this->id)
-            ->isNotEmpty()
-            ->isObject();
+            ->isNotEmpty();
         
         $this->activeClassJob = $activeClassJob;
         return $this;

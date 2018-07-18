@@ -3,8 +3,7 @@
 namespace Lodestone\Parser\Character;
 
 use Lodestone\Entities\Character\ClassJob,
-    Lodestone\Modules\Logging\Benchmark,
-    Lodestone\Modules\Game\ClassJobsData;
+    Lodestone\Modules\Logging\Benchmark;
 
 /**
  * Class TraitClassJob
@@ -21,7 +20,6 @@ trait TraitClassJob
      */
     protected function parseClassJob()
     {
-        $classjobs = new ClassJobsData();
         Benchmark::start(__METHOD__,__LINE__);
         $box = $this->getSpecial__ClassJobs();
 
@@ -35,17 +33,10 @@ trait TraitClassJob
             {
                 // class name
                 $name = trim($li->find('.character__job__name', 0)->plaintext);
-
-                // get class ids
-                $ids = $classjobs->getClassJobIds($name);
                 
                 // build role
                 $role = new ClassJob();
-                $role
-                    ->setClassId($ids->class[0])
-                    ->setClassName($ids->class[2])
-                    ->setJobId($ids->job[1])
-                    ->setJobName($ids->job[2]);
+                #$role->setJobName($name);
 
                 // level
                 $level = trim($li->find('.character__job__level', 0)->plaintext);
@@ -63,7 +54,7 @@ trait TraitClassJob
                     ->setExpLevelTogo($max - $current);
 
                 // save
-                $this->results->addClassJob($ids->key, $role);
+                $this->results->addClassJob($name, $role);
             }
         }
         

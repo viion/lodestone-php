@@ -2,7 +2,6 @@
 
 namespace Lodestone\Parser\Character;
 
-use Lodestone\Modules\Game\ClassJobsData;
 use Lodestone\Modules\Logging\Benchmark;
 use Lodestone\Entities\Character\{
     ClassJob,
@@ -33,17 +32,8 @@ trait TraitClassJobActive
         // get main hand previously parsed
         /** @var Item $mainhand */
         $mainhand = $this->results->getGear('mainhand');
-        $name = explode("'", $mainhand->getCategory())[0];
-
-        // get class job id from the main-hand category name
-        $classjobs = new ClassJobsData();
-        $ids = $classjobs->getClassJobIds($name);
-
-        // set id and name
-        $role = $this->results->getClassjob($ids->key);
-        $role = $role ? clone $role : false;
-    
-        $this->results->setActiveClassJob($role);
+        $name = explode("'", $mainhand->getCategory())[0];    
+        $this->results->setActiveClassJob($name);
 
         // save
         Benchmark::finish(__METHOD__,__LINE__);

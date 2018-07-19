@@ -55,7 +55,6 @@ class ValidationException extends Exception
         // convert values to string acceptable values
         $name = $validator->name;
         $object = self::convertArrayToString($validator->object);
-
         $message = sprintf("%s (%s) is not of type: %s.\n", $name, $object, $type);
 
         return new ValidationException($message);

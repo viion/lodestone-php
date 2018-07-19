@@ -451,11 +451,7 @@ class CharacterProfile extends AbstractEntity
      */
     public function setGuardian(Guardian $guardian)
     {
-        Validator::getInstance()
-            ->check($guardian, 'Guardian', $this->id)
-            ->isNotEmpty()->isString();
         $this->guardian = $guardian;
-
         return $this;
     }
 
@@ -473,11 +469,7 @@ class CharacterProfile extends AbstractEntity
      */
     public function setTown(Town $town)
     {
-        Validator::getInstance()
-            ->check($town, 'Town', $this->id)
-            ->isNotEmpty()->isString();
         $this->town = $town;
-
         return $this;
     }
 
@@ -495,11 +487,7 @@ class CharacterProfile extends AbstractEntity
      */
     public function setGrandCompany($grandCompany)
     {
-        Validator::getInstance()
-            ->check($grandCompany, 'Grand Company', $this->id)
-            ->isNotEmpty()->isString();
         $this->grandCompany = $grandCompany;
-
         return $this;
     }
 

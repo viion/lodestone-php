@@ -1,17 +1,20 @@
 # Final Fantasy XIV: Lodestone PHP Parser
-This project is a maintained PHP library for parsing data directly from the FFXIV Lodestone website.
+This project is PHP library for parsing data directly from the FFXIV Lodestone website based on one develoepd by [@viion](https://github.com/viion).
 
 The goal is to provide an extremely fast and lightweight library, it is built with the purpose of parsing as many characters as possible, key being: Low memory, and micro-timed parsing methods.
 
-> If you would like more data, consider the [XIVDB Rest API](https://github.com/xivdb/api).
-
 ## Notes
-
 - This library parses the live Lodestone website. This website is based in Tokyo.
 - This library is built in PHP 7.1 minimum, please use the latest as this can increase 
 
-## Getting Started
+## What's different?
+If you are using the original library there is not a "need" to switch, but this update already has some differences, that may get you interested:
+    1. It has slightly different code structure, that aims at reduction of rarely used or unnecessary functions and some standartization (on-going attempt). Tests show that in some cases it can provide slightly faster results winning ~10ms of time. If you are using it heavily like I am doing on [FFTracker](https://simbiat.ru/fftracker) you will be greatful even for such small boost. This also implies some code cleaning and, potentially, retirement of objects in some cases to get additional boost.
+    2. More filters for your queries. This is mainly for search subfunctions, but other calls also may already or will have additional options to provide more flexibility.
+    3. Attempt at multilangual support. Search functions already support multilingual filters (insterad of IDs) and at the moment, it looks like only some character parser functions need to be updated to provide full support.
 
+
+## Getting Started
 - [Getting Started](docs/GettingStarted.md)
     - [API: Characters](docs/ApiCharacters.md)
     - [API: Database](docs/ApiDatabase.md)
@@ -24,19 +27,7 @@ The goal is to provide an extremely fast and lightweight library, it is built wi
 - [Entities](docs/Entities.md)
 - [Validation](docs/Validation.md)
 - [DOM Library](docs/DomLibraryLegacy.md) (Third-Party)
-- [Travis CI](https://travis-ci.org/Simbiat/lodestone-php/branches)
 
 ## Settings
 It's possible to set your own UserAgent used by CURL: simply use `->setUseragent('useragent')`
 It's also possible to change LodeStone language by `->setLanguage('na')`. Accepted langauge values are `na`, `eu`, `jp`, `fr`, `de`
-
-## Contributing
-
-- [Read the contributing guide first!](CONTRIBUTING.md)
-- Switch to `dev` when working on the repo please!
-
-**If you contribute to this library, please add your github user here :)**
-
-- [@shentschel](https://github.com/shentschel)
-- [@Simbiat](https://github.com/Simbiat)
-

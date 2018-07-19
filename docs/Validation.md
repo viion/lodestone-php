@@ -20,7 +20,6 @@ validates every attribute. An example for a validation would be:
 ```php
 $this->validator
   ->check($id, 'ID')
-  ->isInitialized()
   ->isInteger()
   ->validate();
 ```

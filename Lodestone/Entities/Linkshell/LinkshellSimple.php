@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Linkshell;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\LinkshellValidator
+    Modules\Validator
 };
 
 /**
@@ -46,9 +46,8 @@ class LinkshellSimple extends AbstractEntity
      */
     public function setId(string $id)
     {
-        LinkshellValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty();
         
         $this->id = $id;
@@ -70,9 +69,8 @@ class LinkshellSimple extends AbstractEntity
      */
     public function setName(string $name)
     {
-        LinkshellValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         
@@ -95,9 +93,8 @@ class LinkshellSimple extends AbstractEntity
      */
     public function setServer(string $server)
     {
-        LinkshellValidator::getInstance()
+        Validator::getInstance()
             ->check($server, 'Server', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         

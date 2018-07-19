@@ -4,8 +4,7 @@ namespace Lodestone\Modules\Http;
 
 use Lodestone\Modules\Logging\Logger;
 use Lodestone\Validator\Exceptions\ValidationException,
-    Lodestone\Validator\HttpRequestValidator,
-    Lodestone\Validator\BaseValidator;
+    Lodestone\Modules\Validator;
 
 /**
  * Class HttpRequest
@@ -65,14 +64,14 @@ class HttpRequest
         Logger::write(__CLASS__, __LINE__, 'RESPONSE: '. $httpCode);
 
         // specific conditions to return code on
-        HttpRequestValidator::getInstance()
+        Validator::getInstance()
             ->check($httpCode, 'HTTP Response Code', $url)
             ->isFound()
             ->isNotMaintenance()
             ->isNotHttpError();
             
         // check that data is not empty
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($data, "HTML")
             ->isNotEmpty();
 

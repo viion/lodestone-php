@@ -2,7 +2,7 @@
 
 namespace Lodestone\Entities\Traits;
 
-use Lodestone\Validator\BaseValidator;
+use Lodestone\Modules\Validator;
 
 /**
  * Class ListTrait
@@ -77,9 +77,8 @@ trait ListTrait
      */
     public function setPageCurrent(int $pageCurrent)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($pageCurrent, 'Current Page')
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
         
@@ -105,9 +104,8 @@ trait ListTrait
      */
     public function setPageTotal(int $pageTotal)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($pageTotal, 'Page Total')
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
         
@@ -133,7 +131,7 @@ trait ListTrait
      */
     public function setTotal(int $total)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($total, 'Total')
             ->isNotEmpty()
             ->isNumeric();

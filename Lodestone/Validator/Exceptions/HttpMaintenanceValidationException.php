@@ -2,7 +2,7 @@
 
 namespace Lodestone\Validator\Exceptions;
 
-use Lodestone\Validator\HttpRequestValidator;
+use Lodestone\Modules\Validator;
 
 /**
  * Class HttpMaintenanceValidationException
@@ -16,7 +16,7 @@ class HttpMaintenanceValidationException extends ValidationException
      * @param int $code
      * @param null $previous
      */
-    public function __construct($code = HttpRequestValidator::HTTP_SERVICE_NOT_AVAILABLE, $previous = null)
+    public function __construct($code = Validator::HTTP_SERVICE_NOT_AVAILABLE, $previous = null)
     {
         parent::__construct('Lodestone not available', $code, $previous);
     }

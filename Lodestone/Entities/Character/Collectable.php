@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\BaseValidator
+    Modules\Validator
 };
 
 /**
@@ -32,9 +32,8 @@ class Collectable extends AbstractEntity
      */
     public function setName(string $name)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -49,9 +48,8 @@ class Collectable extends AbstractEntity
      */
     public function setIcon(string $icon)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($icon, 'Icon URL')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 

@@ -3,7 +3,7 @@
 namespace Lodestone\Entities;
 
 use Lodestone\Modules\Logging\Benchmark;
-use Lodestone\Validator\BaseValidator;
+use Lodestone\Modules\Validator;
 
 /**
  * Class AbstractEntity

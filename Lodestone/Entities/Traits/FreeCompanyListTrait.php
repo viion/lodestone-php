@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Traits;
 
 use Lodestone\{
     Entities\FreeCompany\FreeCompanySimple,
-    Validator\FreeCompanyValidator
+    Modules\Validator
 };
 
 /**
@@ -34,9 +34,8 @@ trait FreeCompanyListTrait
      */
     public function setFreeCompanies(array $freeCompanies)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($freeCompanies, 'FreeCompanies')
-            ->isInitialized()
             ->isArray();
         
         $this->freeCompanies = $freeCompanies;
@@ -50,9 +49,8 @@ trait FreeCompanyListTrait
      */
     public function addFreeCompany(FreeCompanySimple $character)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($character, 'FreeCompany')
-            ->isInitialized()
             ->isObject();
         
         $this->freeCompanies[] = $character;

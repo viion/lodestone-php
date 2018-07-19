@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -58,9 +58,8 @@ class Achievements extends AbstractEntity
      */
     public function setPointsObtained(int $pointsObtained)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pointsObtained, 'pointsObtained')
-            ->isInitialized()
             ->isNumeric();
         
         $this->pointsObtained = $pointsObtained;
@@ -74,9 +73,8 @@ class Achievements extends AbstractEntity
      */
     public function incPointsTotal(int $pointsTotal)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pointsTotal, 'pointsTotal')
-            ->isInitialized()
             ->isNumeric();
         
         $this->pointsTotal += $pointsTotal;
@@ -98,9 +96,8 @@ class Achievements extends AbstractEntity
      */
     public function setPointsTotal(int $pointsTotal)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pointsTotal, 'pointsTotal')
-            ->isInitialized()
             ->isNumeric();
         
         $this->pointsTotal = $pointsTotal;
@@ -114,9 +111,8 @@ class Achievements extends AbstractEntity
      */
     public function incPointsObtained(int $pointsObtained)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pointsObtained, 'pointsObtained')
-            ->isInitialized()
             ->isNumeric();
         
         $this->pointsObtained += $pointsObtained;
@@ -138,9 +134,8 @@ class Achievements extends AbstractEntity
      */
     public function setCategory(int $category)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($category, 'category')
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
         
@@ -163,9 +158,8 @@ class Achievements extends AbstractEntity
      */
     public function setCharacter(int $id)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'character ID')
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
         
@@ -188,9 +182,8 @@ class Achievements extends AbstractEntity
      */
     public function setAchievements(array $achievements)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($achievements, 'achievements')
-            ->isInitialized()
             ->isArray();
         
         $this->achievements = $achievements;

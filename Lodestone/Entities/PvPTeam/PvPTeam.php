@@ -6,7 +6,7 @@ use Lodestone\{
     Entities\Traits\CharacterListTrait,
     Entities\AbstractEntity,
     Entities\Traits\ListTrait,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -52,9 +52,8 @@ class PvPTeam extends AbstractEntity
      */
     public function __construct($id)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         

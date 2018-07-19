@@ -6,7 +6,7 @@ use Lodestone\{
     Entities\Traits\CharacterListTrait,
     Entities\AbstractEntity,
     Entities\Traits\ListTrait,
-    Validator\LinkshellValidator
+    Modules\Validator
 };
 
 /**
@@ -44,9 +44,8 @@ class Linkshell extends AbstractEntity
      */
     public function __construct($id)
     {
-        LinkshellValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
         

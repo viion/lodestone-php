@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\BaseValidator
+    Modules\Validator
 };
 
 /**
@@ -51,9 +51,8 @@ class ClassJob extends AbstractEntity
      */
     public function setLevel(int $level)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($level, 'Level')
-            ->isInitialized()
             ->isNumeric();
 
         $this->level = $level;

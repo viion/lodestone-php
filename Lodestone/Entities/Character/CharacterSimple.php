@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -79,9 +79,8 @@ class CharacterSimple extends AbstractEntity
      */
     public function setId(int $id)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
     
@@ -104,9 +103,8 @@ class CharacterSimple extends AbstractEntity
      */
     public function setName(string $name)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString()
             ->isValidCharacterName();
@@ -130,9 +128,8 @@ class CharacterSimple extends AbstractEntity
      */
     public function setServer(string $server)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($server, 'Server', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         
@@ -155,9 +152,8 @@ class CharacterSimple extends AbstractEntity
      */
     public function setAvatar(string $avatar)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($avatar, 'Avatar URL', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         
@@ -218,7 +214,7 @@ class CharacterSimple extends AbstractEntity
      */
     public function setFeasts($feasts)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($feasts, 'Feast Games', $this->id)
             ->isString();
         

@@ -4,7 +4,7 @@ namespace Lodestone\Entities\FreeCompany;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\FreeCompanyValidator
+    Modules\Validator
 };
 
 /**
@@ -52,9 +52,8 @@ class FreeCompanySimple extends AbstractEntity
      */
     public function setId(string $id)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty();
         
         $this->id = $id;
@@ -76,9 +75,8 @@ class FreeCompanySimple extends AbstractEntity
      */
     public function setName(string $name)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         
@@ -101,9 +99,8 @@ class FreeCompanySimple extends AbstractEntity
      */
     public function setServer(string $server)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($server, 'Server', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
         
@@ -126,9 +123,8 @@ class FreeCompanySimple extends AbstractEntity
      */
     public function setAvatar(array $avatar)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($avatar, 'Avatar Array', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isArray();
         

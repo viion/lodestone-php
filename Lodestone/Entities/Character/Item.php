@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\BaseValidator
+    Modules\Validator
 };
 
 /**
@@ -76,9 +76,8 @@ class Item extends AbstractEntity
      */
     public function setId($id)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'Item Lodestone ID')
-            ->isInitialized()
             ->isString();
     
         $this->id = $id;
@@ -99,9 +98,8 @@ class Item extends AbstractEntity
      */
     public function setName(string $name)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Item Name')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -123,9 +121,8 @@ class Item extends AbstractEntity
      */
     public function setSlot(string $slot)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($slot, 'Item Slot')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -147,9 +144,8 @@ class Item extends AbstractEntity
      */
     public function setCategory(string $category)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($category, 'Item Category')
-            ->isInitialized()
             ->isStringOrEmpty();
 
         $this->category = $category;
@@ -171,9 +167,8 @@ class Item extends AbstractEntity
     public function setMirage(array $mirage)
     {
         // can be empty
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($mirage, 'Item mirage')
-            ->isInitialized()
             ->isObject();
 
         $this->mirage = $mirage;
@@ -195,9 +190,8 @@ class Item extends AbstractEntity
     public function setCreator(int $creator)
     {
         // can be empty
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($creator, 'Item Creator')
-            ->isInitialized()
             ->isNumeric();
 
         $this->creator = $creator;
@@ -218,9 +212,8 @@ class Item extends AbstractEntity
      */
     public function setDye(ItemSimple $dye)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($dye, 'Item Dye')
-            ->isInitialized()
             ->isObject();
 
         $this->dye = $dye;
@@ -241,9 +234,8 @@ class Item extends AbstractEntity
      */
     public function setMateria(array $materia)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($materia, 'Materia Array (replace)')
-            ->isInitialized()
             ->isArray();
 
         $this->materia = $materia;
@@ -256,9 +248,8 @@ class Item extends AbstractEntity
      */
     public function addMateria(ItemSimple $materia)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($materia, 'Materia Array (add)')
-            ->isInitialized()
             ->isObject();
 
         $this->materia[] = $materia;

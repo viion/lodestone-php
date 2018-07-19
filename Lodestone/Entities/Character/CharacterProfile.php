@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -147,9 +147,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function __construct($id)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
 
@@ -213,9 +212,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setName(string $name)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString()
             ->isValidCharacterName();
@@ -239,9 +237,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setServer(string $server)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($server, 'Server', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -263,9 +260,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setTitle($title)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($title, 'Title', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -288,9 +284,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setAvatar(string $avatar)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($avatar, 'Avatar URL', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -313,9 +308,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setPortrait(string $portrait)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($portrait, 'Portrait URL', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -338,9 +332,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setBio(string $bio)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($bio, 'Bio', $this->id)
-            ->isInitialized()
             ->isStringOrEmpty();
 
         $this->bio = $bio;
@@ -362,9 +355,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setRace(string $race)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($race, 'Race', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -387,9 +379,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setTribe(string $tribe)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($tribe, 'Tribe', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -412,9 +403,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setGender(string $gender)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($gender, 'Gender', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -437,9 +427,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setNameday(string $nameday)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($nameday, 'Nameday', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -462,10 +451,9 @@ class CharacterProfile extends AbstractEntity
      */
     public function setGuardian(Guardian $guardian)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($guardian, 'Guardian', $this->id)
-            ->isInitialized();
-
+            ->isNotEmpty()->isString();
         $this->guardian = $guardian;
 
         return $this;
@@ -485,10 +473,9 @@ class CharacterProfile extends AbstractEntity
      */
     public function setTown(Town $town)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($town, 'Town', $this->id)
-            ->isInitialized();
-
+            ->isNotEmpty()->isString();
         $this->town = $town;
 
         return $this;
@@ -508,10 +495,9 @@ class CharacterProfile extends AbstractEntity
      */
     public function setGrandCompany($grandCompany)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($grandCompany, 'Grand Company', $this->id)
-            ->isInitialized();
-
+            ->isNotEmpty()->isString();
         $this->grandCompany = $grandCompany;
 
         return $this;
@@ -531,9 +517,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setFreecompany($freecompany)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($freecompany, 'Free Company', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -548,9 +533,8 @@ class CharacterProfile extends AbstractEntity
      */
     public function setPvPTeam($pvpteam)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pvpteam, 'PvP Team', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -573,7 +557,7 @@ class CharacterProfile extends AbstractEntity
      */
     public function setActiveClassJob($activeClassJob): CharacterProfile
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($activeClassJob, 'Active ClassJob', $this->id)
             ->isNotEmpty();
         

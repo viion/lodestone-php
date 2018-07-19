@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\BaseValidator
+    Modules\Validator
 };
 
 /**
@@ -46,9 +46,8 @@ class ItemSimple extends AbstractEntity
      */
     public function setId($id)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'Item Lodestone ID')
-            ->isInitialized()
             ->isString();
     
         $this->id = $id;
@@ -69,9 +68,8 @@ class ItemSimple extends AbstractEntity
      */
     public function setName(string $name)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Item Name')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -94,9 +92,8 @@ class ItemSimple extends AbstractEntity
     public function setValue(string $value)
     {
         // can be empty
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($value, 'Item value')
-            ->isInitialized()
             ->isString();
         
         $this->value = $value;

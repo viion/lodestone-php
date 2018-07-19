@@ -4,8 +4,7 @@ namespace Lodestone\Validator\Exceptions;
 
 use Exception,
     Throwable;
-use Lodestone\Validator\BaseValidator;
-use Lodestone\Validator\CharacterValidator;
+use Lodestone\Modules\Validator;
 
 /**
  * Class ValidationException
@@ -27,16 +26,7 @@ class ValidationException extends Exception
     }
 
     /**
-     * @param $validator
-     * @return string
-     */
-    public static function notInitialized($validator)
-    {
-        return new ValidationException($validator->name . ' is not set.');
-    }
-
-    /**
-     * @param $validator BaseValidator|CharacterValidator
+     * @param $validator Validator
      * @return ValidationException
      */
     public static function emptyValidation($validator)
@@ -60,7 +50,7 @@ class ValidationException extends Exception
      * @param $type
      * @return ValidationException
      */
-    public static function typeValidation(BaseValidator $validator, $type)
+    public static function typeValidation(Validator $validator, $type)
     {
         // convert values to string acceptable values
         $name = $validator->name;
@@ -117,10 +107,10 @@ class ValidationException extends Exception
     }
 
     /**
-     * @param BaseValidator $validator
+     * @param Validator $validator
      * @return ValidationException
      */
-    public static function relativeUrlValidation(BaseValidator $validator)
+    public static function relativeUrlValidation(Validator $validator)
     {
         $name = $validator->name;
         $object = self::convertArrayToString($validator->object);

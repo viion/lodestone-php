@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Traits;
 
 use Lodestone\{
     Entities\PvPTeam\PvPTeamSimple,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -34,7 +34,7 @@ trait PvPTeamListTrait
      */
     public function setPvPTeams(array $pvpTeams)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pvpTeams, 'PvPTeams')
             ->isArray();
         
@@ -49,7 +49,7 @@ trait PvPTeamListTrait
      */
     public function addPvPTeam(PvPTeamSimple $pvpTeams)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($pvpTeams, 'PvPTeam')
             ->isObject();
         

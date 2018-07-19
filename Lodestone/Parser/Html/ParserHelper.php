@@ -4,7 +4,7 @@ namespace Lodestone\Parser\Html;
 
 use Lodestone\{
     Dom\Document,
-    Validator\BaseValidator,
+    Modules\Validator,
     Entities\Character\CharacterSimple
 };
 
@@ -83,7 +83,7 @@ class ParserHelper
      */
     protected function ensureHtml()
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($this->html, "HTML")
             ->isNotEmpty();
     }

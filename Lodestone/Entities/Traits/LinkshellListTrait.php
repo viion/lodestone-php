@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Traits;
 
 use Lodestone\{
     Entities\Linkshell\LinkshellSimple,
-    Validator\LinkshellValidator
+    Modules\Validator
 };
 
 /**
@@ -34,9 +34,8 @@ trait LinkshellListTrait
      */
     public function setLinkshells(array $linkshells)
     {
-        LinkshellValidator::getInstance()
+        Validator::getInstance()
             ->check($linkshells, 'Linkshells')
-            ->isInitialized()
             ->isArray();
         
         $this->linkshells = $linkshells;
@@ -50,9 +49,8 @@ trait LinkshellListTrait
      */
     public function addLinkshell(LinkshellSimple $character)
     {
-        LinkshellValidator::getInstance()
+        Validator::getInstance()
             ->check($character, 'Linkshell')
-            ->isInitialized()
             ->isObject();
         
         $this->linkshells[] = $character;

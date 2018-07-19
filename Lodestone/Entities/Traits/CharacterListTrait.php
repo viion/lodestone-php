@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Traits;
 
 use Lodestone\{
     Entities\Character\CharacterSimple,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -34,9 +34,8 @@ trait CharacterListTrait
      */
     public function setCharacters(array $characters)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($characters, 'Characters')
-            ->isInitialized()
             ->isArray();
         
         $this->characters = $characters;
@@ -50,9 +49,8 @@ trait CharacterListTrait
      */
     public function addCharacter(CharacterSimple $character)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($character, 'Character')
-            ->isInitialized()
             ->isObject();
         
         $this->characters[] = $character;

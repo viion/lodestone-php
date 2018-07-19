@@ -4,7 +4,7 @@ namespace Lodestone\Entities\PvPTeam;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -46,7 +46,7 @@ class PvPTeamSimple extends AbstractEntity
      */
     public function setId(string $id)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
             ->isNotEmpty();
         
@@ -69,7 +69,7 @@ class PvPTeamSimple extends AbstractEntity
      */
     public function setName(string $name)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name', $this->id)
             ->isNotEmpty()
             ->isString();
@@ -93,7 +93,7 @@ class PvPTeamSimple extends AbstractEntity
      */
     public function setDataCenter(string $dataCenter)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($dataCenter, 'Data Center', $this->id)
             ->isNotEmpty()
             ->isString();

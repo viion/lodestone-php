@@ -4,7 +4,7 @@ namespace Lodestone\Entities\FreeCompany;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\FreeCompanyValidator
+    Modules\Validator
 };
 
 /**
@@ -123,9 +123,8 @@ class FreeCompany extends AbstractEntity
      */
     public function __construct($id)
     {
-        FreeCompanyValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
-            ->isInitialized()
             ->isNotEmpty()
             ->isNumeric();
     

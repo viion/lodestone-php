@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\BaseValidator
+    Modules\Validator
 };
 
 /**
@@ -46,9 +46,8 @@ class GrandCompany extends AbstractEntity
      */
     public function setName(string $name)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Name')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -71,9 +70,8 @@ class GrandCompany extends AbstractEntity
      */
     public function setIcon(string $icon)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($icon, 'Icon URL')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 
@@ -96,9 +94,8 @@ class GrandCompany extends AbstractEntity
      */
     public function setRank(string $rank)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($rank, 'Rank')
-            ->isInitialized()
             ->isNotEmpty()
             ->isString();
 

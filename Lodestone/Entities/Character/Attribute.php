@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\BaseValidator
+    Modules\Validator
 };
 
 /**
@@ -40,9 +40,8 @@ class Attribute extends AbstractEntity
      */
     public function setName(string $name)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Attribute Name')
-            ->isInitialized()
             ->isString();
 
         $this->name = $name;
@@ -63,9 +62,8 @@ class Attribute extends AbstractEntity
      */
     public function setValue(int $value)
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($value, 'Attribute Value')
-            ->isInitialized()
             ->isNumeric();
 
         $this->value = $value;

@@ -7,7 +7,7 @@ use Lodestone\Modules\{
     Logging\Benchmark, Logging\Logger, Http\Routes, Http\HttpRequest
 };
 
-use Lodestone\Validator\BaseValidator;
+use Lodestone\Modules\Validator;
 
 use Lodestone\Search\{
     Character as CharacterSearch,
@@ -468,7 +468,7 @@ class Api
     
     private function queryBuilder(array $params): string
     {
-        BaseValidator::getInstance()
+        Validator::getInstance()
             ->check($params, "Query params provided to the API")
             ->isArray();
         $query = [];

@@ -4,7 +4,7 @@ namespace Lodestone\Entities\Character;
 
 use Lodestone\{
     Entities\AbstractEntity,
-    Validator\CharacterValidator
+    Modules\Validator
 };
 
 /**
@@ -88,7 +88,7 @@ class Achievement extends AbstractEntity
      */
     public function setId(int $id)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'ID', $this->id)
             ->isNotEmpty()
             ->isNumeric();
@@ -112,7 +112,7 @@ class Achievement extends AbstractEntity
      */
     public function setPoints(int $points)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($points, 'Points', $this->id)
             ->isNumeric();
     
@@ -135,7 +135,7 @@ class Achievement extends AbstractEntity
      */
     public function setTimestamp(\DateTime $timestamp)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($timestamp, 'DateTime', $this->id)
             ->isObject();
         
@@ -150,7 +150,7 @@ class Achievement extends AbstractEntity
      */
     public function setName(string $name)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Achievement Name')
             ->isString();
 
@@ -164,7 +164,7 @@ class Achievement extends AbstractEntity
      */
     public function setIcon(string $icon)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($icon, 'Icon URL')
             ->isNotEmpty()
             ->isString();
@@ -180,7 +180,7 @@ class Achievement extends AbstractEntity
      */
     public function setHowto(string $howto)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($howto, 'How to')
             ->isNotEmpty()
             ->isString();
@@ -196,7 +196,7 @@ class Achievement extends AbstractEntity
      */
     public function setTitle(string $title)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($title, 'Title')
             ->isNotEmpty()
             ->isString();
@@ -212,7 +212,7 @@ class Achievement extends AbstractEntity
      */
     public function setCategory(string $category)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($category, 'Category')
             ->isNotEmpty()
             ->isString();
@@ -228,7 +228,7 @@ class Achievement extends AbstractEntity
      */
     public function setSubcategory(string $subcategory)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($subcategory, 'Subcategory')
             ->isNotEmpty()
             ->isString();
@@ -244,17 +244,17 @@ class Achievement extends AbstractEntity
      */
     public function setItem(string $id, string $name, string $icon)
     {
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($id, 'Item ID')
             ->isNotEmpty()
             ->isString();
             
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($name, 'Item name')
             ->isNotEmpty()
             ->isString();
             
-        CharacterValidator::getInstance()
+        Validator::getInstance()
             ->check($icon, 'Item icon')
             ->isNotEmpty()
             ->isString();

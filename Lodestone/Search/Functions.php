@@ -2,7 +2,7 @@
 namespace Lodestone\Search;
 
 use Lodestone\Modules\{
-    Logging\Logger, Http\Routes, Http\HttpRequest
+    Logging\Logger, Routes, Http\HttpRequest
 };
 
 trait Functions {

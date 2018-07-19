@@ -2,7 +2,7 @@
 
 namespace Lodestone\Parser;
 
-use Lodestone\Modules\Http\Routes;
+use Lodestone\Modules\Routes;
 use Lodestone\Parser\Html\ParserHelper;
 
 /**

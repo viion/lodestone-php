@@ -5,7 +5,6 @@ namespace Lodestone\Parser;
 use Lodestone\{
     Entities\Character\Achievements as Achs,
     Entities\Character\Achievement,
-    Modules\Http\Routes,
     Parser\Html\ParserHelper
 };
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Validator;
+namespace Lodestone\Modules;
 
 use Lodestone\Validator\Exceptions\{
     HttpMaintenanceValidationException,

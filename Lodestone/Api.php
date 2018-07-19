@@ -4,10 +4,8 @@ namespace Lodestone;
 
 // use all the things
 use Lodestone\Modules\{
-    Logging\Benchmark, Logging\Logger, Http\Routes, Http\HttpRequest
+    Logging\Benchmark, Logging\Logger, Routes, Validator, Http\HttpRequest
 };
-
-use Lodestone\Modules\Validator;
 
 use Lodestone\Search\{
     Character as CharacterSearch,

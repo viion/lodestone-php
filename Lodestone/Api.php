@@ -41,7 +41,8 @@ class Api
 {
     #Use traits
     use Modules\Converters;
-    use Search\Functions;
+    use Modules\Parsers;
+    use Modules\Search;
     
     const langallowed = ['na', 'jp', 'eu', 'fr', 'de'];
     
@@ -99,16 +100,16 @@ class Api
             $this->html = $http->get($this->url);
             switch($this->type) {
                 case 'searchCharacter':
-                    $this->result = (new CharacterSearch($this->html))->results;
+                    $this->pageCount()->CharacterList();
                     break;
                 case 'searchFreeCompany':
-                    $this->result = (new FreeCompanySearch($this->html))->results;
+                    $this->pageCount()->FreeCompaniesList();
                     break;
                 case 'searchLinkshell':
-                    $this->result = (new LinkshellSearch($this->html))->results;
+                    $this->pageCount()->LinkshellsList();
                     break;
                 case 'searchPvPTeam':
-                    $this->result = (new PvPTeamSearch($this->html))->results;
+                    $this->pageCount()->PvPTeamsList();
                     break;
                 case 'Character':
                     if (!empty($this->typesettings)) {

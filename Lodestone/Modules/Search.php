@@ -1,11 +1,11 @@
 <?php
-namespace Lodestone\Search;
+namespace Lodestone\Modules;
 
 use Lodestone\Modules\{
     Logging\Logger, Routes, Http\HttpRequest
 };
 
-trait Functions {
+trait Search {
     /**
      * @test Premium Virtue,Phoenix
      * @param $name

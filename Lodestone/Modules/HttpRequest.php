@@ -1,6 +1,6 @@
 <?php
 
-namespace Lodestone\Modules\Http;
+namespace Lodestone\Modules;
 
 use Lodestone\Modules\Logging\Logger;
 use Lodestone\Validator\Exceptions\ValidationException,

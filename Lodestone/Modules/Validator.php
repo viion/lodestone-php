@@ -2,11 +2,7 @@
 
 namespace Lodestone\Modules;
 
-use Lodestone\Validator\Exceptions\{
-    HttpMaintenanceValidationException,
-    HttpNotFoundValidationException,
-    ValidationException
-};
+use Lodestone\Modules\Exceptions;
 
 class Validator
 {
@@ -60,7 +56,7 @@ class Validator
     public function isNotEmpty()
     {
         if (empty($this->object)) {
-            throw ValidationException::emptyValidation($this);
+            throw Exceptions::emptyValidation($this);
         }
 
         return $this;
@@ -72,7 +68,7 @@ class Validator
     public function isInteger()
     {
         if (!is_int($this->object)) {
-            throw ValidationException::integerValidation($this);
+            throw Exceptions::integerValidation($this);
         }
 
         return $this;
@@ -84,7 +80,7 @@ class Validator
     public function isNumeric()
     {
         if (!is_numeric($this->object)) {
-            throw ValidationException::numericValidation($this);
+            throw Exceptions::numericValidation($this);
         }
 
         return $this;
@@ -96,7 +92,7 @@ class Validator
     public function isString()
     {
         if (!is_string($this->object)) {
-            throw ValidationException::stringValidation($this);
+            throw Exceptions::stringValidation($this);
         }
 
         return $this;
@@ -120,7 +116,7 @@ class Validator
     public function isArray()
     {
         if (!is_array($this->object)) {
-            throw ValidationException::arrayValidation($this);
+            throw Exceptions::arrayValidation($this);
         }
 
         return $this;
@@ -132,7 +128,7 @@ class Validator
     public function isObject()
     {
         if (!is_object($this->object)) {
-            throw ValidationException::objectValidation($this);
+            throw Exceptions::objectValidation($this);
         }
         
         return $this;
@@ -144,7 +140,7 @@ class Validator
     public function isRelativeUrl()
     {
         if (preg_match(self::URL_REGEX, $this->object)) {
-            throw ValidationException::relativeUrlValidation($this);
+            throw Exceptions::relativeUrlValidation($this);
         }
 
         return $this;
@@ -156,7 +152,7 @@ class Validator
     public function isValidCharacterName()
     {
         if (!preg_match(self::VALID_CHARACTER_REGEX, $this->object)) {
-            throw new ValidationException($this->object . ' is not a valid character name.');
+            throw new Exceptions($this->object . ' is not a valid character name.');
         }
 
         return $this;
@@ -170,7 +166,7 @@ class Validator
     public function isFound()
     {
         if ($this->object == self::HTTP_NOT_FOUND) {
-            throw new HttpNotFoundValidationException($this);
+            throw new Exceptions(sprintf('Page %s was not found (404)', $this->id), self::HTTP_NOT_FOUND);
         }
 
         return $this;
@@ -184,7 +180,7 @@ class Validator
     public function isNotMaintenance()
     {
         if ($this->object == self::HTTP_SERVICE_NOT_AVAILABLE) {
-            throw new HttpMaintenanceValidationException();
+            throw new Exceptions('Lodestone not available', self::HTTP_SERVICE_NOT_AVAILABLE, $previous);
         }
 
         return $this;
@@ -199,7 +195,7 @@ class Validator
     public function isNotHttpError()
     {
         if ($this->object < self::HTTP_OK || $this->object > self::HTTP_PERM_REDIRECT) {
-            throw new ValidationException('Requested page '.$this->id.' is not available');
+            throw new Exceptions('Requested page '.$this->id.' is not available');
         }
 
         return $this;

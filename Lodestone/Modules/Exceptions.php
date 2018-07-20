@@ -1,20 +1,20 @@
 <?php
 
-namespace Lodestone\Validator\Exceptions;
+namespace Lodestone\Modules;
 
 use Exception,
     Throwable;
 use Lodestone\Modules\Validator;
 
 /**
- * Class ValidationException
+ * Class Exceptions
  *
  * @package Lodestone\Validator
  */
-class ValidationException extends Exception
+class Exceptions extends Exception
 {
     /**
-     * ValidationException constructor.
+     * Exceptions constructor.
      *
      * @param string $message
      * @param int $code
@@ -27,7 +27,7 @@ class ValidationException extends Exception
 
     /**
      * @param $validator Validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function emptyValidation($validator)
     {
@@ -42,13 +42,13 @@ class ValidationException extends Exception
             );
         }
 
-        return new ValidationException($message);
+        return new Exceptions($message);
     }
 
     /**
      * @param $name
      * @param $type
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function typeValidation(Validator $validator, $type)
     {
@@ -57,57 +57,57 @@ class ValidationException extends Exception
         $object = self::convertArrayToString($validator->object);
         $message = sprintf("%s (%s) is not of type: %s.\n", $name, $object, $type);
 
-        return new ValidationException($message);
+        return new Exceptions($message);
     }
 
     /**
      * @param $validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function integerValidation($validator)
     {
-        return ValidationException::typeValidation($validator, 'Integer');
+        return Exceptions::typeValidation($validator, 'Integer');
     }
 
     /**
      * @param $validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function numericValidation($validator)
     {
-        return ValidationException::typeValidation($validator, 'Numeric');
+        return Exceptions::typeValidation($validator, 'Numeric');
     }
 
     /**
      * @param $validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function stringValidation($validator)
     {
-        return ValidationException::typeValidation($validator, 'String');
+        return Exceptions::typeValidation($validator, 'String');
     }
 
     /**
      * @param $validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function arrayValidation($validator)
     {
-        return ValidationException::typeValidation($validator, 'Array');
+        return Exceptions::typeValidation($validator, 'Array');
     }
     
     /**
      * @param $validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function objectValidation($validator)
     {
-        return ValidationException::typeValidation($validator, 'Object');
+        return Exceptions::typeValidation($validator, 'Object');
     }
 
     /**
      * @param Validator $validator
-     * @return ValidationException
+     * @return Exceptions
      */
     public static function relativeUrlValidation(Validator $validator)
     {
@@ -116,7 +116,7 @@ class ValidationException extends Exception
 
         $message = sprintf("%s (%s) is not a relative url.\n", $name, $object);
 
-        return new ValidationException($message);
+        return new Exceptions($message);
     }
 
     /**

@@ -5,7 +5,8 @@ use Lodestone\Modules\{
     Logging\Logger, Routes
 };
 
-trait Search {
+trait Search
+{
     /**
      * @test Premium Virtue,Phoenix
      * @param $name

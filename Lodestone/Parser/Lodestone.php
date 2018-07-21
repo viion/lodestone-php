@@ -21,45 +21,6 @@ class Lodestone extends ParserHelper
     /**
      * @return array
      */
-    public function parseBanners()
-    {
-        $entries = $this->getDocument()->find('#slider_bnr_area li');
-        $results = [];
-        
-        foreach($entries as $entry) {
-            $results[] = [
-                'url' => $entry->find('a',0)->href,
-                'banner' => explode('?', $entry->find('img', 0)->src)[0],
-            ];
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * @return array
-     */
-    public function parseTopics()
-    {
-        $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list--topics');
-        $results = [];
-        
-        foreach($entries as $entry) {
-            $results[] = [
-                'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
-                'title' => $entry->find('.news__list--title')->plaintext,
-                'url' => $entry->find('.news__list--title a', 0)->href,
-                'banner' => $entry->find('.news__list--img img', 0)->getAttribute('src'),
-                'html' => $entry->find('.news__list--banner p')->innerHtml(),
-            ];
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * @return array
-     */
     public function parseNotices(string $language)
     {
         $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');

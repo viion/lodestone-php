@@ -1,9 +1,50 @@
 <?php
-#Functions used to convert textual filters to appropriate IDs used by Lodestone
-
 namespace Lodestone\Modules;
 
-trait Parsers {
+trait Parsers
+{
+    private function News()
+    {
+        preg_match_all(
+            '/<li class="news__list--topics ic__topics--list( news__content__bottom-radius)?"><header class="news__list--header clearfix"><p class="news__list--title"><a href="(?<url>.{65})">(?<title>.{1,100})<\/a><\/p><time class="news__list--time"><span id="datetime-0\.\d*">.{1,20}<\/span><script>document\.getElementById\(\'datetime-0\.\d*\'\)\.innerHTML = ldst_strftime\((?<time>\d*), \'YMD\'\);<\/script><\/time><\/header><div class="news__list--banner"><a href=".{65}" class="news__list--img"><img src="(?<banner>.{74})\.(png|jpg)\?\d*" width="570"( height="149")? alt=""><\/a>(?<html>.{0,1200})<\/div><\/li>/im',
+            $this->html,
+            $news,
+            PREG_SET_ORDER
+        );
+        foreach ($news as $key=>$new) {
+            foreach ($new as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($news[$key][$key2]);
+                }
+            }
+            $news[$key]['url'] = $this->language.Routes::LODESTONE_URL_BASE.$new['url'];
+        }
+        if ($this->type == 'Topics') {
+            unset($this->result['total']);
+            $this->result['topics'] = $news;
+        } else {
+            $this->result = $news;
+        }
+    }
+    
+    private function Banners()
+    {
+        preg_match('/<ul id="slider_bnr_area">(\s*<li.*><a href=".*".*><img src=".*".*><\/a><\/li>\s*)*<\/ul>/im', $this->html, $banners);
+        preg_match_all(
+            '/<li><a href="(?<url>.{19,19})"><img src="(?<banner>.{74,74}\.png)\?\d*" width="\d*" height="\d*"><\/a><\/li>/ims',
+            $banners[0],
+            $banners,
+            PREG_SET_ORDER
+        );
+        foreach ($banners as $key=>$banner) {
+            foreach ($banner as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($banners[$key][$key2]);
+                }
+            }
+        }
+        $this->result = $banners;
+    }
     
     private function CharacterList()
     {
@@ -118,16 +159,20 @@ trait Parsers {
     private function pageCount()
     {
         preg_match_all(
-            '/<div class="parts__total">(?<total>\d*).*<\/div>.*<li class="btn__pager__current">(Page |Seite )*(?<pageCurrent>\d*)[^\d]*(?<pageTotal>\d*).*<\/li>/mis',
+            '/(<div class="parts__total">(?<total>\d*).*<\/div>.*)?<li class="btn__pager__current">(Page |Seite )*(?<pageCurrent>\d*)[^\d]*(?<pageTotal>\d*).{0,20}<\/li>/mis',
             $this->html,
             $pages,
             PREG_SET_ORDER
         );
-        $this->result = [
-            'pageCurrent'=>$pages[0]['pageCurrent'],
-            'pageTotal'=>$pages[0]['pageTotal'],
-            'total'=>$pages[0]['total'],
-        ];
+        if (isset($pages[0]['pageCurrent'])) {
+            $this->result['pageCurrent'] = $pages[0]['pageCurrent'];
+        }
+        if (isset($pages[0]['pageTotal'])) {
+            $this->result['pageTotal'] = $pages[0]['pageTotal'];
+        }
+        if (isset($pages[0]['total'])) {
+            $this->result['total'] = $pages[0]['total'];
+        }
         return $this;
     }
 }

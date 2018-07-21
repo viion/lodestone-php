@@ -5,7 +5,8 @@ use Lodestone\Modules\{
     Logging\Logger, Routes
 };
 
-trait Special {
+trait Special
+{
     /**
      * @test .
      * @return array|bool
@@ -35,7 +36,7 @@ trait Special {
     public function getLodestoneTopics(int $page = 1)
     {
         $this->url = $this->language.Routes::LODESTONE_TOPICS.'?page='.$page;
-        $this->type = 'News';
+        $this->type = 'Topics';
         return $this->parse();
     }
 

@@ -158,10 +158,13 @@ class Api
                     }
                     break;
                 case 'Banners':
-                    $this->result = (new LodeStoneParser($this->html))->parseBanners();
+                    $this->Banners();
                     break;
                 case 'News':
-                    $this->result = (new LodeStoneParser($this->html))->parseTopics();
+                    $this->News();
+                    break;
+                case 'Topics':
+                    $this->pageCount()->News();
                     break;
                 case 'Notices':
                     $this->result = (new LodeStoneParser($this->html))->parseNotices($this->language);

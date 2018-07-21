@@ -3,6 +3,34 @@ namespace Lodestone\Modules;
 
 trait Parsers
 {
+    private function Notices()
+    {
+        #required to skipp "special" notices
+        preg_match_all(
+            '/<ul>(<li class="news__list">.*<\/li>)*<\/ul>/im',
+            $this->html,
+            $notices,
+            PREG_SET_ORDER
+        );
+        preg_match_all(
+            '/<li class="news__list"><a href="(?<url>.{63})" class="news__list--link ic__info--list"><div class="clearfix"><p class="news__list--title">(<span class="news__list--tag">\[(?<tag>.{1,20})\]<\/span>)?(?<title>.{1,100})<\/p><time class="news__list--time"><span id="datetime-0\.\d*">-<\/span><script>document\.getElementById\(\'datetime-0\.\d*\'\)\.innerHTML = ldst_strftime\((?<time>\d*), \'YMD\'\);<\/script><\/time><\/div><\/a><\/li>/mi',
+            $notices[0][0],
+            $notices,
+            PREG_SET_ORDER
+        );
+        foreach ($notices as $key=>$notice) {
+            foreach ($notice as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($notices[$key][$key2]);
+                }
+            }
+            $notices[$key]['url'] = $this->language.Routes::LODESTONE_URL_BASE.$notice['url'];
+        }
+        $this->result['notices'] = $notices;
+        unset($this->result['total']);
+        return $this;
+    }
+    
     private function News()
     {
         preg_match_all(
@@ -25,6 +53,7 @@ trait Parsers
         } else {
             $this->result = $news;
         }
+        return $this;
     }
     
     private function Banners()
@@ -44,6 +73,7 @@ trait Parsers
             }
         }
         $this->result = $banners;
+        return $this;
     }
     
     private function CharacterList()
@@ -84,6 +114,7 @@ trait Parsers
             unset($characters[$key]['gcname'], $characters[$key]['gcrank'], $characters[$key]['gcrankicon'], $characters[$key]['fcid'], $characters[$key]['fcname'], $characters[$key]['fccrestimg1'], $characters[$key]['fccrestimg2'], $characters[$key]['fccrestimg3']);
         }
         $this->result['characters'] = $characters;
+        return $this;
     }
     
     private function FreeCompaniesList()
@@ -110,6 +141,7 @@ trait Parsers
             unset($freecompanies[$key]['fccrestimg1'], $freecompanies[$key]['fccrestimg2'], $freecompanies[$key]['fccrestimg3']);
         }
         $this->result['freeCompanies'] = $freecompanies;
+        return $this;
     }
     
     private function LinkshellsList()
@@ -128,6 +160,7 @@ trait Parsers
             }
         }
         $this->result['linkshells'] = $linkshells;
+        return $this;
     }
     
     private function PvPTeamsList()
@@ -154,6 +187,7 @@ trait Parsers
             unset($pvpteams[$key]['crest1'], $pvpteams[$key]['crest2'], $pvpteams[$key]['crest3']);
         }
         $this->result['PvPTeams'] = $pvpteams;
+        return $this;
     }
     
     private function pageCount()

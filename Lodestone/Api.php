@@ -167,7 +167,7 @@ class Api
                     $this->pageCount()->News();
                     break;
                 case 'Notices':
-                    $this->result = (new LodeStoneParser($this->html))->parseNotices($this->language);
+                    $this->pageCount()->Notices();
                     break;
                 case 'WorldStatus':
                     $this->result = (new LodeStoneParser($this->html))->parseWorldStatus();

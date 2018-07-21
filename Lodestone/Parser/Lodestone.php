@@ -21,30 +21,6 @@ class Lodestone extends ParserHelper
     /**
      * @return array
      */
-    public function parseNotices(string $language)
-    {
-        $entries = $this->getDocumentFromClassname('.news__content')->find('li.news__list');
-        $results = [];
-        
-        foreach($entries as $entry) {
-            $tag = @$entry->find('.news__list--tag')->plaintext;
-            $title = $entry->find('.news__list--title')->plaintext;
-            $title = str_ireplace($tag, null, $title);
-            
-            $results[] = [
-                'time' => $this->getTimestamp($entry->find('.news__list--time', 0)),
-                'title' => $title,
-                'url' => $language.rtrim(Routes::LODESTONE_URL_BASE, '/') . $entry->find('.news__list--link', 0)->href,
-                'tag' => $tag,
-            ];
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * @return array
-     */
     public function parseWorldStatus()
     {
         $entries = $this->getDocumentFromClassname('.parts__space--pb16')->find('div.item-list__worldstatus');

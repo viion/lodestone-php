@@ -1,10 +1,6 @@
 <?php
 namespace Lodestone\Modules;
 
-use Lodestone\Modules\{
-    Logging\Logger, Routes
-};
-
 trait Special
 {
     /**

@@ -176,7 +176,7 @@ class Api
                     $this->Feast();
                     break;
                 case 'DeepDungeon':
-                    $this->result = (new LodeStoneParser($this->html))->parseDeepDungeon();
+                    $this->DeepDungeon();
                     break;
             }
         }

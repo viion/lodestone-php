@@ -3,6 +3,31 @@ namespace Lodestone\Modules;
 
 trait Parsers
 {
+    private function DeepDungeon()
+    {
+        preg_match_all(
+            '/<li class="deepdungeon__ranking__list__item"\s*data-href="\/lodestone\/character\/(?<id>\d*)\/"\s*>\s*<div class="deepdungeon__ranking__order">\s*<p class="deepdungeon__ranking__result__order">(?<rank>\d*)<\/p>\s*<\/div>\s*<div class="deepdungeon__ranking__face">\s*<div class="deepdungeon__ranking__face__inner">\s*<img src="(?<avatar>.{109}\.jpg)\?\d*" width="50" height="50" alt="">\s*<\/div>\s*<\/div>(\s*<div class="deepdungeon__ranking__job">\s*<img src="(?<jobform>.{66}\.png)" width="52" height="60" alt="" title=".{1,40}" class="tooltip">\s*<\/div>)?\s*<div class="deepdungeon__ranking__name">\s*<div class="deepdungeon__ranking__result__name">\s*<h3>(?<name>.{1,40})<\/h3>\s*<\/div>\s*<span class="deepdungeon__ranking__result__world">(?<server>.{1,40})<\/span>\s*<\/div>\s*<div class="deepdungeon__ranking__data">\s*<p class="deepdungeon__ranking__data--score">(?<score>\d*)<\/p>\s*<p class="deepdungeon__ranking__data--reaching">(.{1,9} |B)(?<floor>\d*)<\/p>\s*<p class="deepdungeon__ranking__data--time"><span id="datetime-0\.\d*">-<\/span><script>document\.getElementById\(\'datetime-0\.\d*\'\)\.innerHTML = ldst_strftime\((?<time>\d*), \'YMDHM\'\);<\/script><\/p>\s*<\/div>\s*<div class="deepdungeon__ranking__icon">\s*<img src="(?<jobicon>.{66}\.png)" width="32" height="32" alt="" title="(?<job>.{1,40})" class="tooltip">\s*<\/div>\s*<\/li>/mi',
+            $this->html,
+            $characters,
+            PREG_SET_ORDER
+        );
+        foreach ($characters as $key=>$character) {
+            foreach ($character as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($characters[$key][$key2]);
+                }
+            }
+            $characters[$key]['job'] = [
+                'name'=>$character['job'],
+                'icon'=>$character['jobicon'],
+                'form'=>$character['jobform'],
+            ];
+            unset($characters[$key]['jobicon'], $characters[$key]['jobform']);
+        }
+        $this->result = $characters;
+        return $this;
+    }
+    
     private function Feast()
     {
         preg_match_all(

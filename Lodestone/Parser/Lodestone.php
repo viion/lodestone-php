@@ -21,52 +21,6 @@ class Lodestone extends ParserHelper
     /**
      * @return array
      */
-    public function parseWorldStatus()
-    {
-        $entries = $this->getDocumentFromClassname('.parts__space--pb16')->find('div.item-list__worldstatus');
-        $results = [];
-        
-        foreach($entries as $entry) {
-            $results[] = [
-                'title' => trim($entry->find('h3')->plaintext),
-                'status' => trim($entry->find('p')->plaintext),
-            ];
-        }
-        
-        return $results;
-    }
-    
-    /**
-     * @return array
-     */
-    public function parseFeast()
-    {        
-        $entries = $this->getDocument()->find('.wolvesden__ranking__table tr');
-        $results = [];
-        
-        foreach($entries as $node) {
-            $results[] = [
-                'id' => explode('/', $node->getAttribute('data-href'))[3],
-                'name' => trim($node->find('.wolvesden__ranking__result__name h3', 0)->plaintext),
-                'server' =>trim( $node->find('.wolvesden__ranking__result__world', 0)->plaintext),
-                'avatar' => explode('?', $node->find('.wolvesden__ranking__result__face img', 0)->src)[0],
-                'rank' => $node->find('.wolvesden__ranking__result__order', 0)->plaintext,
-                'rank_previous' => trim($node->find('.wolvesden__ranking__td__prev_order', 0)->plaintext),
-                'win_count' => trim(@$node->find('.wolvesden__ranking__result__win_count', 0)->plaintext),
-                'win_rate' => str_ireplace('%', null, trim(@$node->find('.wolvesden__ranking__result__winning_rate', 0)->plaintext)),
-                'matches' => trim(@$node->find('.wolvesden__ranking__result__match_count', 0)->plaintext),
-                'rating' => trim($node->find('.wolvesden__ranking__result__match_rate', 0)->plaintext),
-                'rank_image' => @trim($node->find('.wolvesden__ranking__td__rank img', 0)->src),
-            ];
-        }
-        
-        $this->add('results', $results);
-        return $results;
-    }
-    
-    /**
-     * @return array
-     */
     public function parseDeepDungeon()
     {
         $entries = $this->getDocument()->find('.deepdungeon__ranking__wrapper__inner li');

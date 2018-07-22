@@ -3,6 +3,44 @@ namespace Lodestone\Modules;
 
 trait Parsers
 {
+    private function Feast()
+    {
+        preg_match_all(
+            '/<tr\s*data-href="\/lodestone\/character\/(?<id>\d*)\/"\s*>\s*<td class="wolvesden__ranking__td__order">\s*<p class="wolvesden__ranking__result__order">(?<rank>\d*)<\/p>\s*<\/td>\s*<td class="wolvesden__ranking__td__prev_order">(?<rank_previous>\d*)<\/td>\s*<td class="wolvesden__ranking__td__face">\s*<div class="wolvesden__ranking__result__face">\s*<img src="(?<avatar>.{109}\.jpg)\?\d*" width="50" height="50" alt="">\s*<\/div>\s*<\/td>\s*<td class="wolvesden__ranking__td__name">\s*<div class="wolvesden__ranking__result__name">\s*<h3>(?<name>.{1,40})<\/h3>\s*<\/div>\s*<span class="wolvesden__ranking__result__world">(?<server>.{1,40})<\/span>\s*<\/td>(\s*<td class="wolvesden__ranking__td__win_count">\s*<p class="wolvesden__ranking__result__win_count">(?<win_count>\d*)<\/p>\s*<p class="wolvesden__ranking__result__winning_rate">(?<win_rate>[0-9\.]*)%<\/p>\s*<\/td>\s*<td class="wolvesden__ranking__td__separator">	\s*<p class="wolvesden__ranking__result__separator">\/<\/p>\s*<\/td>\s*<td class="wolvesden__ranking__td__match_count">\s*<p class="wolvesden__ranking__result__match_count">(?<matches>\d*)<\/p>\s*<\/td>)?\s*<td class="wolvesden__ranking__td__match_rate">\s*<p class="wolvesden__ranking__result__match_rate">(?<rating>\d*)<\/p>\s*<\/td>\s*<td class="wolvesden__ranking__td__rank">\s*<img src="(?<league_image>.{66}\.png)" width="88" height="60" alt=".{1,20}" title="(?<league>.{1,20})" class="js--wolvesden-tooltip">\s*<\/td>\s*<\/tr>/mi',
+            $this->html,
+            $characters,
+            PREG_SET_ORDER
+        );
+        foreach ($characters as $key=>$character) {
+            foreach ($character as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($characters[$key][$key2]);
+                }
+            }
+        }
+        $this->result = $characters;
+        return $this;
+    }
+    
+    private function Worlds()
+    {
+        preg_match_all(
+            '/<div class="item-list__worldstatus">\s*<h3 class="">(?<server>.*)<\/h3>\s*<p>\s*(?<status>.{1,10})\s*<\/p>/mi',
+            $this->html,
+            $worlds,
+            PREG_SET_ORDER
+        );
+        foreach ($worlds as $key=>$world) {
+            foreach ($world as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($worlds[$key][$key2]);
+                }
+            }
+        }
+        $this->result = $worlds;
+        return $this;
+    }
+    
     private function Notices()
     {
         #required to skipp "special" notices

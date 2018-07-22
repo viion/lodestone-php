@@ -170,14 +170,10 @@ class Api
                     $this->pageCount()->Notices();
                     break;
                 case 'WorldStatus':
-                    $this->result = (new LodeStoneParser($this->html))->parseWorldStatus();
-                    break;
-                case 'DevBlog':
-                    $xml = simplexml_load_string($this->html, null, LIBXML_NOCDATA);
-                    $this->result = json_decode(json_encode($xml), true)['entry'];
+                    $this->Worlds();
                     break;
                 case 'Feast':
-                    $this->result = (new LodeStoneParser($this->html))->parseFeast();
+                    $this->Feast();
                     break;
                 case 'DeepDungeon':
                     $this->result = (new LodeStoneParser($this->html))->parseDeepDungeon();

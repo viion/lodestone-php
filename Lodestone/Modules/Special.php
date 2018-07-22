@@ -92,17 +92,6 @@ trait Special
     }
 
     /**
-     * @test .
-     * @return mixed
-     */
-    public function getDevBlog()
-    {
-        $this->url = $this->language.Routes::LODESTONE_DEV_BLOG;
-        $this->type = 'DevBlog';
-        return $this->parse();
-    }
-
-    /**
      * Get params from: http://eu.finalfantasyxiv.com/lodestone/ranking/thefeast/
      *
      * @test .

@@ -14,6 +14,8 @@ If you are using the original library there is not a "need" to switch, but this 
 - More filters for your queries. This is mainly for search subfunctions, but other calls also may already or will have additional options to provide more flexibility.
 - Return more potential useful information in searches.
 - Attempt at multilangual support. Search functions already support multilingual filters (insterad of IDs) and at the moment, it looks like only some character parser functions need to be updated to provide full support.
+- Ability to "link" different types of entities, requesting several pages on one go (WIP)
+- Option to get results from all pages in one go (WIP)
 
 
 ## Getting Started

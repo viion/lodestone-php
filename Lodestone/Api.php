@@ -101,6 +101,8 @@ class Api
             $this->html = $http->get($this->url);
             switch($this->type) {
                 case 'searchCharacter':
+                case 'CharacterFriends':
+                case 'CharacterFollowing':
                     $this->pageCount()->CharacterList();
                     break;
                 case 'searchFreeCompany':
@@ -116,12 +118,6 @@ class Api
                     if (!empty($this->typesettings)) {
                         $this->result = (new CharacterParser($this->typesettings['id'], $this->html))->results;
                     }
-                    break;
-                case 'CharacterFriends':
-                    $this->result = (new CharacterFriendsParser($this->html))->results;
-                    break;
-                case 'CharacterFollowing':
-                    $this->result = (new CharacterFollowingParser($this->html))->results;
                     break;
                 case 'Achievements':
                     if (!empty($this->typesettings)) {

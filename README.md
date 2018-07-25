@@ -1,5 +1,7 @@
 # Final Fantasy XIV: Lodestone PHP Parser
 
+> This project is no longer being worked on by the origial developer, if someone would like to take it over I can transfer it.
+
 [![Latest Stable Version](https://poser.pugx.org/viion/lodestone-php/v/stable)](https://packagist.org/packages/viion/lodestone-php)
 [![Total Downloads](https://poser.pugx.org/viion/lodestone-php/downloads)](https://packagist.org/packages/viion/lodestone-php)
 [![License](https://poser.pugx.org/viion/lodestone-php/license)](https://packagist.org/packages/viion/lodestone-php)

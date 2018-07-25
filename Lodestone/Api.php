@@ -141,9 +141,7 @@ class Api
                     }
                     break;
                 case 'PvPTeamMembers':
-                    if (!empty($this->typesettings)) {
-                        $this->result = (new PvPTeamParser($this->typesettings['id'], $this->html))->results;
-                    }
+                    $this->pageCount()->CharacterList();
                     break;
                 case 'Banners':
                     $this->Banners();
@@ -286,7 +284,7 @@ class Api
      * @param bool $page
      * @return Entities\Linkshell\Linkshell
      */
-    public function getLinkshellMembers($id, $page = 1)
+    public function getLinkshell($id, $page = 1)
     {
         $this->url = sprintf($this->language.Routes::LODESTONE_LINKSHELL_MEMBERS_URL.'/?page='.$page, $id);
         $this->type = 'LinkshellMembers';
@@ -299,7 +297,7 @@ class Api
      * @param $id
      * @return Entities\PvPTeam\PvPTeam
      */
-    public function getPvPTeamMembers($id)
+    public function getPvPTeam($id)
     {
         $this->url = sprintf($this->language.Routes::LODESTONE_PVPTEAM_MEMBERS_URL, $id);
         $this->type = 'PvPTeamMembers';

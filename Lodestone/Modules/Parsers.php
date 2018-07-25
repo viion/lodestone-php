@@ -142,7 +142,7 @@ trait Parsers
     private function CharacterList()
     {
         preg_match_all(
-            '/<(li|div) class="entry">\s*<a href="\/lodestone\/character\/(?<id>\d*)\/" class="entry__(bg|link)">(\s*<div class="entry__flex">)?\s*<div class="entry__chara__face">\s*<img src="(?<avatar>.{109}\.jpg)\?\d*" alt=".{0,40}">\s*<\/div>\s*<div class="(entry__freecompany__center|entry__box entry__box--world)">\s*<p class="entry__name">(?<name>.{1,40})<\/p>\s*<p class="entry__world">(?<server>.{1,40})<\/p>\s*<ul class="entry__(chara_|freecompany__)info">(\s*<li>\s*<img src="(?<rankicon>.{66}\.png)" width="20" height="20" alt=""><span>(?<rank>.{1,15})<\/span><\/li>)?\s*<li>\s*<i class="list__ic__class">\s*<img src=".{66}\.png" width="20" height="20" alt="">\s*<\/i>\s*<span>\d*<\/span>\s*<\/li>(\s*<li class="js__tooltip" data-tooltip="(?<gcname>.*) \/ (?<gcrank>.*)">\s*<img src="(?<gcrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<\/li>)?\s*<\/ul>(\s*<div class="entry__chara_info__linkshell">\s*<img src="(?<lsrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<span>(?<lsrank>.{1,40})<\/span>\s*<\/div>)?\s*<\/div>(\s*<div class="entry__chara__lang">(?<language>.{1,40})<\/div>)?(\s*<\/div>)?\s*<\/a>(\s*<a href="\/lodestone\/freecompany\/(?<fcid>\d*)\/" class="entry__freecompany__link">\s*<i class="list__ic__crest">\s*<img src="(?<fccrestimg1>https:.{58,74}\.png)" width="18" height="18">(\s*<img src="(?<fccrestimg2>https:.{58,74}\.png)" width="18" height="18">)?(\s*<img src="(?<fccrestimg3>https:.{58,74}\.png)" width="18" height="18">)?\s*<\/i>\s*<span>(?<fcname>.{1,40})<\/span>\s*<\/a>)?\s*<\/(li|div)>/mi',
+            '/<(li|div) class="entry">\s*<a href="\/lodestone\/character\/(?<id>\d*)\/" class="entry__(bg|link)">(\s*<div class="entry__flex">)?\s*<div class="entry__chara__face">\s*<img src="(?<avatar>.{109}\.jpg)\?\d*" alt=".{0,40}">\s*<\/div>\s*<div class="(entry__freecompany__center|entry__box entry__box--world)">\s*<p class="entry__name">(?<name>.{1,40})<\/p>\s*<p class="entry__world">(?<server>.{1,40})<\/p>\s*<ul class="entry__(chara_|freecompany__)info">(\s*<li>\s*<img src="(?<rankicon>.{66}\.png)" width="20" height="20" alt=""><span>(?<rank>.{1,15})<\/span><\/li>)?\s*<li>\s*<i class="list__ic__class">\s*<img src=".{66}\.png" width="20" height="20" alt="">\s*<\/i>\s*<span>\d*<\/span>\s*<\/li>(\s*<li class="js__tooltip" data-tooltip="(?<gcname>.*) \/ (?<gcrank>.*)">\s*<img src="(?<gcrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<\/li>)?(\s*<li>\s*<img src=".{66}\.png" width="20" height="20" class="entry__pvpteam__battle__icon js__tooltip" data-tooltip=".{1,40}">\s*<span>(?<feasts>\d*)<\/span>\s*<\/li>)?\s*<\/ul>(\s*<div class="entry__chara_info__linkshell">\s*<img src="(?<lsrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<span>(?<lsrank>.{1,40})<\/span>\s*<\/div>)?\s*<\/div>(\s*<div class="entry__chara__lang">(?<language>.{1,40})<\/div>)?(\s*<\/div>)?\s*<\/a>(\s*<a href="\/lodestone\/freecompany\/(?<fcid>\d*)\/" class="entry__freecompany__link">\s*<i class="list__ic__crest">\s*<img src="(?<fccrestimg1>https:.{58,74}\.png)" width="18" height="18">(\s*<img src="(?<fccrestimg2>https:.{58,74}\.png)" width="18" height="18">)?(\s*<img src="(?<fccrestimg3>https:.{58,74}\.png)" width="18" height="18">)?\s*<\/i>\s*<span>(?<fcname>.{1,40})<\/span>\s*<\/a>)?\s*<\/(li|div)>/mi',
             $this->html,
             $characters,
             PREG_SET_ORDER
@@ -264,7 +264,7 @@ trait Parsers
     private function pageCount()
     {
         preg_match_all(
-            '/(<h3 class="heading__linkshell__name">(?<linkshellname>.{1,40})<\/h3>.{1,2000})?(<div class="parts__total">(?<total>\d*).{0,20}<\/div>.{1,3000})?<li class="btn__pager__current">(Page |Seite )*(?<pageCurrent>\d*)[^\d]*(?<pageTotal>\d*).{0,20}<\/li>/mis',
+            '/(<div class="entry__pvpteam__crest__image">\s*<img src="https:.{58,74}\.png" width="64" height="64">\s*<img src="(?<crest1>https:.{58,74}\.png)" width="64" height="64">(\s*<img src="(?<crest2>https:.{58,74}\.png)" width="64" height="64">)?(\s*<img src="(?<crest3>https:.{58,74}\.png)" width="64" height="64">)?\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="entry__pvpteam__name">\s*<h2 class="entry__pvpteam__name--team">(?<pvpname>.{1,40})<\/h2>\s*<p class="entry__pvpteam__name--dc">(?<server>.{1,40})<\/p>\s*<\/div>\s*<div class="entry__pvpteam__data">\s*<span class="entry__pvpteam__data--formed">\s*.{1,100}<span id="datetime-0\.\d*">-<\/span><script>document\.getElementById\(\'datetime-0\.\d*\'\)\.innerHTML = ldst_strftime\((?<formed>\d*), \'YMD\'\);<\/script>\s*<\/span>\s*<\/div>\s*<\/div>\s*<\/div>)|((<h3 class="heading__linkshell__name">(?<linkshellname>.{1,40})<\/h3>.{1,2000})?(<div class="parts__total">(?<total>\d*).{0,20}<\/div>.{1,3000})?<li class="btn__pager__current">(Page |Seite )*(?<pageCurrent>\d*)[^\d]*(?<pageTotal>\d*).{0,20}<\/li>)/mis',
             $this->html,
             $pages,
             PREG_SET_ORDER
@@ -280,6 +280,22 @@ trait Parsers
         }
         if (!empty($pages[0]['total'])) {
             $this->result['total'] = $pages[0]['total'];
+        }
+        if (!empty($pages[0]['pvpname'])) {
+            $this->result['name'] = $pages[0]['pvpname'];
+            if (!empty($pages[0]['server'])) {
+                $this->result['dataCenter'] = $pages[0]['server'];
+            }
+            if (!empty($pages[0]['formed'])) {
+                $this->result['formed'] = $pages[0]['formed'];
+            }
+            $this->result['crest'][] = str_replace('64x64', '128x128', $pages[0]['crest1']);
+            if (!empty($pages[0]['crest2'])) {
+                $this->result['crest'][] = str_replace('64x64', '128x128', $pages[0]['crest2']);
+            }
+            if (!empty($pages[0]['crest3'])) {
+                $this->result['crest'][] = str_replace('64x64', '128x128', $pages[0]['crest3']);
+            }
         }
         return $this;
     }

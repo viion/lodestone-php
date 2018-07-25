@@ -140,9 +140,7 @@ class Api
                     }
                     break;
                 case 'LinkshellMembers':
-                    if (!empty($this->typesettings)) {
-                        $this->result = (new LinkshellParser($this->typesettings['id'], $this->html))->results;
-                    }
+                    $this->pageCount()->CharacterList();
                     break;
                 case 'PvPTeamMembers':
                     if (!empty($this->typesettings)) {

@@ -142,7 +142,7 @@ trait Parsers
     private function CharacterList()
     {
         preg_match_all(
-            '/<(li|div) class="entry">\s*<a href="\/lodestone\/character\/(?<id>\d*)\/" class="entry__(bg|link)">(\s*<div class="entry__flex">)?\s*<div class="entry__chara__face">\s*<img src="(?<avatar>.{109}\.jpg)\?\d*" alt=".{0,40}">\s*<\/div>\s*<div class="(entry__freecompany__center|entry__box entry__box--world)">\s*<p class="entry__name">(?<name>.{1,40})<\/p>\s*<p class="entry__world">(?<server>.{1,40})<\/p>\s*<ul class="entry__(chara_|freecompany__)info">(\s*<li>\s*<img src="(?<rankicon>.{66}\.png)" width="20" height="20" alt=""><span>(?<rank>.{1,15})<\/span><\/li>)?\s*<li>\s*<i class="list__ic__class">\s*<img src=".{66}\.png" width="20" height="20" alt="">\s*<\/i>\s*<span>\d*<\/span>\s*<\/li>(\s*<li class="js__tooltip" data-tooltip="(?<gcname>.*) \/ (?<gcrank>.*)">\s*<img src="(?<gcrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<\/li>)?\s*<\/ul>\s*<\/div>(\s*<div class="entry__chara__lang">(?<language>.*)<\/div>)?(\s*<\/div>)?\s*<\/a>(\s*<a href="\/lodestone\/freecompany\/(?<fcid>\d*)\/" class="entry__freecompany__link">\s*<i class="list__ic__crest">\s*<img src="(?<fccrestimg1>https:.{58,74}\.png)" width="18" height="18">(\s*<img src="(?<fccrestimg2>https:.{58,74}\.png)" width="18" height="18">)?(\s*<img src="(?<fccrestimg3>https:.{58,74}\.png)" width="18" height="18">)?\s*<\/i>\s*<span>(?<fcname>.{1,40})<\/span>\s*<\/a>)?\s*<\/(li|div)>/m',
+            '/<(li|div) class="entry">\s*<a href="\/lodestone\/character\/(?<id>\d*)\/" class="entry__(bg|link)">(\s*<div class="entry__flex">)?\s*<div class="entry__chara__face">\s*<img src="(?<avatar>.{109}\.jpg)\?\d*" alt=".{0,40}">\s*<\/div>\s*<div class="(entry__freecompany__center|entry__box entry__box--world)">\s*<p class="entry__name">(?<name>.{1,40})<\/p>\s*<p class="entry__world">(?<server>.{1,40})<\/p>\s*<ul class="entry__(chara_|freecompany__)info">(\s*<li>\s*<img src="(?<rankicon>.{66}\.png)" width="20" height="20" alt=""><span>(?<rank>.{1,15})<\/span><\/li>)?\s*<li>\s*<i class="list__ic__class">\s*<img src=".{66}\.png" width="20" height="20" alt="">\s*<\/i>\s*<span>\d*<\/span>\s*<\/li>(\s*<li class="js__tooltip" data-tooltip="(?<gcname>.*) \/ (?<gcrank>.*)">\s*<img src="(?<gcrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<\/li>)?\s*<\/ul>(\s*<div class="entry__chara_info__linkshell">\s*<img src="(?<lsrankicon>.{66}\.png)" width="20" height="20" alt="">\s*<span>(?<lsrank>.{1,40})<\/span>\s*<\/div>)?\s*<\/div>(\s*<div class="entry__chara__lang">(?<language>.{1,40})<\/div>)?(\s*<\/div>)?\s*<\/a>(\s*<a href="\/lodestone\/freecompany\/(?<fcid>\d*)\/" class="entry__freecompany__link">\s*<i class="list__ic__crest">\s*<img src="(?<fccrestimg1>https:.{58,74}\.png)" width="18" height="18">(\s*<img src="(?<fccrestimg2>https:.{58,74}\.png)" width="18" height="18">)?(\s*<img src="(?<fccrestimg3>https:.{58,74}\.png)" width="18" height="18">)?\s*<\/i>\s*<span>(?<fcname>.{1,40})<\/span>\s*<\/a>)?\s*<\/(li|div)>/mi',
             $this->html,
             $characters,
             PREG_SET_ORDER
@@ -174,7 +174,15 @@ trait Parsers
                     $characters[$key]['freeCompany']['crest'][] = str_replace('40x40', '128x128', $character['fccrestimg3']);
                 }
             }
-            unset($characters[$key]['gcname'], $characters[$key]['gcrank'], $characters[$key]['gcrankicon'], $characters[$key]['fcid'], $characters[$key]['fcname'], $characters[$key]['fccrestimg1'], $characters[$key]['fccrestimg2'], $characters[$key]['fccrestimg3']);
+            if (!empty($character['lsrank'])) {
+                $characters[$key]['rank'] = $character['lsrank'];
+                $characters[$key]['rankicon'] = $character['lsrankicon'];
+                if (empty($this->result['server'])) {
+                    $this->result['server'] = $character['server'];
+                }
+                unset($characters[$key]['server']);
+            }
+            unset($characters[$key]['gcname'], $characters[$key]['gcrank'], $characters[$key]['gcrankicon'], $characters[$key]['fcid'], $characters[$key]['fcname'], $characters[$key]['fccrestimg1'], $characters[$key]['fccrestimg2'], $characters[$key]['fccrestimg3'], $characters[$key]['lsrank'], $characters[$key]['lsrankicon']);
         }
         $this->result['characters'] = $characters;
         return $this;
@@ -256,18 +264,21 @@ trait Parsers
     private function pageCount()
     {
         preg_match_all(
-            '/(<div class="parts__total">(?<total>\d*).{0,20}<\/div>.*)?<li class="btn__pager__current">(Page |Seite )*(?<pageCurrent>\d*)[^\d]*(?<pageTotal>\d*).{0,20}<\/li>/mis',
+            '/(<h3 class="heading__linkshell__name">(?<linkshellname>.{1,40})<\/h3>.{1,2000})?(<div class="parts__total">(?<total>\d*).{0,20}<\/div>.{1,3000})?<li class="btn__pager__current">(Page |Seite )*(?<pageCurrent>\d*)[^\d]*(?<pageTotal>\d*).{0,20}<\/li>/mis',
             $this->html,
             $pages,
             PREG_SET_ORDER
         );
-        if (isset($pages[0]['pageCurrent'])) {
+        if (!empty($pages[0]['linkshellname'])) {
+            $this->result['name'] = $pages[0]['linkshellname'];
+        }
+        if (!empty($pages[0]['pageCurrent'])) {
             $this->result['pageCurrent'] = $pages[0]['pageCurrent'];
         }
-        if (isset($pages[0]['pageTotal'])) {
+        if (!empty($pages[0]['pageTotal'])) {
             $this->result['pageTotal'] = $pages[0]['pageTotal'];
         }
-        if (isset($pages[0]['total'])) {
+        if (!empty($pages[0]['total'])) {
             $this->result['total'] = $pages[0]['total'];
         }
         return $this;

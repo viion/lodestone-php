@@ -104,6 +104,7 @@ class Api
                 case 'CharacterFriends':
                 case 'CharacterFollowing':
                 case 'FreeCompanyMembers':
+                case 'LinkshellMembers':
                     $this->pageCount()->CharacterList();
                     break;
                 case 'searchFreeCompany':
@@ -138,9 +139,6 @@ class Api
                     if (!empty($this->typesettings)) {
                         $this->result = (new FreeCompanyParser($this->typesettings['id'], $this->html))->results;
                     }
-                    break;
-                case 'LinkshellMembers':
-                    $this->pageCount()->CharacterList();
                     break;
                 case 'PvPTeamMembers':
                     if (!empty($this->typesettings)) {

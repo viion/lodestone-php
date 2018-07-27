@@ -3,6 +3,161 @@ namespace Lodestone\Modules;
 
 trait Parsers
 {    
+    private function FreeCompany()
+    {
+        preg_match_all(
+            '/<div class="entry">\s*<a href="\/lodestone\/freecompany\/(?<id>\d*)\/" class="entry__freecompany">\s*<div class="entry__freecompany__crest">\s*<div class="entry__freecompany__crest--position">\s*<img src=".{66}\.png" width="68" height="68" alt="" class="entry__freecompany__crest__base">\s*<div class="entry__freecompany__crest__image">\s*<img src="(?<crest1>.{80}\.png)" width="64" height="64">(\s*<img src="(?<crest2>.{80}\.png)" width="64" height="64">)?(\s*<img src="(?<crest3>.{80}\.png)" width="64" height="64">)?\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="entry__freecompany__box">\s*<p class="entry__freecompany__gc">(?<grandCompany>.{1,40})&#60;.{1,20}<\/p>\s*<p class="entry__freecompany__name">(?<name>.{1,40})<\/p>\s*<p class="entry__freecompany__gc">\s*(?<server>.{1,40})\s*<\/p>\s*<\/div>\s*<\/a>\s*<\/div>\s*<h3 class="heading--lead">.{1,40}<\/h3>\s*<p class="freecompany__text freecompany__text__message">(?<slogan>.{1,200})<\/p>\s*<h3 class="heading--lead">.{1,100}<span class="freecompany__text__tag">.{1,100}<\/span><\/h3>\s*<p class="freecompany__text__name">.{1,40}<p>\s*<p class="freecompany__text freecompany__text__tag">&laquo;(?<tag>.{1,5})&raquo;<\/span><\/p>\s*<h3 class="heading--lead">.{1,20}<\/h3>\s*<p class="freecompany__text">\s*<span id="datetime-0\.\d*">-<\/span>\s*<script>\s*document\.getElementById\(\'datetime-0\.\d*\'\)\.innerHTML = ldst_strftime\((?<formed>\d*), \'YMD\'\);\s*<\/script>\s*<\/p>\s*<h3 class="heading--lead">.{1,50}<\/h3>\s*<p class="freecompany__text">(?<members>\d*)<\/p>\s*<h3 class="heading--lead">.{1,15}<\/h3>\s*<p class="freecompany__text">(?<rank>\d*)<\/p>\s*<h3 class="heading--lead">.{1,20}<\/h3>\s*<div class="freecompany__reputation">\s*<div class="freecompany__reputation__icon">\s*<img src=".{66}\.png" alt="" width="32" height="32">\s*<\/div>\s*<div class="freecompany__reputation__data">\s*<p class="freecompany__reputation__gcname">(?<gcname1>.{1,40})<\/p>\s*<p class="freecompany__reputation__rank color_\d*">(?<gcrepu1>.{1,40})<\/p>\s*<div class="character__bar">\s*<div style="width:\d*%;"><\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="freecompany__reputation">\s*<div class="freecompany__reputation__icon">\s*<img src=".{66}\.png" alt="" width="32" height="32">\s*<\/div>\s*<div class="freecompany__reputation__data">\s*<p class="freecompany__reputation__gcname">(?<gcname2>.{1,40})<\/p>\s*<p class="freecompany__reputation__rank color_\d*">(?<gcrepu2>.{1,40})<\/p>\s*<div class="character__bar">\s*<div style="width:\d*%;"><\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<div class="freecompany__reputation last">\s*<div class="freecompany__reputation__icon">\s*<img src=".{66}\.png" alt="" width="32" height="32">\s*<\/div>\s*<div class="freecompany__reputation__data">\s*<p class="freecompany__reputation__gcname">(?<gcname3>.{1,40})<\/p>\s*<p class="freecompany__reputation__rank color_\d*">(?<gcrepu3>.{1,40})<\/p>\s*<div class="character__bar">\s*<div style="width:\d*%;"><\/div>\s*<\/div>\s*<\/div>\s*<\/div>\s*<h3 class="heading--lead">.{1,40}<\/h3>\s*<table class="character__ranking__data parts__space--reset">\s*<tr>\s*<th>[^\d\-]{1,17}(?<weekly_rank>[\d\-]{1,})?[^\d]{0,20}<\/th>\s*<\/tr>\s*<tr>\s*<th>[^\d\-]{1,17}(?<monthly_rank>[\d\-]{1,})?[^\d]{0,20}<\/th>\s*<\/tr>\s*<\/table>\s*<p class="freecompany__ranking__notes">.{1,100}\/p>\s*<h3 class="heading--lead">.{1,100}<\/h3>\s*((<p class="freecompany__estate__name">(?<estate_name>.{1,20})<\/p>|<p class="parts__text">.{1,40}<\/p>)\s*<p class="freecompany__estate__title">.{1,40}<\/p>\s*<p class="freecompany__estate__text">(?<estate_address>.{1,200})<\/p>\s*<p class="freecompany__estate__title">.{1,20}<\/p>\s*<p class="freecompany__estate__greeting">(?<estate_greeting>.{0,200})<\/p>|<p class="freecompany__estate__none">.{1,50}<\/p>)\s*<\/div>\s*<div class="ldst__window">\s*<h2 class="heading--lg parts__space--add" id="anchor__focus">.{1,40}<\/h2>\s*<h3 class="heading--lead">.{1,40}<\/h3>\s*<p class="freecompany__text">\s*(?<active>.{1,40})\s*<\/p>\s*<h3 class="heading--lead">.{1,40}<\/h3>\s*<p class="freecompany__text( freecompany__recruitment)?">\s*(?<recruitment>.{1,40})\s*<\/p>\s*<h3 class="heading--lead">.{1,40}<\/h3>\s*(<ul class="freecompany__focus_icon clearfix">\s*<li( class="(?<focusoff1>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon1>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname1>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff2>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon2>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname2>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff3>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon3>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname3>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff4>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon4>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname4>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff5>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon5>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname5>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff6>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon6>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname6>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff7>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon7>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname7>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff8>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon8>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname8>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<focusoff9>freecompany__focus_icon--off)")?>\s*<div><img src="(?<focusicon9>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<focusname9>.{1,40})<\/p>\s*<\/li>\s*<\/ul>|<p class="freecompany__text">.{1,40}<\/p>)\s*<h3 class="heading--lead">.{1,40}<\/h3>\s*(<ul class="freecompany__focus_icon freecompany__focus_icon--role clearfix">\s*<li( class="(?<seekingoff1>freecompany__focus_icon--off)")?>\s*<div><img src="(?<seekingicon1>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<seekingname1>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<seekingoff2>freecompany__focus_icon--off)")?>\s*<div><img src="(?<seekingicon2>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<seekingname2>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<seekingoff3>freecompany__focus_icon--off)")?>\s*<div><img src="(?<seekingicon3>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<seekingname3>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<seekingoff4>freecompany__focus_icon--off)")?>\s*<div><img src="(?<seekingicon4>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<seekingname4>.{1,40})<\/p>\s*<\/li>\s*<li( class="(?<seekingoff5>freecompany__focus_icon--off)")?>\s*<div><img src="(?<seekingicon5>.{66}\.png)" alt="" width="32" height="32"><\/div>\s*<p>(?<seekingname5>.{1,40})<\/p>\s*<\/li>\s*<\/ul>|<p class="parts__text">.{1,30}<\/p>)/mi',
+            $this->html,
+            $characters,
+            PREG_SET_ORDER
+        );
+        foreach ($characters as $key=>$character) {
+            foreach ($character as $key2=>$details) {
+                if (is_numeric($key2) || empty($details)) {
+                    unset($characters[$key][$key2]);
+                }
+            }
+            $characters[$key]['crest'][] = str_replace('64x64', '128x128', $character['crest1']);
+            if (!empty($character['crest2'])) {
+                $characters[$key]['crest'][] = str_replace('64x64', '128x128', $character['crest2']);
+            }
+            if (!empty($character['crest3'])) {
+                $characters[$key]['crest'][] = str_replace('64x64', '128x128', $character['crest3']);
+            }
+            //ranking checks for --
+            if ($character['weekly_rank'] == '--') {
+                unset($characters[$key]['weekly_rank']);
+            }
+            if ($character['monthly_rank'] == '--') {
+                unset($characters[$key]['monthly_rank']);
+            }
+            #Estates
+            if (!empty($character['estate_name'])) {
+                $characters[$key]['estate']['name'] = $character['estate_name'];
+            }
+            if (!empty($character['estate_address'])) {
+                $characters[$key]['estate']['address'] = $character['estate_address'];
+            }
+            if (!empty($character['estate_greeting']) && !in_array($character['estate_greeting'], ['No greeting available.', 'グリーティングメッセージが設定されていません。', 'Il n\'y a aucun message d\'accueil.', 'Keine Begrüßung vorhanden.'])) {
+                $characters[$key]['estate']['greeting'] = $character['estate_greeting'];
+            }
+            #Grand companies reputation
+            $characters[$key]['reputation'] = [
+                $character['gcname1']=>$character['gcrepu1'],
+                $character['gcname2']=>$character['gcrepu2'],
+                $character['gcname3']=>$character['gcrepu3'],
+            ];
+            #Focus
+            if (!empty($character['focusname1'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname1'],
+                    'enabled'=>($character['focusoff1'] ? 0 : 1),
+                    'icon'=>$character['focusicon1'],
+                ];
+            }
+            if (!empty($character['focusname2'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname2'],
+                    'enabled'=>($character['focusoff2'] ? 0 : 1),
+                    'icon'=>$character['focusicon2'],
+                ];
+            }
+            if (!empty($character['focusname3'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname3'],
+                    'enabled'=>($character['focusoff3'] ? 0 : 1),
+                    'icon'=>$character['focusicon3'],
+                ];
+            }
+            if (!empty($character['focusname4'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname4'],
+                    'enabled'=>($character['focusoff4'] ? 0 : 1),
+                    'icon'=>$character['focusicon4'],
+                ];
+            }
+            if (!empty($character['focusname5'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname5'],
+                    'enabled'=>($character['focusoff5'] ? 0 : 1),
+                    'icon'=>$character['focusicon5'],
+                ];
+            }
+            if (!empty($character['focusname6'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname6'],
+                    'enabled'=>($character['focusoff6'] ? 0 : 1),
+                    'icon'=>$character['focusicon6'],
+                ];
+            }
+            if (!empty($character['focusname7'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname7'],
+                    'enabled'=>($character['focusoff7'] ? 0 : 1),
+                    'icon'=>$character['focusicon7'],
+                ];
+            }
+            if (!empty($character['focusname8'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname8'],
+                    'enabled'=>($character['focusoff8'] ? 0 : 1),
+                    'icon'=>$character['focusicon8'],
+                ];
+            }
+            if (!empty($character['focusname9'])) {
+                $characters[$key]['focus'][] = [
+                    'name'=>$character['focusname9'],
+                    'enabled'=>($character['focusoff9'] ? 0 : 1),
+                    'icon'=>$character['focusicon9'],
+                ];
+            }
+            #Seeking
+            if (!empty($character['seekingname1'])) {
+                $characters[$key]['seeking'][] = [
+                    'name'=>$character['seekingname1'],
+                    'enabled'=>($character['seekingoff1'] ? 0 : 1),
+                    'icon'=>$character['seekingicon1'],
+                ];
+            }
+            if (!empty($character['seekingname2'])) {
+                $characters[$key]['seeking'][] = [
+                    'name'=>$character['seekingname2'],
+                    'enabled'=>($character['seekingoff2'] ? 0 : 1),
+                    'icon'=>$character['seekingicon2'],
+                ];
+            }
+            if (!empty($character['seekingname3'])) {
+                $characters[$key]['seeking'][] = [
+                    'name'=>$character['seekingname3'],
+                    'enabled'=>($character['seekingoff3'] ? 0 : 1),
+                    'icon'=>$character['seekingicon3'],
+                ];
+            }
+            if (!empty($character['seekingname4'])) {
+                $characters[$key]['seeking'][] = [
+                    'name'=>$character['seekingname4'],
+                    'enabled'=>($character['seekingoff4'] ? 0 : 1),
+                    'icon'=>$character['seekingicon4'],
+                ];
+            }
+            if (!empty($character['seekingname5'])) {
+                $characters[$key]['seeking'][] = [
+                    'name'=>$character['seekingname5'],
+                    'enabled'=>($character['seekingoff5'] ? 0 : 1),
+                    'icon'=>$character['seekingicon5'],
+                ];
+            }
+            #Trim slogan
+            $characters[$key]['slogan'] = trim($character['slogan']);
+            unset($characters[$key]['crest1'], $characters[$key]['crest2'], $characters[$key]['crest3'], $characters[$key]['focusname1'], $characters[$key]['focusoff1'], $characters[$key]['focusicon1'], $characters[$key]['focusname2'], $characters[$key]['focusoff2'], $characters[$key]['focusicon2'], $characters[$key]['focusname3'], $characters[$key]['focusoff3'], $characters[$key]['focusicon3'], $characters[$key]['focusname4'], $characters[$key]['focusoff4'], $characters[$key]['focusicon4'], $characters[$key]['focusname5'], $characters[$key]['focusoff5'], $characters[$key]['focusicon5'], $characters[$key]['focusname6'], $characters[$key]['focusoff6'], $characters[$key]['focusicon6'], $characters[$key]['focusname7'], $characters[$key]['focusoff7'], $characters[$key]['focusicon7'], $characters[$key]['focusname8'], $characters[$key]['focusoff8'], $characters[$key]['focusicon8'], $characters[$key]['focusname9'], $characters[$key]['focusoff9'], $characters[$key]['focusicon9'], $characters[$key]['seekingname1'], $characters[$key]['seekingoff1'], $characters[$key]['seekingicon1'], $characters[$key]['seekingname2'], $characters[$key]['seekingoff2'], $characters[$key]['seekingicon2'], $characters[$key]['seekingname3'], $characters[$key]['seekingoff3'], $characters[$key]['seekingicon3'], $characters[$key]['seekingname4'], $characters[$key]['seekingoff4'], $characters[$key]['seekingicon4'], $characters[$key]['seekingname5'], $characters[$key]['seekingoff5'], $characters[$key]['seekingicon5'],
+            $characters[$key]['gcname1'], $characters[$key]['gcrepu1'],
+            $characters[$key]['gcname2'], $characters[$key]['gcrepu2'],
+            $characters[$key]['gcname3'], $characters[$key]['gcrepu3'], $characters[$key]['estate_greeting'],  $characters[$key]['estate_address'],  $characters[$key]['estate_name']);
+        }
+        $this->result = $characters[0];
+        return $this;
+    }
+    
     private function DeepDungeon()
     {
         preg_match_all(

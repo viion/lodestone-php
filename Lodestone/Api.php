@@ -137,9 +137,7 @@ class Api
                     }
                     break;
                 case 'FreeCompany':
-                    if (!empty($this->typesettings)) {
-                        $this->result = (new FreeCompanyParser($this->typesettings['id'], $this->html))->results;
-                    }
+                    $this->FreeCompany();
                     break;
                 case 'Banners':
                     $this->Banners();

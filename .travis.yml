@@ -3,6 +3,9 @@ language: php
 php:
   - 7.1
   
+before_script: 
+  - cd symfony
+  
 install: 
   - composer install
 
